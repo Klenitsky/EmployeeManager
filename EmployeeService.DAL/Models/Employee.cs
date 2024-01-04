@@ -7,11 +7,11 @@
         public string Email { get; set; }
 
         public int OfficeId { get; set; }
-        public Office Office { get; set; }
+        public Office OfficeNavigation { get; set; }
 
 
-        public int SalaryCurrencyId {  get; set; }
-        public Currency SalaryCurrency { get; set; }
+        public int CurrencyId {  get; set; }
+        public Currency CurrencyNavigation { get; set; }
 
         public float Salary {  get; set; }
     }
