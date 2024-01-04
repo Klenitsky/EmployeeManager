@@ -7,7 +7,11 @@ namespace EmployeeService.Models
     {
         [Key,DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        public string Name { get; set; }
+        [Required, MaxLength(50)]
+        public string FirstName { get; set; }
+        [Required, MaxLength(50)]
+        public string LastName { get; set; }
+        [EmailAddress]
         public string Email { get; set; }
 
         public int OfficeId { get; set; }
@@ -17,6 +21,7 @@ namespace EmployeeService.Models
         public int CurrencyId {  get; set; }
         public Currency CurrencyNavigation { get; set; }
 
+        [Required,Range(0.0,float.MaxValue)]
         public float Salary {  get; set; }
     }
 }
