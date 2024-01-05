@@ -1,13 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using EmployeeService.DAL.Models;
 
 namespace EmployeeService.Models
 {
-    public class Country
+    public class Country: BaseModel
     {
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
         [Required, MaxLength(50)]
         public string Name { get; set; }
         [Required, MinLength(2),MaxLength(3)]
