@@ -50,80 +50,80 @@ namespace EmployeeService.DAL.Repositories
             _isDisposed = true;
         }
 
-        public int Add(T entity, bool persist = true)
+        public virtual int Add(T entity, bool persist = true)
         {
             Table.Add(entity);
             return persist ? SaveChanges() : 0;
         }
 
-        public int AddRange(IEnumerable<T> entities, bool persist = true)
+        public virtual int AddRange(IEnumerable<T> entities, bool persist = true)
         {
             Table.AddRange(entities);
             return persist ? SaveChanges() : 0;
         }
 
-        public int Update(T entity, bool persist = true)
+        public virtual int Update(T entity, bool persist = true)
         {
             Table.Update(entity);
             return persist ? SaveChanges() : 0;
         }
 
-        public int UpdateRange(IEnumerable<T> entities, bool persist = true)
+        public virtual int UpdateRange(IEnumerable<T> entities, bool persist = true)
         {
             Table.UpdateRange(entities);
             return persist ? SaveChanges() : 0;
         }
 
-        public int Delete(int id, bool persist = true)
+        public virtual  int Delete(int id, bool persist = true)
         {
             var entity = new T { Id = id };
             DbContext.Entry(entity).State = EntityState.Deleted;
             return persist ? SaveChanges() : 0;
         }
 
-        public int Delete(T entity, bool persist = true)
+        public virtual int Delete(T entity, bool persist = true)
         {
             Table.Remove(entity);
             return persist ? SaveChanges() : 0;
         }
 
-        public int DeleteRange(IEnumerable<T> entities, bool persist = true)
+        public virtual int DeleteRange(IEnumerable<T> entities, bool persist = true)
         {
             Table.RemoveRange(entities);
             return persist ? SaveChanges() : 0;
         }
 
-        public T? Find(int? id)
+        public virtual  T? Find(int? id)
         {
             return Table.Find(id);
         }
 
-        public T? FindAsNoTracking(int id)
+        public virtual T? FindAsNoTracking(int id)
         {
             return  Table.AsNoTrackingWithIdentityResolution().FirstOrDefault(x => x.Id  == id);
         }
 
-        public T? FindlgnoreQueryFilters(int id)
+        public virtual T? FindIgnoreQueryFilters(int id)
         {
           return Table.IgnoreQueryFilters().FirstOrDefault(x=> x.Id == id);
         }
 
-        public IEnumerable<T> GetAll()
+        public virtual IEnumerable<T> GetAll()
         {
             return Table;
         }
 
-        public IEnumerable<T> GetAllIgnoreQueryFilters()
+        public virtual IEnumerable<T> GetAllIgnoreQueryFilters()
         {
             return Table.IgnoreQueryFilters();
         }
 
-        public void ExecuteQuery(string sql, object[] sqlParametersObjects)
+        public virtual void ExecuteQuery(string sql, object[] sqlParametersObjects)
         {
             DbContext.Database.ExecuteSqlRaw(sql, sqlParametersObjects);
         }
 
-        public int SaveChanges()
+        public virtual int SaveChanges()
         {
             return DbContext.SaveChanges();
         }

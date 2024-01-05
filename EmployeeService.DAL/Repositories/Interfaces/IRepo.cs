@@ -17,7 +17,7 @@ namespace EmployeeService.DAL.Repositories.Interfaces
         int DeleteRange(IEnumerable<T> entities, bool persist = true);
         T? Find(int? id);
         T? FindAsNoTracking(int id);
-        T? FindlgnoreQueryFilters(int id);
+        T? FindIgnoreQueryFilters(int id);
         IEnumerable<T> GetAll();
         IEnumerable<T> GetAllIgnoreQueryFilters();
         void ExecuteQuery(string sql, object[] sqlParametersObjects);
