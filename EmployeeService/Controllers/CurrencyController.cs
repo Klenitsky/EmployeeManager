@@ -130,7 +130,7 @@ namespace EmployeeService.Controllers
             return Ok();
         }
 
-        [HttpDelete("DeleteById")]
+        [HttpDelete("DeleteById/{id}")]
         public IActionResult Delete(int id)
         {
             try
