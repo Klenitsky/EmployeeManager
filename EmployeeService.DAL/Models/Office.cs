@@ -12,7 +12,6 @@ namespace EmployeeService.Models
         public int? CountryId { get; set; }
         public Country? CountryNavigation { get; set; }
 
-        //public IEnumerable<Employee> Employees { get; set; } = new List<Employee>();
 
     }
 }

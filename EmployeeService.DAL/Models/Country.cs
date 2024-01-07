@@ -15,6 +15,5 @@ namespace EmployeeService.Models
         public int? CurrencyId { get; set; }
         public Currency? Currency { get; set; }
 
-       // public IEnumerable<Office> Offices { get; set; } = new List<Office>();
     }
 }
