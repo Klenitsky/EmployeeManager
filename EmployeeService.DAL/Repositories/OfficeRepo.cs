@@ -32,7 +32,8 @@ namespace EmployeeService.DAL.Repositories
         public override IEnumerable<Office> GetAll()
         {
             return Table
-                    .Include(o => o.CountryNavigation);
+                    .Include(o => o.CountryNavigation)
+                    .ThenInclude(c => c.Currency);
         }
 
         public override IEnumerable<Office> GetAllIgnoreQueryFilters()

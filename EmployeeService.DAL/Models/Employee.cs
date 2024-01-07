@@ -14,11 +14,11 @@ namespace EmployeeService.Models
         public string Email { get; set; }
 
         public int OfficeId { get; set; }
-        public Office OfficeNavigation { get; set; }
+        public Office? OfficeNavigation { get; set; }
 
 
         public int CurrencyId {  get; set; }
-        public Currency CurrencyNavigation { get; set; }
+        public Currency? CurrencyNavigation { get; set; }
 
         [Required,Range(0.0,float.MaxValue)]
         public float Salary {  get; set; }
