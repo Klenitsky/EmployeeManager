@@ -26,6 +26,8 @@ namespace EmployeeService.DAL.Repositories
                     .Where(e => e.OfficeId == officeId)
                     .Include(e => e.CurrencyNavigation)
                     .Include(e => e.OfficeNavigation)
+                    .ThenInclude(o => o.CountryNavigation)
+                    .ThenInclude(c => c.Currency)
                     .OrderBy(e => e.LastName);
         }
 
@@ -33,7 +35,9 @@ namespace EmployeeService.DAL.Repositories
         {
             return Table
                     .Include(e => e.CurrencyNavigation)
-                    .Include(e=>e.OfficeNavigation);
+                    .Include(e => e.OfficeNavigation)
+                    .ThenInclude(o => o.CountryNavigation)
+                    .ThenInclude(c => c.Currency);
         }
 
         public override IEnumerable<Employee> GetAllIgnoreQueryFilters()
@@ -41,7 +45,9 @@ namespace EmployeeService.DAL.Repositories
             return Table
                 .IgnoreQueryFilters()
                 .Include(e => e.CurrencyNavigation)
-                .Include(e => e.OfficeNavigation);
+                .Include(e => e.OfficeNavigation)
+                .ThenInclude(o => o.CountryNavigation)
+                .ThenInclude(c => c.Currency);
         }
 
         public override Employee? Find(int? id)
@@ -50,6 +56,8 @@ namespace EmployeeService.DAL.Repositories
                     .Where(e => e.Id == id)
                     .Include(e => e.CurrencyNavigation)
                     .Include(e => e.OfficeNavigation)
+                    .ThenInclude(o => o.CountryNavigation)
+                    .ThenInclude(c => c.Currency)
                     .FirstOrDefault();
         }
 
@@ -60,6 +68,8 @@ namespace EmployeeService.DAL.Repositories
                     .Where(e => e.Id == id)
                     .Include(e => e.CurrencyNavigation)
                     .Include(e => e.OfficeNavigation)
+                    .ThenInclude(o => o.CountryNavigation)
+                    .ThenInclude(c => c.Currency)
                     .FirstOrDefault();
         }
     }

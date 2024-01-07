@@ -25,6 +25,7 @@ namespace EmployeeService.DAL.Repositories
             return Table
                     .Where(o => o.CountryId == countryId)
                     .Include(o => o.CountryNavigation)
+                    .ThenInclude(c => c.Currency)
                     .OrderBy(o => o.Name);
         }
 
@@ -38,7 +39,8 @@ namespace EmployeeService.DAL.Repositories
         {
             return Table
                 .IgnoreQueryFilters()
-                .Include(o => o.CountryNavigation);
+                .Include(o => o.CountryNavigation)
+                .ThenInclude(c => c.Currency);
         }
 
         public override Office? Find(int? id)
@@ -46,6 +48,7 @@ namespace EmployeeService.DAL.Repositories
             return Table
                     .Where(e => e.Id == id)
                     .Include(o => o.CountryNavigation)
+                    .ThenInclude(c => c.Currency)
                     .FirstOrDefault();
         }
 
@@ -55,6 +58,7 @@ namespace EmployeeService.DAL.Repositories
                     .IgnoreQueryFilters()
                     .Where(e => e.Id == id)
                     .Include(o => o.CountryNavigation)
+                    .ThenInclude(c => c.Currency)
                     .FirstOrDefault();
         }
     }
