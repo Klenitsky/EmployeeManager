@@ -43,7 +43,7 @@ namespace EmployeeService.Controllers
             }
         }
 
-        [HttpGet("FindByCountry/{id}")]
+        [HttpGet("FindByCountry/{countryId}")]
         public ActionResult<IEnumerable<Office>> FindByCountry(int countryId)
         {
             IEnumerable<Office> offices = officeRepo.GetAllByCountry(countryId);
