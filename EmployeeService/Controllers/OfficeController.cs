@@ -11,8 +11,13 @@ namespace EmployeeService.Controllers
     [ApiController]
     public class OfficeController : ControllerBase
     {
-        private static string[] args = { };
-        OfficeRepo officeRepo = new OfficeRepo(new ApplicationDbContextFactory().CreateDbContext(args));
+
+        private OfficeRepo _officeRepo;
+
+        public OfficeController(ApplicationDbContext dbContext)
+        {
+            _officeRepo = new OfficeRepo(dbContext);
+        }
 
 
         [HttpGet]
@@ -21,7 +26,7 @@ namespace EmployeeService.Controllers
         {
             try
             {
-                return Ok(officeRepo.GetAll());
+                return Ok(_officeRepo.GetAll());
             }
             catch (Exception ex)
             {
@@ -32,7 +37,7 @@ namespace EmployeeService.Controllers
         [HttpGet("find/{id}")]
         public ActionResult<Office> Find(int id)
         {
-            Office answer = officeRepo.Find(id);
+            Office answer = _officeRepo.Find(id);
             if (answer != null)
             {
                 return Ok(answer);
@@ -46,7 +51,7 @@ namespace EmployeeService.Controllers
         [HttpGet("FindByCountry/{countryId}")]
         public ActionResult<IEnumerable<Office>> FindByCountry(int countryId)
         {
-            IEnumerable<Office> offices = officeRepo.GetAllByCountry(countryId);
+            IEnumerable<Office> offices = _officeRepo.GetAllByCountry(countryId);
             if (offices != null)
             {
                 return Ok(offices);
@@ -63,7 +68,7 @@ namespace EmployeeService.Controllers
         {
             try
             {
-                officeRepo.Add(office);
+                _officeRepo.Add(office);
             }
             catch (Exception ex)
             {
@@ -79,7 +84,7 @@ namespace EmployeeService.Controllers
         {
             try
             {
-                officeRepo.AddRange(offices);
+                _officeRepo.AddRange(offices);
             }
             catch (Exception ex)
             {
@@ -93,7 +98,7 @@ namespace EmployeeService.Controllers
         {
             try
             {
-                officeRepo.Update(office);
+                _officeRepo.Update(office);
             }
             catch (Exception ex)
             {
@@ -107,7 +112,7 @@ namespace EmployeeService.Controllers
         {
             try
             {
-                officeRepo.UpdateRange(offices);
+                _officeRepo.UpdateRange(offices);
             }
             catch (Exception ex)
             {
@@ -122,7 +127,7 @@ namespace EmployeeService.Controllers
         {
             try
             {
-                officeRepo.Delete(office);
+                _officeRepo.Delete(office);
             }
             catch (Exception ex)
             {
@@ -136,7 +141,7 @@ namespace EmployeeService.Controllers
         {
             try
             {
-                officeRepo.DeleteRange(offices);
+                _officeRepo.DeleteRange(offices);
             }
             catch (Exception ex)
             {
@@ -150,7 +155,7 @@ namespace EmployeeService.Controllers
         {
             try
             {
-                officeRepo.Delete(id);
+                _officeRepo.Delete(id);
             }
             catch (Exception ex)
             {

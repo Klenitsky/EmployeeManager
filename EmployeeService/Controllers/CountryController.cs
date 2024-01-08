@@ -11,8 +11,12 @@ namespace EmployeeService.Controllers
     [ApiController]
     public class CountryController : ControllerBase
     {
-        private static string[] args = { };
-        CountryRepo countryRepo = new CountryRepo(new ApplicationDbContextFactory().CreateDbContext(args));
+        CountryRepo _countryRepo;
+
+        public CountryController(ApplicationDbContext dbContext) 
+        {
+            _countryRepo= new CountryRepo(dbContext);
+        }
 
 
         [HttpGet]
@@ -21,7 +25,7 @@ namespace EmployeeService.Controllers
         {
             try
             {
-                return Ok(countryRepo.GetAll());
+                return Ok(_countryRepo.GetAll());
             }
             catch (Exception ex)
             {
@@ -32,7 +36,7 @@ namespace EmployeeService.Controllers
         [HttpGet("find/{id}")]
         public ActionResult<Currency> Find(int id)
         {
-            Country answer = countryRepo.Find(id);
+            Country answer = _countryRepo.Find(id);
             if (answer != null)
             {
                 return Ok(answer);
@@ -49,7 +53,7 @@ namespace EmployeeService.Controllers
         {
             try
             {
-                countryRepo.Add(country);
+                _countryRepo.Add(country);
             }
             catch (Exception ex)
             {
@@ -65,7 +69,7 @@ namespace EmployeeService.Controllers
         {
             try
             {
-                countryRepo.AddRange(countries);
+                _countryRepo.AddRange(countries);
             }
             catch (Exception ex)
             {
@@ -79,7 +83,7 @@ namespace EmployeeService.Controllers
         {
             try
             {
-                countryRepo.Update(country);
+                _countryRepo.Update(country);
             }
             catch (Exception ex)
             {
@@ -93,7 +97,7 @@ namespace EmployeeService.Controllers
         {
             try
             {
-                countryRepo.UpdateRange(countries);
+                _countryRepo.UpdateRange(countries);
             }
             catch (Exception ex)
             {
@@ -108,7 +112,7 @@ namespace EmployeeService.Controllers
         {
             try
             {
-                countryRepo.Delete(country);
+                _countryRepo.Delete(country);
             }
             catch (Exception ex)
             {
@@ -122,7 +126,7 @@ namespace EmployeeService.Controllers
         {
             try
             {
-                countryRepo.DeleteRange(countries);
+                _countryRepo.DeleteRange(countries);
             }
             catch (Exception ex)
             {
@@ -136,7 +140,7 @@ namespace EmployeeService.Controllers
         {
             try
             {
-                countryRepo.Delete(id);
+                _countryRepo.Delete(id);
             }
             catch (Exception ex)
             {

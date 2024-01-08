@@ -10,8 +10,12 @@ namespace EmployeeService.Controllers
     [ApiController]
     public class CurrencyController : ControllerBase
     {
-        private static string[] args = { };
-        CurrencyRepo currencyRepo = new CurrencyRepo(new ApplicationDbContextFactory().CreateDbContext(args));
+        private CurrencyRepo _currencyRepo;
+
+        public CurrencyController(ApplicationDbContext dbContext)
+        {
+            _currencyRepo = new CurrencyRepo(dbContext);
+        }
 
 
         [HttpGet]
@@ -20,7 +24,7 @@ namespace EmployeeService.Controllers
         {
             try
             {
-                return Ok(currencyRepo.GetAll());
+                return Ok(_currencyRepo.GetAll());
             }
             catch (Exception ex)
             {
@@ -31,7 +35,7 @@ namespace EmployeeService.Controllers
         [HttpGet("find/{id}")]
         public ActionResult<Currency> Find(int id)
         {
-           Currency answer = currencyRepo.Find(id);
+           Currency answer = _currencyRepo.Find(id);
             if(answer != null)
             {
                 return Ok(answer);
@@ -48,7 +52,7 @@ namespace EmployeeService.Controllers
         {
             try
             {
-                currencyRepo.Add(currency);
+                _currencyRepo.Add(currency);
             }
             catch (Exception ex) 
             { 
@@ -64,7 +68,7 @@ namespace EmployeeService.Controllers
         {
             try
             {
-                currencyRepo.AddRange(currencies);
+                _currencyRepo.AddRange(currencies);
             }
             catch (Exception ex)
             {
@@ -78,7 +82,7 @@ namespace EmployeeService.Controllers
         {
             try
             {
-                currencyRepo.Update(currency);
+                _currencyRepo.Update(currency);
             }
             catch (Exception ex)
             {
@@ -92,7 +96,7 @@ namespace EmployeeService.Controllers
         {
             try
             {
-                currencyRepo.UpdateRange(currencies);
+                _currencyRepo.UpdateRange(currencies);
             }
             catch (Exception ex)
             {
@@ -107,7 +111,7 @@ namespace EmployeeService.Controllers
         {
             try
             {
-                currencyRepo.Delete(currency);
+                _currencyRepo.Delete(currency);
             }
             catch (Exception ex)
             {
@@ -121,7 +125,7 @@ namespace EmployeeService.Controllers
         {
             try
             {
-                currencyRepo.DeleteRange(currency);
+                _currencyRepo.DeleteRange(currency);
             }
             catch (Exception ex)
             {
@@ -135,7 +139,7 @@ namespace EmployeeService.Controllers
         {
             try
             {
-                currencyRepo.Delete(id);
+                _currencyRepo.Delete(id);
             }
             catch (Exception ex)
             {

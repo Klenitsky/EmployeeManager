@@ -11,8 +11,13 @@ namespace EmployeeService.Controllers
     [ApiController]
     public class EmployeeController : ControllerBase
     {
-        private static string[] args = { };
-        EmployeeRepo employeeRepo = new EmployeeRepo(new ApplicationDbContextFactory().CreateDbContext(args));
+       
+        private EmployeeRepo _employeeRepo;
+
+        public EmployeeController(ApplicationDbContext dbContext)
+        {
+            _employeeRepo = new EmployeeRepo(dbContext);
+        }
 
 
         [HttpGet]
@@ -21,7 +26,7 @@ namespace EmployeeService.Controllers
         {
             try
             {
-                return Ok(employeeRepo.GetAll());
+                return Ok(_employeeRepo.GetAll());
             }
             catch (Exception ex)
             {
@@ -32,7 +37,7 @@ namespace EmployeeService.Controllers
         [HttpGet("find/{id}")]
         public ActionResult<Employee> Find(int id)
         {
-            Employee answer = employeeRepo.Find(id);
+            Employee answer = _employeeRepo.Find(id);
             if (answer != null)
             {
                 return Ok(answer);
@@ -46,7 +51,7 @@ namespace EmployeeService.Controllers
         [HttpGet("findByOffice/{officeId}")]
         public ActionResult<IEnumerable<Employee>> FindByOffice(int officeId)
         {
-            IEnumerable<Employee> answer = employeeRepo.GetAllByOffice(officeId);
+            IEnumerable<Employee> answer = _employeeRepo.GetAllByOffice(officeId);
             if (answer != null)
             {
                 return Ok(answer);
@@ -63,7 +68,7 @@ namespace EmployeeService.Controllers
         {
             try
             {
-                employeeRepo.Add(employee);
+                _employeeRepo.Add(employee);
             }
             catch (Exception ex)
             {
@@ -79,7 +84,7 @@ namespace EmployeeService.Controllers
         {
             try
             {
-                employeeRepo.AddRange(employees);
+                _employeeRepo.AddRange(employees);
             }
             catch (Exception ex)
             {
@@ -93,7 +98,7 @@ namespace EmployeeService.Controllers
         {
             try
             {
-                employeeRepo.Update(employee);
+                _employeeRepo.Update(employee);
             }
             catch (Exception ex)
             {
@@ -107,7 +112,7 @@ namespace EmployeeService.Controllers
         {
             try
             {
-                employeeRepo.UpdateRange(employees);
+                _employeeRepo.UpdateRange(employees);
             }
             catch (Exception ex)
             {
@@ -122,7 +127,7 @@ namespace EmployeeService.Controllers
         {
             try
             {
-                employeeRepo.Delete(employees);
+                _employeeRepo.Delete(employees);
             }
             catch (Exception ex)
             {
@@ -136,7 +141,7 @@ namespace EmployeeService.Controllers
         {
             try
             {
-                employeeRepo.DeleteRange(employees);
+                _employeeRepo.DeleteRange(employees);
             }
             catch (Exception ex)
             {
@@ -150,7 +155,7 @@ namespace EmployeeService.Controllers
         {
             try
             {
-                employeeRepo.Delete(id);
+                _employeeRepo.Delete(id);
             }
             catch (Exception ex)
             {
