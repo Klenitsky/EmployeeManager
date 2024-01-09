@@ -21,4 +21,9 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="NBRBStructures\" />
+    <Folder Include="DatabaseStructures\" />
+  </ItemGroup>
+
 </Project>
