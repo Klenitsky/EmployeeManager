@@ -22,8 +22,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="NBRBStructures\" />
-    <Folder Include="DatabaseStructures\" />
+    <Folder Include="DatabaseStructures\Repositories\" />
+    <Folder Include="NbrbAPI\Repositories\" />
   </ItemGroup>
 
 </Project>
