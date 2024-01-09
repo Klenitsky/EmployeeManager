@@ -16,9 +16,6 @@ namespace ExchangeRateService.DAL.BasicStructures.Models
 
         public string? Abbreviation { get; set; }
 
-        [Required, Range(0,9999)]
-        public int CurrencyCode { get; set; }
-
         [Required, Range(1,int.MaxValue)]   
         public int Scale { get; set; }
 
