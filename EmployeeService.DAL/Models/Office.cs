@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using EmployeeService.DAL.Models;
 
-namespace EmployeeService.Models
+namespace EmployeeService.DAL.Models
 {
     public class Office : BaseModel
     {

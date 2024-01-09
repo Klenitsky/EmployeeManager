@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using EmployeeService.DAL.Models;
 
-namespace EmployeeService.Models
+namespace EmployeeService.DAL.Models
 {
     public class Country: BaseModel
     {

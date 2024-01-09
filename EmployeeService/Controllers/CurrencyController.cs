@@ -1,6 +1,6 @@
 ﻿using EmployeeService.DAL.Contexts;
 using EmployeeService.DAL.Repositories;
-using EmployeeService.Models;
+using EmployeeService.DAL.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 

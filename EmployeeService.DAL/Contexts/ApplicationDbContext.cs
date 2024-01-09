@@ -1,4 +1,4 @@
-﻿using EmployeeService.Models;
+﻿using EmployeeService.DAL.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
