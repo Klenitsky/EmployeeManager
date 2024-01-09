@@ -17,7 +17,7 @@ namespace ExchangeRateService.DAL.NbrbAPI.RateReaders
             string requestString = "https://api.nbrb.by/exrates/rates/" + currencyCode.ToUpper() + "?parammode=2&ondate=" + date.ToString("yyyy-MM-dd");
 
             HttpClient httpClient = new HttpClient();
-            if (currencyCode.ToUpper() != "USD")
+            if (currencyCode.ToUpper() != "BYN")
             {
                 Rate rate = httpClient.GetFromJsonAsync<Rate>(requestString).Result;
                 requestString = "https://api.nbrb.by/exrates/rates/USD?parammode=2&ondate=" + date.ToString("yyyy-MM-dd");
@@ -30,7 +30,7 @@ namespace ExchangeRateService.DAL.NbrbAPI.RateReaders
             {
                 requestString = "https://api.nbrb.by/exrates/rates/USD?parammode=2&ondate=" + date.ToString("yyyy-MM-dd");
                 Rate rateUSD = httpClient.GetFromJsonAsync<Rate>(requestString).Result;
-                rateUSD.Cur_OfficialRate = 1;
+                rateUSD.Cur_OfficialRate = 1/rateUSD.Cur_OfficialRate;
                 return rateUSD;
             }
         }

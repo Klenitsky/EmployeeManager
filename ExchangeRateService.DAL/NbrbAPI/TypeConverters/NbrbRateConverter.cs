@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace ExchangeRateService.DAL.NbrbAPI.TypeConverters
 {
-    public class RBRateConverter : ITypeConverter<Rate>
+    public class NbrbRateConverter : ITypeConverter<Rate>
     {
         public ExchangeRate ConvertToExchangeRate(Rate value)
         {
@@ -18,7 +18,8 @@ namespace ExchangeRateService.DAL.NbrbAPI.TypeConverters
                 CurrencyName = value.Cur_Name,
                 Abbreviation= value.Cur_Abbreviation,
                 Scale= value.Cur_Scale,
-                Rate = (float)value.Cur_OfficialRate               
+                Rate = (float)value.Cur_OfficialRate  ,
+                Date = value.Date
             };
 
             return exchangeRate;
