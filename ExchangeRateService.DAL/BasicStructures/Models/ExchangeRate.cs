@@ -21,5 +21,8 @@ namespace ExchangeRateService.DAL.BasicStructures.Models
 
         [Required,Range(0,float.MaxValue)]
         public float Rate { get; set; }
+
+        [Required]
+        public DateTime Date { get; set; }
     }
 }
