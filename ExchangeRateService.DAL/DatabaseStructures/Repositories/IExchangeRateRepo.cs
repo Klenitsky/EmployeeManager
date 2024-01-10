@@ -13,10 +13,10 @@ namespace ExchangeRateService.DAL.DatabaseStructures.Repositories
 {
     public interface IExchangeRateRepo<T>
     {
-        protected ExchangeRateDbContext DbContext { get; set; }
-        protected ICurrencyLoader CurrencyLoader { get; set; }
-        protected IRateReader<T> RateReader { get; set; }
-        protected ITypeConverter<T> TypeConverter { get; set; }
+        protected ExchangeRateDbContext DbContext { get;}
+        protected ICurrencyLoader CurrencyLoader { get;}
+        protected IRateReader<T> RateReader { get;}
+        protected ITypeConverter<T> TypeConverter { get;}
 
         public IEnumerable<ExchangeRate> GetExchangeRates();
         public IEnumerable<ActiveCurrency> GetActiveCurrencies();

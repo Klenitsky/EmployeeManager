@@ -10,7 +10,7 @@ using static System.Net.WebRequestMethods;
 
 namespace ExchangeRateService.DAL.NbrbAPI.RateReaders
 {
-    public class RateReader : IRateReader<Rate>
+    public class NbrbApiReader : IRateReader<Rate>
     {
         public Rate ReadRate(DateTime date, string currencyCode)
         {
