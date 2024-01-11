@@ -22,11 +22,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="DatabaseStructures\Repositories\" />
-    <Folder Include="NbrbAPI\Repositories\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\EmployeeService.DAL\EmployeeService.DAL.csproj" />
   </ItemGroup>
 
