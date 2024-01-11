@@ -11,12 +11,10 @@ using System.Threading.Tasks;
 
 namespace ExchangeRateService.DAL.DatabaseStructures.Repositories
 {
-    public interface IExchangeRateRepo<T>
+    public interface IExchangeRateRepo
     {
         protected ExchangeRateDbContext DbContext { get;}
         protected ICurrencyLoader CurrencyLoader { get;}
-        protected IRateReader<T> RateReader { get;}
-        protected ITypeConverter<T> TypeConverter { get;}
 
         public IEnumerable<ExchangeRate> GetExchangeRates();
         public IEnumerable<ActiveCurrency> GetActiveCurrencies();

@@ -17,16 +17,15 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ExchangeRateService.DAL.NbrbAPI.Repositories
 {
-    public class NbrbExchangeRateRepo : IExchangeRateRepo<Rate>
+    public class NbrbExchangeRateRepo : IExchangeRateRepo
     {
         private ExchangeRateDbContext _dbContext = new ExchangeRateDbContextFactory().CreateDbContext(new List<string>().ToArray());
         private  EmployeeServiceCurrencyLoader _currencyLoader = new EmployeeServiceCurrencyLoader();
         private NbrbApiReader _reader = new NbrbApiReader();
         private NbrbRateConverter _rateConverter = new NbrbRateConverter();
-        ExchangeRateDbContext IExchangeRateRepo<Rate>.DbContext { get => _dbContext;}
-        ICurrencyLoader IExchangeRateRepo<Rate>.CurrencyLoader { get => _currencyLoader; }
-        IRateReader<Rate> IExchangeRateRepo<Rate>.RateReader { get => _reader; }
-        ITypeConverter<Rate> IExchangeRateRepo<Rate>.TypeConverter { get => _rateConverter; }
+        ExchangeRateDbContext IExchangeRateRepo.DbContext { get => _dbContext;}
+        ICurrencyLoader IExchangeRateRepo.CurrencyLoader { get => _currencyLoader; }
+
 
         public IEnumerable<ActiveCurrency> GetActiveCurrencies()
         {
@@ -101,13 +100,6 @@ namespace ExchangeRateService.DAL.NbrbAPI.Repositories
 
             return rates;
         }
-
-        IEnumerable<ActiveCurrency> IExchangeRateRepo<Rate>.GetActiveCurrencies()
-        {
-            return _dbContext.ActiveCurrencies.ToList();
-        }
-
-       
 
 
         private ExchangeRate LoadRate(string currencyAbbreviation, DateTime date)
