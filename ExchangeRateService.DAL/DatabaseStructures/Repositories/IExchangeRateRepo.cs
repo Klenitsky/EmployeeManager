@@ -22,15 +22,15 @@ namespace ExchangeRateService.DAL.DatabaseStructures.Repositories
         public IEnumerable<ExchangeRate> GetExchangeRatesByDateOnRequest(DateTime date);
         public IEnumerable<ExchangeRate> GetExchangeRatesByDateRangeOnRequest(DateTime startDate, DateTime endDate);
 
-        public IEnumerable<ExchangeRate> GetExchangeRatesByCurrencyInSystem(string currencyAbbreviation);
         public ExchangeRate GetExchangeRateByDateAndCurrencyOnRequest(string currencyAbbreviation, DateTime date);
         public IEnumerable<ExchangeRate> GetExchangeRatesByDateRangeAndCurrencyOnRequest(string currencyAbbreviation, DateTime startDate,DateTime endDate);
 
-        public IEnumerable<ExchangeRate> GetExchangeRatesByDateInSystem(DateTime date);
-        public IEnumerable<ExchangeRate> GetExchangeRatesByDateRangeInSystem(DateTime startDate, DateTime endDate);
+        public IEnumerable<ExchangeRate>? GetExchangeRatesByCurrencyInSystem(string currencyAbbreviation);
+        public IEnumerable<ExchangeRate>? GetExchangeRatesByDateInSystem(DateTime date);
+        public IEnumerable<ExchangeRate>? GetExchangeRatesByDateRangeInSystem(DateTime startDate, DateTime endDate);
 
-        public ExchangeRate GetExchangeRateByDateAndCurrencyInSystem(string currencyAbbreviation, DateTime date);
-        public IEnumerable<ExchangeRate> GetExchangeRatesByDateRangeAndCurrencyInSystem(string currencyAbbreviation, DateTime startDate, DateTime endDate);
+        public ExchangeRate? GetExchangeRateByDateAndCurrencyInSystem(string currencyAbbreviation, DateTime date);
+        public IEnumerable<ExchangeRate>? GetExchangeRatesByDateRangeAndCurrencyInSystem(string currencyAbbreviation, DateTime startDate, DateTime endDate);
 
         public void LoadActiveCurrencies() => CurrencyLoader.LoadCurrency(DbContext);
 

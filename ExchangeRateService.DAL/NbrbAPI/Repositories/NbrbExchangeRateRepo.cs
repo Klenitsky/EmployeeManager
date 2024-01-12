@@ -34,9 +34,7 @@ namespace ExchangeRateService.DAL.NbrbAPI.Repositories
 
         public ExchangeRate GetExchangeRateByDateAndCurrencyOnRequest(string currencyAbbreviation, DateTime date)
         {
-            var exchangeRate = _dbContext.ExchangeRates
-                                         .Where(r => (r.Abbreviation.ToUpper() == currencyAbbreviation.ToUpper()) && r.Date == date)
-                                         .FirstOrDefault();
+            var exchangeRate = GetExchangeRateByDateAndCurrencyInSystem(currencyAbbreviation, date);
 
             if(exchangeRate != null)
             {
@@ -64,15 +62,7 @@ namespace ExchangeRateService.DAL.NbrbAPI.Repositories
         }
     
 
-        public IEnumerable<ExchangeRate> GetExchangeRates()
-        {
-            return _dbContext.ExchangeRates.ToList();
-        }
-
-        public IEnumerable<ExchangeRate> GetExchangeRatesByCurrencyInSystem(string currencyAbbreviation)
-        {
-            return _dbContext.ExchangeRates.Where(r => r.Abbreviation == currencyAbbreviation);
-        }
+     
 
         public IEnumerable<ExchangeRate> GetExchangeRatesByDateOnRequest(DateTime date)
         {
@@ -100,6 +90,71 @@ namespace ExchangeRateService.DAL.NbrbAPI.Repositories
 
             return rates;
         }
+        public IEnumerable<ExchangeRate> GetExchangeRates()
+        {
+            return _dbContext.ExchangeRates.ToList();
+        }
+
+        public IEnumerable<ExchangeRate>? GetExchangeRatesByCurrencyInSystem(string currencyAbbreviation)
+        {
+            return _dbContext.ExchangeRates.Where(r => r.Abbreviation == currencyAbbreviation);
+        }
+
+        public IEnumerable<ExchangeRate>? GetExchangeRatesByDateInSystem(DateTime date)
+        {
+            List<ExchangeRate> rates = new List<ExchangeRate>();
+
+            List<string?> currencyAbbreviations = _dbContext.ActiveCurrencies.Select(c => c.Abbreviation).ToList();
+            foreach (var currencyAbbreviation in currencyAbbreviations)
+            {
+                var exchangeRate = GetExchangeRateByDateAndCurrencyInSystem(currencyAbbreviation, date);
+                if (exchangeRate != null)
+                {
+                    rates.Add(exchangeRate);
+                }
+            }
+
+            return rates;
+        }
+
+        public IEnumerable<ExchangeRate>? GetExchangeRatesByDateRangeInSystem(DateTime startDate, DateTime endDate)
+        {
+            List<ExchangeRate> rates = new List<ExchangeRate>();
+            while (startDate <= endDate)
+            {
+                var currentDateRates = GetExchangeRatesByDateInSystem(startDate);
+                if (currentDateRates != null)
+                {
+                    rates.AddRange(currentDateRates);
+                }
+                startDate.AddDays(1);
+            }
+
+            return rates;
+        }
+
+        public ExchangeRate? GetExchangeRateByDateAndCurrencyInSystem(string currencyAbbreviation, DateTime date)
+        {
+            return _dbContext.ExchangeRates
+                                         .Where(r => (r.Abbreviation.ToUpper() == currencyAbbreviation.ToUpper()) && r.Date == date)
+                                         .FirstOrDefault();
+        }
+
+        public IEnumerable<ExchangeRate>? GetExchangeRatesByDateRangeAndCurrencyInSystem(string currencyAbbreviation, DateTime startDate, DateTime endDate)
+        {
+            List<ExchangeRate> rates = new List<ExchangeRate>();
+            while (startDate <= endDate)
+            {
+                var currentDateRate = GetExchangeRateByDateAndCurrencyInSystem(currencyAbbreviation, startDate);
+                if (currentDateRate != null)
+                {
+                    rates.Add(currentDateRate);
+                }
+                startDate.AddDays(1);
+            }
+
+            return rates;
+        }
 
 
         private ExchangeRate LoadRate(string currencyAbbreviation, DateTime date)
@@ -110,5 +165,7 @@ namespace ExchangeRateService.DAL.NbrbAPI.Repositories
             return exchangeRate;
 
         }
+
+   
     }
 }
