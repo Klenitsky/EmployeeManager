@@ -23,7 +23,7 @@ namespace ExchangeRateService.Controllers
         {
             try
             {
-                return Ok(_repo.GetExchangeRatesByDate(Date));
+                return Ok(_repo.GetExchangeRatesByDateOnRequest(Date));
             }
             catch(Exception ex) 
             {
@@ -37,7 +37,7 @@ namespace ExchangeRateService.Controllers
         {
             try
             {
-                return Ok(_repo.GetExchangeRatesByDateRange(startDate,endDate));
+                return Ok(_repo.GetExchangeRatesByDateRangeOnRequest(startDate,endDate));
             }
             catch (Exception ex)
             {
@@ -51,7 +51,7 @@ namespace ExchangeRateService.Controllers
         {
             try
             {
-                return Ok(_repo.GetExchangeRateByDateAndCurrency(currencyAbbreviation,date));
+                return Ok(_repo.GetExchangeRateByDateAndCurrencyOnRequest(currencyAbbreviation,date));
             }
             catch (Exception ex)
             {
@@ -65,7 +65,7 @@ namespace ExchangeRateService.Controllers
         {
             try
             {
-                return Ok(_repo.GetExchangeRatesByDateRangeAndCurrency(currencyAbbreviation,startDate, endDate));
+                return Ok(_repo.GetExchangeRatesByDateRangeAndCurrencyOnRequest(currencyAbbreviation,startDate, endDate));
             }
             catch (Exception ex)
             {

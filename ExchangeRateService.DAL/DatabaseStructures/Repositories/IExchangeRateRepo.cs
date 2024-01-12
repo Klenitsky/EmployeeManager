@@ -19,12 +19,18 @@ namespace ExchangeRateService.DAL.DatabaseStructures.Repositories
         public IEnumerable<ExchangeRate> GetExchangeRates();
         public IEnumerable<ActiveCurrency> GetActiveCurrencies();
 
-        public IEnumerable<ExchangeRate> GetExchangeRatesByDate(DateTime date);
-        public IEnumerable<ExchangeRate> GetExchangeRatesByDateRange(DateTime startDate, DateTime endDate);
+        public IEnumerable<ExchangeRate> GetExchangeRatesByDateOnRequest(DateTime date);
+        public IEnumerable<ExchangeRate> GetExchangeRatesByDateRangeOnRequest(DateTime startDate, DateTime endDate);
 
-        public IEnumerable<ExchangeRate> GetExchangeRatesByCurrency(string currencyAbbreviation);
-        public ExchangeRate GetExchangeRateByDateAndCurrency(string currencyAbbreviation, DateTime date);
-        public IEnumerable<ExchangeRate> GetExchangeRatesByDateRangeAndCurrency(string currencyAbbreviation, DateTime startDate,DateTime endDate);
+        public IEnumerable<ExchangeRate> GetExchangeRatesByCurrencyInSystem(string currencyAbbreviation);
+        public ExchangeRate GetExchangeRateByDateAndCurrencyOnRequest(string currencyAbbreviation, DateTime date);
+        public IEnumerable<ExchangeRate> GetExchangeRatesByDateRangeAndCurrencyOnRequest(string currencyAbbreviation, DateTime startDate,DateTime endDate);
+
+        public IEnumerable<ExchangeRate> GetExchangeRatesByDateInSystem(DateTime date);
+        public IEnumerable<ExchangeRate> GetExchangeRatesByDateRangeInSystem(DateTime startDate, DateTime endDate);
+
+        public ExchangeRate GetExchangeRateByDateAndCurrencyInSystem(string currencyAbbreviation, DateTime date);
+        public IEnumerable<ExchangeRate> GetExchangeRatesByDateRangeAndCurrencyInSystem(string currencyAbbreviation, DateTime startDate, DateTime endDate);
 
         public void LoadActiveCurrencies() => CurrencyLoader.LoadCurrency(DbContext);
 

@@ -50,7 +50,7 @@ namespace ExchangeRateService.Controllers
         {
             try
             {
-                return Ok(_repo.GetExchangeRatesByCurrency(currencyAbbreviation));
+                return Ok(_repo.GetExchangeRatesByCurrencyInSystem(currencyAbbreviation));
             }
             catch (Exception ex)
             {
