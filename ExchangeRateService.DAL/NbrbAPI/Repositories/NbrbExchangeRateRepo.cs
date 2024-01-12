@@ -50,7 +50,7 @@ namespace ExchangeRateService.DAL.NbrbAPI.Repositories
 
         }
 
-        public IEnumerable<ExchangeRate> GetExchangeRateByDateRangeAndCurrency(string currencyAbbreviation, DateTime startDate, DateTime endDate)
+        public IEnumerable<ExchangeRate> GetExchangeRatesByDateRangeAndCurrency(string currencyAbbreviation, DateTime startDate, DateTime endDate)
         {
             List<ExchangeRate> rates = new List<ExchangeRate>();
             while(startDate <= endDate)

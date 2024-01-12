@@ -65,7 +65,7 @@ namespace ExchangeRateService.Controllers
         {
             try
             {
-                return Ok(_repo.GetExchangeRateByDateRangeAndCurrency(currencyAbbreviation,startDate, endDate));
+                return Ok(_repo.GetExchangeRatesByDateRangeAndCurrency(currencyAbbreviation,startDate, endDate));
             }
             catch (Exception ex)
             {
