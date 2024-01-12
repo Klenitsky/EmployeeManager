@@ -71,5 +71,61 @@ namespace ExchangeRateService.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpGet("OnDate")]
+        public ActionResult<IEnumerable<ExchangeRate>> GetByDate(DateTime Date)
+        {
+            try
+            {
+                return Ok(_repo.GetExchangeRatesByDateOnRequest(Date));
+            }
+            catch (Exception ex)
+            {
+                return NotFound();
+            }
+
+        }
+
+        [HttpGet("OnDateRange")]
+        public ActionResult<IEnumerable<ExchangeRate>> GetByDateRange(DateTime startDate, DateTime endDate)
+        {
+            try
+            {
+                return Ok(_repo.GetExchangeRatesByDateRangeInSystem(startDate, endDate));
+            }
+            catch (Exception ex)
+            {
+                return NotFound();
+            }
+
+        }
+
+        [HttpGet("OnDateAndCurrency")]
+        public ActionResult<ExchangeRate> GetByDateAndCurrency(DateTime date, string currencyAbbreviation)
+        {
+            try
+            {
+                return Ok(_repo.GetExchangeRateByDateAndCurrencyInSystem(currencyAbbreviation, date));
+            }
+            catch (Exception ex)
+            {
+                return NotFound();
+            }
+
+        }
+
+        [HttpGet("OnDateRangeAndCurrency")]
+        public ActionResult<IEnumerable<ExchangeRate>> GetByDateRangeAndCurrency(DateTime startDate, DateTime endDate, string currencyAbbreviation)
+        {
+            try
+            {
+                return Ok(_repo.GetExchangeRatesByDateRangeAndCurrencyInSystem(currencyAbbreviation, startDate, endDate));
+            }
+            catch (Exception ex)
+            {
+                return NotFound();
+            }
+
+        }
     }
 }
