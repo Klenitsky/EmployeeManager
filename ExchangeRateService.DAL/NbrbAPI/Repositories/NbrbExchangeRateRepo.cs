@@ -58,7 +58,7 @@ namespace ExchangeRateService.DAL.NbrbAPI.Repositories
                 startDate = startDate.AddDays(1);
             }
 
-            return rates;
+            return rates.OrderBy(r => r.Date);
         }
     
 
@@ -88,11 +88,11 @@ namespace ExchangeRateService.DAL.NbrbAPI.Repositories
                 startDate =  startDate.AddDays(1);
             }
 
-            return rates;
+            return rates.OrderBy(r => r.CurrencyName).OrderBy(r => r.Date);
         }
         public IEnumerable<ExchangeRate> GetExchangeRates()
         {
-            return _dbContext.ExchangeRates.ToList();
+            return _dbContext.ExchangeRates.OrderBy(r => r.CurrencyName).OrderBy(r => r.Date).ToList();
         }
 
         public IEnumerable<ExchangeRate>? GetExchangeRatesByCurrencyInSystem(string currencyAbbreviation)
@@ -114,7 +114,7 @@ namespace ExchangeRateService.DAL.NbrbAPI.Repositories
                 }
             }
 
-            return rates;
+            return rates.OrderBy(r => r.Date);
         }
 
         public IEnumerable<ExchangeRate>? GetExchangeRatesByDateRangeInSystem(DateTime startDate, DateTime endDate)
@@ -130,7 +130,7 @@ namespace ExchangeRateService.DAL.NbrbAPI.Repositories
                startDate =  startDate.AddDays(1);
             }
 
-            return rates;
+            return rates.OrderBy(r => r.CurrencyName).OrderBy(r => r.Date);
         }
 
         public ExchangeRate? GetExchangeRateByDateAndCurrencyInSystem(string currencyAbbreviation, DateTime date)
@@ -153,7 +153,7 @@ namespace ExchangeRateService.DAL.NbrbAPI.Repositories
                 startDate = startDate.AddDays(1);
             }
 
-            return rates;
+            return rates.OrderBy(r => r.CurrencyName).OrderBy(r => r.Date);
         }
 
 
