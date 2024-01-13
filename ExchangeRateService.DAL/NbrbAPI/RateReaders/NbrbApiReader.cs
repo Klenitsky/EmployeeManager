@@ -31,6 +31,8 @@ namespace ExchangeRateService.DAL.NbrbAPI.RateReaders
                 requestString = "https://api.nbrb.by/exrates/rates/USD?parammode=2&ondate=" + date.ToString("yyyy-MM-dd");
                 Rate rateUSD = httpClient.GetFromJsonAsync<Rate>(requestString).Result;
                 rateUSD.Cur_OfficialRate = 1/rateUSD.Cur_OfficialRate;
+                rateUSD.Cur_Abbreviation = "BYN";
+                rateUSD.Cur_Name = "Белорусский рубль";
                 return rateUSD;
             }
         }
