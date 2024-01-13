@@ -18,7 +18,7 @@ namespace ExchangeRateService.Controllers
             _repo = repo;
         }
 
-        [HttpGet("rates")]
+        [HttpGet("Rates")]
         public ActionResult<IEnumerable<ExchangeRate>> GetExchangeRates()
         {
             try
@@ -32,7 +32,7 @@ namespace ExchangeRateService.Controllers
         }
 
 
-        [HttpGet("currencies")]
+        [HttpGet("Currencies")]
         public ActionResult<IEnumerable<ActiveCurrency>> GetActiveCurrencies()
         {
             try
@@ -46,7 +46,7 @@ namespace ExchangeRateService.Controllers
         }
 
         [HttpGet("OnCurrency")]
-        ActionResult<IEnumerable<ExchangeRate>> GetRatesByCurrency(string currencyAbbreviation)
+        public ActionResult<IEnumerable<ExchangeRate>> GetRatesByCurrency(string currencyAbbreviation)
         {
             try
             {
