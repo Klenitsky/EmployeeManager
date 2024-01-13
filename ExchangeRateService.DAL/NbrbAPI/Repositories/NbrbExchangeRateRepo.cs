@@ -55,7 +55,7 @@ namespace ExchangeRateService.DAL.NbrbAPI.Repositories
             {
                 var currentDateRate = GetExchangeRateByDateAndCurrencyOnRequest(currencyAbbreviation, startDate);
                 rates.Add(currentDateRate);
-                startDate.AddDays(1);
+                startDate = startDate.AddDays(1);
             }
 
             return rates;
@@ -85,7 +85,7 @@ namespace ExchangeRateService.DAL.NbrbAPI.Repositories
             {
                 var currentDateRates = GetExchangeRatesByDateOnRequest(startDate);
                 rates.AddRange(currentDateRates);
-                startDate.AddDays(1);
+                startDate =  startDate.AddDays(1);
             }
 
             return rates;
@@ -127,7 +127,7 @@ namespace ExchangeRateService.DAL.NbrbAPI.Repositories
                 {
                     rates.AddRange(currentDateRates);
                 }
-                startDate.AddDays(1);
+               startDate =  startDate.AddDays(1);
             }
 
             return rates;
@@ -150,7 +150,7 @@ namespace ExchangeRateService.DAL.NbrbAPI.Repositories
                 {
                     rates.Add(currentDateRate);
                 }
-                startDate.AddDays(1);
+                startDate = startDate.AddDays(1);
             }
 
             return rates;
@@ -162,6 +162,7 @@ namespace ExchangeRateService.DAL.NbrbAPI.Repositories
             var rate = _reader.ReadRate(date, currencyAbbreviation);
             var exchangeRate = _rateConverter.ConvertToExchangeRate(rate);
             _dbContext.ExchangeRates.Add(exchangeRate);
+            _dbContext.SaveChanges();
             return exchangeRate;
 
         }
