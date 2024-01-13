@@ -18,7 +18,7 @@ namespace ExchangeRateService.DAL.BasicStructures.CurrencyLoaders
         {
             //TODO: 
             //Move this connection string to the settings file, and configure it to use everything via docker
-            string connectionString = "https://localhost:7054/api/EmployeeService/Currency";
+            string connectionString = "https://localhost:44316/api/EmployeeService/Currency";
 
             HttpClient httpClient = new HttpClient();
             IEnumerable<Currency> currencies =  httpClient.GetFromJsonAsync<IEnumerable<Currency>>(connectionString).Result;
@@ -38,6 +38,7 @@ namespace ExchangeRateService.DAL.BasicStructures.CurrencyLoaders
                     dbContext.ActiveCurrencies.Add(activeCurrency);
                 }
             }
+            dbContext.SaveChanges();
         }
     }
 }
