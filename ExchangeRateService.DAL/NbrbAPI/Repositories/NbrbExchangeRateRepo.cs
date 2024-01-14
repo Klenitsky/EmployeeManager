@@ -34,29 +34,14 @@ namespace ExchangeRateService.DAL.NbrbAPI.Repositories
 
         public ExchangeRate GetExchangeRateByDateAndCurrencyOnRequest(string currencyAbbreviation, DateTime date)
         {
-            var exchangeRate = GetExchangeRateByDateAndCurrencyInSystem(currencyAbbreviation, date);
-
-            if(exchangeRate != null)
-            {
-                return exchangeRate;
-            }
-            else
-            {
-                ExchangeRate loadedRate = LoadRate(currencyAbbreviation, date);
-                return loadedRate;
-            }
+            var exchangeRate = LoadRateByDateRangeAndCurrency(currencyAbbreviation, date, date).First();
+            return exchangeRate;
 
         }
 
         public IEnumerable<ExchangeRate> GetExchangeRatesByDateRangeAndCurrencyOnRequest(string currencyAbbreviation, DateTime startDate, DateTime endDate)
         {
-            List<ExchangeRate> rates = new List<ExchangeRate>();
-            while(startDate <= endDate)
-            {
-                var currentDateRate = GetExchangeRateByDateAndCurrencyOnRequest(currencyAbbreviation, startDate);
-                rates.Add(currentDateRate);
-                startDate = startDate.AddDays(1);
-            }
+            var rates = LoadRateByDateRangeAndCurrency(currencyAbbreviation, startDate, endDate);
 
             return rates.OrderBy(r => r.Date);
         }
@@ -71,7 +56,7 @@ namespace ExchangeRateService.DAL.NbrbAPI.Repositories
             List<string?> currencyAbbreviations = _dbContext.ActiveCurrencies.Select(c=>c.Abbreviation).ToList();
             foreach (var currencyAbbreviation in currencyAbbreviations)
             {
-                var exchangeRate = GetExchangeRateByDateAndCurrencyOnRequest(currencyAbbreviation,date);
+                var exchangeRate = LoadRateByDateRangeAndCurrency(currencyAbbreviation, date, date).First(); ;
                 rates.Add(exchangeRate);
             }
 
@@ -97,7 +82,7 @@ namespace ExchangeRateService.DAL.NbrbAPI.Repositories
 
         public IEnumerable<ExchangeRate>? GetExchangeRatesByCurrencyInSystem(string currencyAbbreviation)
         {
-            return _dbContext.ExchangeRates.Where(r => r.Abbreviation == currencyAbbreviation);
+            return _dbContext.ExchangeRates.Where(r => r.Abbreviation == currencyAbbreviation).OrderBy(r => r.Date);
         }
 
         public IEnumerable<ExchangeRate>? GetExchangeRatesByDateInSystem(DateTime date)
@@ -157,13 +142,32 @@ namespace ExchangeRateService.DAL.NbrbAPI.Repositories
         }
 
 
-        private ExchangeRate LoadRate(string currencyAbbreviation, DateTime date)
+        private IEnumerable<ExchangeRate> LoadRateByDateRangeAndCurrency(string currencyAbbreviation, DateTime startDate,DateTime endDate)
         {
-            var rate = _reader.ReadRate(date, currencyAbbreviation);
-            var exchangeRate = _rateConverter.ConvertToExchangeRate(rate);
-            _dbContext.ExchangeRates.Add(exchangeRate);
+            List<ExchangeRate> rates = new List<ExchangeRate>();
+            while (startDate <= endDate)
+            {
+                var rateInSystem = _dbContext.ExchangeRates
+                                         .Where(r => (r.Abbreviation.ToUpper() == currencyAbbreviation.ToUpper()) && r.Date == startDate)
+                                         .FirstOrDefault();
+                if (rateInSystem == null)
+                {
+                    var rate = _reader.ReadRate(startDate, currencyAbbreviation);
+                    var exchangeRate = _rateConverter.ConvertToExchangeRate(rate);
+                    _dbContext.ExchangeRates.Add(exchangeRate);
+                    rates.Add(exchangeRate);
+                }
+                else
+                {
+                    rates.Add(rateInSystem);
+                }
+
+                startDate = startDate.AddDays(1);
+
+            }
+          
             _dbContext.SaveChanges();
-            return exchangeRate;
+            return rates;
 
         }
 
