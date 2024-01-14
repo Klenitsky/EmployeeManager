@@ -22,5 +22,11 @@ namespace EmployeeService.Models
 
         [Required,Range(0.0,float.MaxValue)]
         public float Salary {  get; set; }
+
+        [Required,Column(TypeName ="datetime2")]
+        public DateTime EmploymentDate { get; set; }
+
+        [Column(TypeName = "datetime2")]
+        public DateTime? DismissalDate { get; set; }
     }
 }

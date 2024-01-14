@@ -72,5 +72,51 @@ namespace EmployeeService.DAL.Repositories
                     .ThenInclude(c => c.Currency)
                     .FirstOrDefault();
         }
+
+        public override int Add(Employee entity, bool persist = true)
+        {
+            if(entity.DismissalDate != null && entity.DismissalDate < entity.EmploymentDate) 
+            {
+                throw new ArgumentException("Employment terms violated");
+            }
+            Table.Add(entity);
+            return persist ? SaveChanges() : 0;
+        }
+
+        public override int AddRange(IEnumerable<Employee> entities, bool persist = true)
+        {
+            foreach(var entity in entities)
+            {
+                if (entity.DismissalDate != null && entity.DismissalDate < entity.EmploymentDate)
+                {
+                    throw new ArgumentException("Employment terms violated");
+                }
+            }
+            Table.AddRange(entities);
+            return persist ? SaveChanges() : 0;
+        }
+
+        public override int Update(Employee entity, bool persist = true)
+        {
+            if (entity.DismissalDate != null && entity.DismissalDate < entity.EmploymentDate)
+            {
+                throw new ArgumentException("Employment terms violated");
+            }
+            Table.Update(entity);
+            return persist ? SaveChanges() : 0;
+        }
+
+        public override int UpdateRange(IEnumerable<Employee> entities, bool persist = true)
+        {
+            foreach (var entity in entities)
+            {
+                if (entity.DismissalDate != null && entity.DismissalDate < entity.EmploymentDate)
+                {
+                    throw new ArgumentException("Employment terms violated");
+                }
+            }
+            Table.UpdateRange(entities);
+            return persist ? SaveChanges() : 0;
+        }
     }
 }
