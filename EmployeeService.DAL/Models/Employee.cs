@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace EmployeeService.Models
+namespace EmployeeService.DAL.Models
 {
     public class Employee : BaseModel
     {

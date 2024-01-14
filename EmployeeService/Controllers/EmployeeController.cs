@@ -1,6 +1,6 @@
 ﻿using EmployeeService.DAL.Contexts;
 using EmployeeService.DAL.Repositories;
-using EmployeeService.Models;
+using EmployeeService.DAL.Models;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
