@@ -8,8 +8,11 @@
 
   <ItemGroup>
     <Folder Include="Models\" />
-    <Folder Include="DataReaders\" />
-    <Folder Include="Reports\Interfaces\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\EmployeeService.DAL\EmployeeService.DAL.csproj" />
+    <ProjectReference Include="..\ExchangeRateService.DAL\ExchangeRateService.DAL.csproj" />
   </ItemGroup>
 
 </Project>
