@@ -19,8 +19,7 @@ namespace EmployeeService.Controllers
         }
 
 
-        [HttpGet]
-        [Route("")]
+        [HttpGet("")]
         public ActionResult<IEnumerable<Currency>> GetAll()
         {
             try
@@ -33,7 +32,7 @@ namespace EmployeeService.Controllers
             }
         }
 
-        [HttpGet("find/{id}")]
+        [HttpGet("Find/{id}")]
         public ActionResult<Currency> Find(int id)
         {
             Country answer = _countryRepo.Find(id);

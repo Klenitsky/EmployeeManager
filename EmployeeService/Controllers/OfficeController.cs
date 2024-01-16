@@ -34,7 +34,7 @@ namespace EmployeeService.Controllers
             }
         }
 
-        [HttpGet("find/{id}")]
+        [HttpGet("Find/{id}")]
         public ActionResult<Office> Find(int id)
         {
             Office answer = _officeRepo.Find(id);
