@@ -17,13 +17,11 @@ namespace ReportService.Structures.Reports.ExchangeRateOnDateRange
         private Dictionary<Currency, float> _includedCurrencies { get; set; }
         private List<ExchangeRate> _exchangeRates { get; set; }
 
-        private string _connectionStringEmployeeService;
         private string _connectionStringExchangeRateService;
 
-        public ExchangeRateOnDateRangeReportBuilder(string EmployeeConnectionString, string ExchangeRateConnectionString)
+        public ExchangeRateOnDateRangeReportBuilder( string ExchangeRateConnectionString)
         {
             _connectionStringExchangeRateService = ExchangeRateConnectionString;
-            _connectionStringEmployeeService = EmployeeConnectionString;
         }
 
         public void SetProperties(DateTime startDate, DateTime endDate, IEnumerable<Currency> includedCurrencies)

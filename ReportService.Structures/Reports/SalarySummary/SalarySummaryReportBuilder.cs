@@ -1,5 +1,6 @@
 ﻿using EmployeeService.DAL.Models;
 using ExchangeRateService.DAL.BasicStructures.Models;
+using ReportService.Structures.DataReaders;
 using ReportService.Structures.Reports.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -53,13 +54,13 @@ namespace ReportService.Structures.Reports.SalarySummary
 
         public void IncludeFullCountriesParams(IEnumerable<Country> countries)
         {
+            CompanyInfoReader reader = new CompanyInfoReader(connectionStringEmployeeService); 
             foreach (var country in countries)
             {
                 if (_includedCountries.Where(c => c.Key.Id == country.Id).Count() == 0)
                 {
                     _includedCountries.Add(country, new StatisticMetric());
-                    HttpClient httpClient = new HttpClient();
-                    IEnumerable<Office> officesInCountry = httpClient.GetFromJsonAsync<IEnumerable<Office>>(connectionStringEmployeeService + "/api/EmployeeService/Office/FindByCountry/" + country.Id).Result;
+                    IEnumerable<Office> officesInCountry = reader.FindOfficesByCountry(country.Id);
                     foreach(var office in officesInCountry)
                     {
                         if(_includedOffices.Where(o=>o.Key.Id == office.Id).Count() == 0)
@@ -74,42 +75,38 @@ namespace ReportService.Structures.Reports.SalarySummary
 
         public void CountMetrics()
         {
-            foreach (var office in _includedOffices)
+            foreach (var officeKey in _includedOffices.Keys)
             {
-                office.Value.SalarySummary = 0;
-                office.Value.AverageSalary = 0;
-                office.Value.NumberOfEmployees = 0;
-                List<Employee> employees = _includedEmployees.Where(e => (e.OfficeId == office.Key.Id) && (e.EmploymentDate <= _date && (e.DismissalDate == null || e.DismissalDate >= _date))).ToList();
+                _includedOffices[officeKey] = new StatisticMetric { AverageSalary = 0, NumberOfEmployees = 0, SalarySummary = 0 };
+                List<Employee> employees = _includedEmployees.Where(e => (e.OfficeId == officeKey.Id) && (e.EmploymentDate <= _date && (e.DismissalDate == null || e.DismissalDate >= _date))).ToList();
                 foreach (var employee in employees)
                 {
                     var exchangeRate = _includedExchangeRates.Where(r => r.Abbreviation == _includedCurrencies.Where(c => c.Id == employee.CurrencyId).First().Abbreviation).First();
-                    office.Value.SalarySummary += employee.Salary * exchangeRate.Rate / exchangeRate.Scale;
-                    office.Value.NumberOfEmployees += 1;
+                    _includedOffices[officeKey].SalarySummary += employee.Salary * exchangeRate.Rate / exchangeRate.Scale;
+                    _includedOffices[officeKey].NumberOfEmployees += 1;
                 }
-                office.Value.AverageSalary = office.Value.SalarySummary / office.Value.NumberOfEmployees;
+                _includedOffices[officeKey].AverageSalary = _includedOffices[officeKey].SalarySummary / _includedOffices[officeKey].NumberOfEmployees;
             }
 
-            foreach (var country in _includedCountries)
+            foreach (var country in _includedCountries.Keys)
             {
-                country.Value.SalarySummary = 0;
-                country.Value.AverageSalary = 0;
-                country.Value.NumberOfEmployees = 0;
-                List<KeyValuePair<Office, StatisticMetric>> officesInCountry = _includedOffices.Where(o => o.Key.CountryId == country.Key.Id).ToList();
-                foreach (var office in officesInCountry)
+                _includedCountries[country] = new StatisticMetric { AverageSalary = 0, NumberOfEmployees = 0, SalarySummary = 0 };
+                List<Office> officesInCountryKeys = _includedOffices.Keys.Where(o => o.CountryId == country.Id).ToList();
+                foreach (var office in officesInCountryKeys)
                 {
-                    country.Value.SalarySummary += office.Value.SalarySummary;
-                    country.Value.NumberOfEmployees += office.Value.NumberOfEmployees;
+                    _includedCountries[country].SalarySummary += _includedOffices[office].SalarySummary;
+                    _includedCountries[country].NumberOfEmployees += _includedOffices[office].NumberOfEmployees;
                 }
-                country.Value.AverageSalary = country.Value.SalarySummary / country.Value.NumberOfEmployees;
+                _includedCountries[country].AverageSalary = _includedCountries[country].SalarySummary / _includedCountries[country].NumberOfEmployees;
             }
 
             _generalStatistics.SalarySummary = 0;
             _generalStatistics.NumberOfEmployees = 0;
             _generalStatistics.AverageSalary = 0;
-            foreach (var country in _includedCountries)
+            foreach (var country in _includedCountries.Keys)
             {
-                _generalStatistics.SalarySummary += country.Value.SalarySummary;
-                _generalStatistics.NumberOfEmployees += country.Value.NumberOfEmployees;
+                _generalStatistics.SalarySummary += _includedCountries[country].SalarySummary;
+                _generalStatistics.NumberOfEmployees += _includedCountries[country].NumberOfEmployees;
             }
             _generalStatistics.AverageSalary = _generalStatistics.SalarySummary / _generalStatistics.NumberOfEmployees;
         }
@@ -128,18 +125,19 @@ namespace ReportService.Structures.Reports.SalarySummary
 
         public void LoadData()
         {
+            CompanyInfoReader companyInfoReader = new CompanyInfoReader(connectionStringEmployeeService);
+            ExchangeRateReader exchangeRateReader = new ExchangeRateReader(connectionStringExchangeRateService);
             foreach(var office in _includedOffices)
             {
-                HttpClient httpClient = new HttpClient();
 
-                List<Employee> employees = httpClient.GetFromJsonAsync<IEnumerable<Employee>>(connectionStringEmployeeService+ "/api/EmployeeService/Employee/FindByOffice/"+office.Key.Id).Result.ToList();
+                List<Employee> employees = companyInfoReader.FindEmployeesByOffice(office.Key.Id).ToList();
                 _includedEmployees.AddRange(employees);
                 foreach(var employee in employees)
                 {
                     if (!_includedCurrencies.Contains(employee.CurrencyNavigation))
                     {
                         _includedCurrencies.Add(employee.CurrencyNavigation);
-                        ExchangeRate rate = httpClient.GetFromJsonAsync<ExchangeRate>(connectionStringExchangeRateService + "/api/ExchangeRate/OnDateAndCurrency?date=" + _date.ToString("yyyy-MM-dd") + "&currencyAbbreviation=" + employee.CurrencyNavigation.Abbreviation).Result;
+                        ExchangeRate rate = exchangeRateReader.GetByDateAndCurrency(_date, employee.CurrencyNavigation.Abbreviation);
                         _includedExchangeRates.Add(rate);
                     }
                 }

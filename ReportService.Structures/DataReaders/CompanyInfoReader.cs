@@ -57,7 +57,7 @@ namespace ReportService.Structures.DataReaders
 
         }
 
-        public IEnumerable<Office> FindOfficesByOffice(int countryId)
+        public IEnumerable<Office> FindOfficesByCountry(int countryId)
         {
             List<Office> offices = _httpClient.GetFromJsonAsync<IEnumerable < Office >> (_connectionString + "api/EmployeeService/Office/FindByCountry/" + countryId).Result.ToList();
             return offices;
