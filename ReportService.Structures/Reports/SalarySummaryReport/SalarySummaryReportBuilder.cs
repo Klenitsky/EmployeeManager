@@ -25,9 +25,10 @@ namespace ReportService.Structures.Reports.SalarySummaryReport
         private DateTime _date;
 
 
-        public SalarySummaryReportBuilder(string connectionString)
+        public SalarySummaryReportBuilder(string connectionStringEmployeeService, string connectionStringExchangeRateService)
         {
-            this.connectionStringEmployeeService = connectionString;
+            this.connectionStringEmployeeService = connectionStringEmployeeService;
+            this.connectionStringExchangeRateService = connectionStringExchangeRateService;
         }
 
         public void SetDate(DateTime date)
