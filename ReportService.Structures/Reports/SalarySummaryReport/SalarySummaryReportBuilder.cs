@@ -18,7 +18,8 @@ namespace ReportService.Structures.Reports.SalarySummaryReport
         private List<Currency> _includedCurrencies = new List<Currency>();
         private List<ExchangeRate> _includedExchangeRates = new List<ExchangeRate>();
 
-        private string connectionString;
+        private string connectionStringEmployeeService;
+        private string connectionStringExchangeRateService;
 
         private StatisticMetric _generalStatistics= new StatisticMetric();
         private DateTime _date;
@@ -26,7 +27,7 @@ namespace ReportService.Structures.Reports.SalarySummaryReport
 
         public SalarySummaryReportBuilder(string connectionString)
         {
-            this.connectionString = connectionString;
+            this.connectionStringEmployeeService = connectionString;
         }
 
         public void SetDate(DateTime date)
@@ -57,7 +58,7 @@ namespace ReportService.Structures.Reports.SalarySummaryReport
                 {
                     _includedCountries.Add(country, new StatisticMetric());
                     HttpClient httpClient = new HttpClient();
-                    IEnumerable<Office> officesInCountry = httpClient.GetFromJsonAsync<IEnumerable<Office>>(connectionString + "/api/EmployeeService/Office/FindByCountry/" + country.Id).Result;
+                    IEnumerable<Office> officesInCountry = httpClient.GetFromJsonAsync<IEnumerable<Office>>(connectionStringEmployeeService + "/api/EmployeeService/Office/FindByCountry/" + country.Id).Result;
                     foreach(var office in officesInCountry)
                     {
                         if(_includedOffices.Where(o=>o.Key.Id == office.Id).Count() == 0)
@@ -130,13 +131,15 @@ namespace ReportService.Structures.Reports.SalarySummaryReport
             {
                 HttpClient httpClient = new HttpClient();
 
-                List<Employee> employees = httpClient.GetFromJsonAsync<IEnumerable<Employee>>(connectionString+ "/api/EmployeeService/Employee/FindByOffice/"+office.Key.Id).Result.ToList();
+                List<Employee> employees = httpClient.GetFromJsonAsync<IEnumerable<Employee>>(connectionStringEmployeeService+ "/api/EmployeeService/Employee/FindByOffice/"+office.Key.Id).Result.ToList();
                 _includedEmployees.AddRange(employees);
                 foreach(var employee in employees)
                 {
                     if (!_includedCurrencies.Contains(employee.CurrencyNavigation))
                     {
                         _includedCurrencies.Add(employee.CurrencyNavigation);
+                        ExchangeRate rate = httpClient.GetFromJsonAsync<ExchangeRate>(connectionStringExchangeRateService + "/api/ExchangeRate/OnDateAndCurrency?date=" + _date.ToString("yyyy-MM-dd") + "&currencyAbbreviation=" + employee.CurrencyNavigation.Abbreviation).Result;
+                        _includedExchangeRates.Add(rate);
                     }
                 }
             }
