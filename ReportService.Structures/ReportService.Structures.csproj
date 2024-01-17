@@ -7,7 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Models\" />
+    <Folder Include="Reports\ExchangeRateOnDateReport\" />
+    <Folder Include="Reports\PaymentOnPeriodReport\" />
   </ItemGroup>
 
   <ItemGroup>
