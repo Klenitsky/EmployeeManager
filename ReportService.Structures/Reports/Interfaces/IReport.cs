@@ -14,8 +14,5 @@ namespace ReportService.Structures.Reports.Interfaces
         public void PrintToCSV(string filename);
         public void PrintToPDF(string filename);
         public void PrintToTXT(string filename);
-
-        public void LoadFromTXT(string filename);
-        public void LoadFromXLSX(string filename);
     }
 }
