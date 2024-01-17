@@ -34,7 +34,7 @@ namespace EmployeeService.Controllers
             }
         }
 
-        [HttpGet("find/{id}")]
+        [HttpGet("Find/{id}")]
         public ActionResult<Employee> Find(int id)
         {
             Employee answer = _employeeRepo.Find(id);
@@ -48,7 +48,7 @@ namespace EmployeeService.Controllers
             }
         }
 
-        [HttpGet("findByOffice/{officeId}")]
+        [HttpGet("FindByOffice/{officeId}")]
         public ActionResult<IEnumerable<Employee>> FindByOffice(int officeId)
         {
             IEnumerable<Employee> answer = _employeeRepo.GetAllByOffice(officeId);
