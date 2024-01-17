@@ -8,7 +8,7 @@ using System.Net.Http.Json;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ReportService.Structures.Reports.SalarySummaryReport
+namespace ReportService.Structures.Reports.SalarySummary
 {
     public class SalarySummaryReportBuilder : IReportBuilder<SalarySummaryReport>
     {

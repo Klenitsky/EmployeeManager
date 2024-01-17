@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ReportService.Structures.Reports.SalarySummaryReport
+namespace ReportService.Structures.Reports.SalarySummary
 {
     public class StatisticMetric
     {
