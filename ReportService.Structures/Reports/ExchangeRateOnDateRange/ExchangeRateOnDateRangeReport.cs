@@ -1,5 +1,6 @@
 ﻿using EmployeeService.DAL.Models;
 using ExchangeRateService.DAL.BasicStructures.Models;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using OfficeOpenXml;
 using ReportService.Structures.Reports.Interfaces;
 using System;
@@ -17,20 +18,43 @@ namespace ReportService.Structures.Reports.ExchangeRateOnDateRange
         public Dictionary<Currency,float> IncludedCurrencies { get; set; }
         public List<ExchangeRate> ExchangeRates { get; set; }
 
-        public void PrintToPDF(string filename)
-        {
-            throw new NotImplementedException();
-        }
 
         public void PrintToTXT(string filename)
         {
-            throw new NotImplementedException();
+            using (StreamWriter writer = new StreamWriter(filename))
+            {
+                writer.Write("Date:");
+                foreach (var currency in IncludedCurrencies)
+                {
+                    writer.Write("  ");
+                    writer.Write(currency.Key.Abbreviation + "(" + ExchangeRates.Where(r => (r.Abbreviation == currency.Key.Abbreviation)).First().Scale + ")");
+                }
+                writer.WriteLine();
+
+                var currentDate = StartDate;
+
+       
+                while (currentDate <= EndDate)
+                {
+                    
+                    writer.Write(currentDate.ToString("yyyy-MM-dd"));
+                    foreach (var currency in IncludedCurrencies)
+                    { 
+                        writer.Write("  ");
+                        writer.Write(ExchangeRates.Where(r => (r.Abbreviation == currency.Key.Abbreviation) && (r.Date == currentDate)).First().Rate);
+                    }
+                    writer.WriteLine();
+                    currentDate = currentDate.AddDays(1);                   
+                }
+
+                writer.Write("Average:  ");
+                foreach (var currency in IncludedCurrencies)
+                {
+                    writer.Write( currency.Value+"  ");
+                }
+            }
         }
 
-        public void PrintToWord(string filename)
-        {
-            throw new NotImplementedException();
-        }
 
         public void PrintToXLSX(string filename)
         {
