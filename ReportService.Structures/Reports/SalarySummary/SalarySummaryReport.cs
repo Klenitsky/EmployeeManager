@@ -21,14 +21,6 @@ namespace ReportService.Structures.Reports.SalarySummary
 
         public StatisticMetric GeneralStatistics { get; set; }
 
-
-
-
-        public void PrintToCSV(string filename)
-        {
-            throw new NotImplementedException();
-        }
-
         public void PrintToPDF(string filename)
         {
             throw new NotImplementedException();
@@ -49,9 +41,5 @@ namespace ReportService.Structures.Reports.SalarySummary
             throw new NotImplementedException();
         }
 
-        public void PrintToXML(string filename)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

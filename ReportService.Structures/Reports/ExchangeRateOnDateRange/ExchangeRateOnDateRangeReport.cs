@@ -17,11 +17,6 @@ namespace ReportService.Structures.Reports.ExchangeRateOnDateRange
         public Dictionary<Currency,float> IncludedCurrencies { get; set; }
         public List<ExchangeRate> ExchangeRates { get; set; }
 
-        public void PrintToCSV(string filename)
-        {
-            throw new NotImplementedException();
-        }
-
         public void PrintToPDF(string filename)
         {
             throw new NotImplementedException();
@@ -90,9 +85,5 @@ namespace ReportService.Structures.Reports.ExchangeRateOnDateRange
             File.WriteAllBytes(filename, reportData);
         }
 
-        public void PrintToXML(string filename)
-        {
-            throw new NotImplementedException();
-        }
     }
 }
