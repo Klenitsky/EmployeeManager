@@ -11,6 +11,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="EPPlus" Version="7.0.6" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\EmployeeService.DAL\EmployeeService.DAL.csproj" />
     <ProjectReference Include="..\ExchangeRateService.DAL\ExchangeRateService.DAL.csproj" />
   </ItemGroup>
