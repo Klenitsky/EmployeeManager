@@ -60,12 +60,12 @@ namespace ReportService.Structures.Reports.ExchangeRateOnDateRange
         {
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             var package = new ExcelPackage();
-            var sheet = package.Workbook.Worksheets.Add("Salary Report");
+            var sheet = package.Workbook.Worksheets.Add("Exchange Rate Report");
             sheet.Cells["A1"].Value = "Date";
             int index = 2;
             foreach(var currency in IncludedCurrencies)
             {
-                sheet.Cells[index,1].Value = currency.Key.Abbreviation +"("+ ExchangeRates.Where(r => (r.Abbreviation == currency.Key.Abbreviation)).First().Scale+")";
+                sheet.Cells[1,index].Value = currency.Key.Abbreviation +"("+ ExchangeRates.Where(r => (r.Abbreviation == currency.Key.Abbreviation)).First().Scale+")";
                 index++;
             }
 
@@ -76,35 +76,34 @@ namespace ReportService.Structures.Reports.ExchangeRateOnDateRange
             while (currentDate <=EndDate)
             {
               
-                sheet.Cells[1,index].Value = currentDate.ToString("yyyy-MM-dd");
+                sheet.Cells[index,1].Value = currentDate.ToString("yyyy-MM-dd");
                 horizontalIndex = 2;
                 foreach (var currency in IncludedCurrencies)
                 {
-                    sheet.Cells[horizontalIndex, index].Value = ExchangeRates.Where(r => (r.Abbreviation == currency.Key.Abbreviation) && (r.Date == currentDate)).First().Rate;
+                    sheet.Cells[index,horizontalIndex].Value = ExchangeRates.Where(r => (r.Abbreviation == currency.Key.Abbreviation) && (r.Date == currentDate)).First().Rate;
                 }
                 currentDate = currentDate.AddDays(1);
                 index++;
             }
 
-            sheet.Cells[1, index].Value = "Average:";
+            sheet.Cells[index,1].Value = "Average:";
             horizontalIndex = 2;
             foreach (var currency in IncludedCurrencies)
             {
-                sheet.Cells[horizontalIndex, index].Value = currency.Value;
+                sheet.Cells[index,horizontalIndex].Value = currency.Value;
                 
                 horizontalIndex++;
             }
-            sheet.Cells[1, 1, horizontalIndex, index].AutoFitColumns();
+            sheet.Cells[1, 1, index,horizontalIndex].AutoFitColumns();
             for(int i=1; i <= horizontalIndex;i++)
             {
                 for(int j = 1; j <= index; j++)
                 {
-                    sheet.Cells[i, j].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Thin);
+                    sheet.Cells[j,i].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Thin);
                 }
             }
 
-
-
+            package.Save();
             byte[] reportData = package.GetAsByteArray();
             File.WriteAllBytes(filename, reportData);
         }
