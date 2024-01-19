@@ -55,20 +55,25 @@ namespace ReportService.Structures.Reports.SalarySummary
             sheet.Cells[1, 1, 1, 6].Merge = true;
             sheet.Cells[1, 1, 1, 6].Value = "Salary Report on " + Date.ToString("yyyy-MM-dd");
             sheet.Cells[1, 1, 1, 6].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Thin);
+            sheet.Cells[1, 1, 1, 6].AutoFitColumns();
             sheet.Cells[2,1,3,1].Merge= true;
             sheet.Cells[2, 1, 3, 1].Value = "Country";
             sheet.Cells[2, 1, 3, 1].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Thin);
             sheet.Cells[2, 1, 3, 1].Style.VerticalAlignment = OfficeOpenXml.Style.ExcelVerticalAlignment.Center;
             sheet.Cells[2, 1, 3, 1].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+            sheet.Cells[2, 1, 3, 1].AutoFitColumns();
             sheet.Cells[2, 2, 3, 2].Merge = true;
             sheet.Cells[2, 2, 3, 2].Value = "Office";
             sheet.Cells[2, 2, 3, 2].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Thin);
             sheet.Cells[2, 2, 3, 2].Style.VerticalAlignment = OfficeOpenXml.Style.ExcelVerticalAlignment.Center;
             sheet.Cells[2, 2, 3, 2].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
-            sheet.Cells[2, 3, 3, 6].Merge = true;
-            sheet.Cells[2, 3, 3, 6].Value = "Employees";
-            sheet.Cells[2, 3, 3, 6].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Thin);
-            sheet.Cells[2, 3, 3, 6].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+            sheet.Cells[2, 2, 3, 2].AutoFitColumns();
+            sheet.Cells[2, 3, 2, 6].Merge = true;
+            sheet.Cells[2, 3, 2, 6].Value = "Employees";
+            sheet.Cells[2, 3, 2, 6].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Thin);
+            sheet.Cells[2, 3, 2, 6].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+            sheet.Cells[2, 3, 2, 6].AutoFitColumns();
+
             sheet.Cells[3, 3].Value = "First Name";
             sheet.Cells[3, 3].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Thin);
             sheet.Cells[3, 4].Value = "Last Name";
@@ -77,8 +82,8 @@ namespace ReportService.Structures.Reports.SalarySummary
             sheet.Cells[3, 5].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Thin);
             sheet.Cells[3, 6].Value = "Salary Amount";
             sheet.Cells[3, 6].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Thin);
-
-            int verticalIndex = 3;
+            sheet.Cells[3, 3, 3, 6].AutoFitColumns();
+            int verticalIndex = 4;
 
             foreach (var country in IncludedCountriesMetrics)
             {
@@ -128,6 +133,7 @@ namespace ReportService.Structures.Reports.SalarySummary
                     sheet.Cells[j, i].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Thin);
                 }
             }
+            sheet.Cells[4, 1, verticalIndex, 8].AutoFitColumns();
             package.Save();
 
 
