@@ -12,7 +12,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ReportService.Structures.Reports.PaymentOnDateRange
 {
-    internal class PaymentOnDateRangeReport : IReport
+    public class PaymentOnDateRangeReport : IReport
     {
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }

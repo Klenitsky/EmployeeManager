@@ -186,7 +186,7 @@ namespace ReportService.Structures.Reports.PaymentOnDateRange
             }
         }
 
-        PaymentOnDateRangeReport IReportBuilder<PaymentOnDateRangeReport>.GetResult()
+        public PaymentOnDateRangeReport GetResult()
         {
             return new PaymentOnDateRangeReport()
             {
