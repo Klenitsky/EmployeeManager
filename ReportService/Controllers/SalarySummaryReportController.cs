@@ -12,7 +12,7 @@ namespace ReportService.Controllers
     {
 
         private string _exchangeRateApiConnectionString = "https://localhost:44341/";
-        private string _EmployeeApiConnectionString = "https://localhost:7054/";
+        private string _EmployeeApiConnectionString = "https://localhost:44316/";
 
         SalarySummaryReportBuilder _salarySummaryReportBuilder;
 
