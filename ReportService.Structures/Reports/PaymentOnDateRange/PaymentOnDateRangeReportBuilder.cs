@@ -33,6 +33,11 @@ namespace ReportService.Structures.Reports.PaymentOnDateRange
         {
             this.connectionStringEmployeeService = connectionStringEmployeeService;
             this.connectionStringExchangeRateService = connectionStringExchangeRateService;
+            _includedEmployees = new Dictionary<Employee, float>();
+            _includedCurrencies = new List<Currency>();
+            _includedExchangeRates = new List<ExchangeRate>();
+            _includedOfficesMetrics = new Dictionary<Office, float>();  
+            _includedCountriesMetrics = new Dictionary<Country, float>();
         }
 
 

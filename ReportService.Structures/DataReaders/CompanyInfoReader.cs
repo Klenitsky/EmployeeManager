@@ -24,42 +24,48 @@ namespace ReportService.Structures.DataReaders
 
         public IEnumerable<Employee> GetEmployees()
         {
-            List<Employee> employees = _httpClient.GetFromJsonAsync<IEnumerable<Employee>>(_connectionString + "api/EmployeeService/Employee").Result.ToList();
+            string url = _connectionString + "/Employee";
+            List<Employee> employees = _httpClient.GetFromJsonAsync<IEnumerable<Employee>>(url).Result.ToList();
             return employees;
 
         }
 
         public Employee FindEmployeeById(int id)
         {
-            Employee employee = _httpClient.GetFromJsonAsync<Employee>(_connectionString + "api/EmployeeService/Employee/Find/"+id).Result;
+            string url = _connectionString + "/Employee/Find/" + id;
+            Employee employee = _httpClient.GetFromJsonAsync<Employee>(url).Result;
             return employee;
 
         }
 
         public IEnumerable<Employee> FindEmployeesByOffice(int officeId)
         {
-            List<Employee> employees = _httpClient.GetFromJsonAsync<IEnumerable<Employee>>(_connectionString + "api/EmployeeService/Employee/FindByOffice/"+officeId).Result.ToList();
+            string url = _connectionString + "/Employee/FindByOffice/" + officeId;
+            List<Employee> employees = _httpClient.GetFromJsonAsync<IEnumerable<Employee>>(url).Result.ToList();
             return employees;
 
         }
 
         public IEnumerable<Office> GetOffices()
         {
-            List<Office> offices = _httpClient.GetFromJsonAsync<IEnumerable<Office>>(_connectionString + "api/EmployeeService/Office").Result.ToList();
+            string url = _connectionString + "/Office";
+            List<Office> offices = _httpClient.GetFromJsonAsync<IEnumerable<Office>>(url).Result.ToList();
             return offices;
 
         }
 
         public Office FindOfficeById(int id)
         {
-            Office office = _httpClient.GetFromJsonAsync<Office>(_connectionString + "api/EmployeeService/Office/Find/" + id).Result;
+            string url = _connectionString + "/Office/Find/" + id;
+            Office office = _httpClient.GetFromJsonAsync<Office>(url).Result;
             return office;
 
         }
 
         public IEnumerable<Office> FindOfficesByCountry(int countryId)
         {
-            List<Office> offices = _httpClient.GetFromJsonAsync<IEnumerable < Office >> (_connectionString + "api/EmployeeService/Office/FindByCountry/" + countryId).Result.ToList();
+            string url = _connectionString + "/Office/FindByCountry/" + countryId;
+            List<Office> offices = _httpClient.GetFromJsonAsync<IEnumerable < Office >> (url).Result.ToList();
             return offices;
 
         }
@@ -67,28 +73,30 @@ namespace ReportService.Structures.DataReaders
 
         public IEnumerable<Country> GetCountries()
         {
-            List<Country> countries = _httpClient.GetFromJsonAsync<IEnumerable<Country>>(_connectionString + "api/EmployeeService/Country").Result.ToList();
+            string url = _connectionString + "/Country";
+            List<Country> countries = _httpClient.GetFromJsonAsync<IEnumerable<Country>>(url).Result.ToList();
             return countries;
 
         }
 
         public Country FindCountryById(int id)
         {
-            Country country = _httpClient.GetFromJsonAsync<Country>(_connectionString + "api/EmployeeService/Country/Find/" + id).Result;
+            string url = _connectionString + "/Country/Find/" + id;
+            Country country = _httpClient.GetFromJsonAsync<Country>(url).Result;
             return country;
 
         }
 
         public IEnumerable<Currency> GetCurrencies()
         {
-            List<Currency> currencies= _httpClient.GetFromJsonAsync<IEnumerable<Currency>>(_connectionString + "api/EmployeeService/Currency").Result.ToList();
+            List<Currency> currencies= _httpClient.GetFromJsonAsync<IEnumerable<Currency>>(_connectionString + "/Currency").Result.ToList();
             return currencies;
 
         }
 
         public Currency FindCurrrencyById(int id)
         {
-            Currency currency = _httpClient.GetFromJsonAsync<Currency>(_connectionString + "api/EmployeeService/Country/Find/" + id).Result;
+            Currency currency = _httpClient.GetFromJsonAsync<Currency>(_connectionString + "/Country/Find/" + id).Result;
             return currency;
 
         }

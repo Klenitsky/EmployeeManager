@@ -30,7 +30,12 @@ namespace ReportService.Structures.Reports.SalarySummary
         {
             this.connectionStringEmployeeService = connectionStringEmployeeService;
             this.connectionStringExchangeRateService = connectionStringExchangeRateService;
-        }
+            _includedOffices = new Dictionary<Office, StatisticMetric>();
+            _includedCountries = new Dictionary<Country, StatisticMetric>();
+            _includedEmployees = new List<Employee>();
+            _includedCurrencies = new List<Currency>();
+            _includedExchangeRates = new List<ExchangeRate>();
+    }
 
         public void SetDate(DateTime date)
         {

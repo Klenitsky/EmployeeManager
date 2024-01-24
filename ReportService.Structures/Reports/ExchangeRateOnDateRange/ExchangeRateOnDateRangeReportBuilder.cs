@@ -22,6 +22,8 @@ namespace ReportService.Structures.Reports.ExchangeRateOnDateRange
         public ExchangeRateOnDateRangeReportBuilder( string ExchangeRateConnectionString)
         {
             _connectionStringExchangeRateService = ExchangeRateConnectionString;
+            _includedCurrencies = new Dictionary<Currency, float>();
+            _exchangeRates = new List<ExchangeRate>();
         }
 
         public void SetProperties(DateTime startDate, DateTime endDate, IEnumerable<Currency> includedCurrencies)
