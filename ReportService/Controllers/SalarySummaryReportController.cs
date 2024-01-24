@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
+using ReportService.DataModels;
+using ReportService.Structures.Reports.PaymentOnDateRange;
 using ReportService.Structures.Reports.SalarySummary;
 
 namespace ReportService.Controllers
@@ -11,24 +13,27 @@ namespace ReportService.Controllers
     public class SalarySummaryReportController : ControllerBase
     {
 
-        private string _exchangeRateApiConnectionString = "https://localhost:44341/";
-        private string _EmployeeApiConnectionString = "https://localhost:44316/";
-
         SalarySummaryReportBuilder _salarySummaryReportBuilder;
 
-        public SalarySummaryReportController()
+        public SalarySummaryReportController(SalarySummaryReportBuilder builder)
         {
-            _salarySummaryReportBuilder = new SalarySummaryReportBuilder(_EmployeeApiConnectionString, _exchangeRateApiConnectionString);
+            _salarySummaryReportBuilder = builder;
 
             
         }
 
-        [HttpGet("")]
-        ActionResult<SalarySummaryReport> GetOnDateRange(DateTime date, IEnumerable<Office> includedOffices, IEnumerable<Country> includedCountries)
+        [HttpPost]
+        public IActionResult SetParameters(SalaryOnDayParametersModel args)
         {
-                _salarySummaryReportBuilder.SetDate(date);
-                _salarySummaryReportBuilder.IncludeOfficeParams(includedOffices);
-                _salarySummaryReportBuilder.IncludeFullCountriesParams(includedCountries);
+            _salarySummaryReportBuilder.SetDate(args.Date);
+            _salarySummaryReportBuilder.IncludeOfficeParams(args.IncludedOffices);
+            _salarySummaryReportBuilder.IncludeFullCountriesParams(args.IncludedCountries);
+            return Ok();
+        }
+
+        [HttpGet("")]
+        public ActionResult<SalarySummaryReport> GetOnDateRange()
+        {
                 _salarySummaryReportBuilder.LoadData();
                 _salarySummaryReportBuilder.CountMetrics();
                 return Ok(_salarySummaryReportBuilder.GetResult());

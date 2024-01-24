@@ -1,6 +1,7 @@
 ﻿using EmployeeService.DAL.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using ReportService.DataModels;
 using ReportService.Structures.Reports.ExchangeRateOnDateRange;
 using ReportService.Structures.Reports.PaymentOnDateRange;
 using ReportService.Structures.Reports.SalarySummary;
@@ -12,27 +13,30 @@ namespace ReportService.Controllers
     public class PaymentOnDateRangeReportController : ControllerBase
     {
 
-        private string _exchangeRateApiConnectionString = "https://localhost:44341/";
-        private string _EmployeeApiConnectionString = "https://localhost:44316/";
-
        PaymentOnDateRangeReportBuilder _paymentOnDateRangeReportBuilder;
 
-        public PaymentOnDateRangeReportController()
+        public PaymentOnDateRangeReportController(PaymentOnDateRangeReportBuilder builder)
         {
-            _paymentOnDateRangeReportBuilder = new PaymentOnDateRangeReportBuilder(_EmployeeApiConnectionString, _exchangeRateApiConnectionString);
+            _paymentOnDateRangeReportBuilder = builder;
 
 
         }
 
-        [HttpGet("")]
-        ActionResult<PaymentOnDateRangeReport> GetOnDateRange(DateTime startDate,DateTime endDate, IEnumerable<Office> includedOffices, IEnumerable<Country> includedCountries)
+        [HttpPost]
+        public IActionResult SetParameters(PaymentParametersModel args)
         {
-            _paymentOnDateRangeReportBuilder.SetDateRange(startDate, endDate);
-            _paymentOnDateRangeReportBuilder.IncludeOfficeParams(includedOffices);
-            _paymentOnDateRangeReportBuilder.IncludeFullCountriesParams(includedCountries);
+            _paymentOnDateRangeReportBuilder.SetDateRange(args.StartDate, args.EndDate);
+            _paymentOnDateRangeReportBuilder.IncludeOfficeParams(args.IncludedOffices);
+            _paymentOnDateRangeReportBuilder.IncludeFullCountriesParams(args.IncludedCountries);
+            return Ok();
+        }
+
+        [HttpGet("")]
+        public ActionResult<PaymentOnDateRangeReport> GetOnDateRange()
+        {  
             _paymentOnDateRangeReportBuilder.LoadData();
             _paymentOnDateRangeReportBuilder.CountMetrics();
-            return Ok(_paymentOnDateRangeReportBuilder.);
+            return Ok(_paymentOnDateRangeReportBuilder.GetResult());
         }
     }
 }

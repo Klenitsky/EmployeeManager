@@ -2,7 +2,9 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
+using ReportService.DataModels;
 using ReportService.Structures.Reports.ExchangeRateOnDateRange;
+using ReportService.Structures.Reports.PaymentOnDateRange;
 
 namespace ReportService.Controllers
 {
@@ -11,26 +13,30 @@ namespace ReportService.Controllers
     public class ExchangeRateOnDateRangeReportController : ControllerBase
     {
 
-        private string _exchangeRateApiConnectionString = "https://localhost:44341/";
-
         ExchangeRateOnDateRangeReportBuilder _exchangeRateOnDateRangeReportBuilder;
 
-        public ExchangeRateOnDateRangeReportController()
+        public ExchangeRateOnDateRangeReportController(ExchangeRateOnDateRangeReportBuilder builder)
         {
-            _exchangeRateOnDateRangeReportBuilder = new ExchangeRateOnDateRangeReportBuilder(_exchangeRateApiConnectionString);
+            _exchangeRateOnDateRangeReportBuilder = builder;
             
         }
 
+        [HttpPost]
+        public IActionResult SetParameters(ExchangeRateParametersModel args)
+        {
+            if (args.StartDate > args.EndDate)
+            {
+                throw new ArgumentOutOfRangeException();
+            }
+            _exchangeRateOnDateRangeReportBuilder.SetProperties(args.StartDate, args.EndDate, args.IncludedCurrencies);
+            return Ok();
+        }
+
         [HttpGet("")]
-        ActionResult<ExchangeRateOnDateRangeReport> GetOnDateRange(DateTime startDate, DateTime endDate, IEnumerable<Currency> currencies)
+        public ActionResult<ExchangeRateOnDateRangeReport> GetOnDateRange()
         {
             try
             {
-                if(startDate> endDate)
-                {
-                    throw new ArgumentOutOfRangeException();
-                }
-                _exchangeRateOnDateRangeReportBuilder.SetProperties(startDate, endDate,currencies);
                 _exchangeRateOnDateRangeReportBuilder.LoadData();
                 _exchangeRateOnDateRangeReportBuilder.CountMetrics();
                 return Ok(_exchangeRateOnDateRangeReportBuilder.GetResult());
