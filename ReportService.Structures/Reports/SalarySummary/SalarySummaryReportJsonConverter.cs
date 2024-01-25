@@ -19,7 +19,7 @@ namespace ReportService.Structures.Reports.SalarySummary
 
         public override void Write(Utf8JsonWriter writer, SalarySummaryReport value, JsonSerializerOptions options)
         {
-            writer.WriteStringValue(GetJsonString(value));
+            writer.WriteRawValue(GetJsonString(value));
         }
 
         private static string GetJsonString(SalarySummaryReport value)

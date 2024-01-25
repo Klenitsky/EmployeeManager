@@ -19,7 +19,7 @@ namespace ReportService.Structures.Reports.PaymentOnDateRange
 
         public override void Write(Utf8JsonWriter writer, PaymentOnDateRangeReport value, JsonSerializerOptions options)
         {
-           writer.WriteStringValue(GetJsonString(value));
+           writer.WriteRawValue(GetJsonString(value));
         }
 
 

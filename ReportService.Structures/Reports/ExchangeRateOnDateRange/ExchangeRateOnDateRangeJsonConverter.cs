@@ -19,7 +19,7 @@ namespace ReportService.Structures.Reports.ExchangeRateOnDateRange
 
         public override void Write(Utf8JsonWriter writer, ExchangeRateOnDateRangeReport value, JsonSerializerOptions options)
         {
-            writer.WriteStringValue(GetJsonString(value));
+            writer.WriteRawValue(GetJsonString(value));
         }
 
         private  string GetJsonString(ExchangeRateOnDateRangeReport value)
