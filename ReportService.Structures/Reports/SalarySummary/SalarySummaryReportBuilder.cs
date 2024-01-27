@@ -136,10 +136,10 @@ namespace ReportService.Structures.Reports.SalarySummary
             {
 
                 List<Employee> employees = companyInfoReader.FindEmployeesByOffice(office.Key.Id).ToList();
-                _includedEmployees.AddRange(employees);
+                _includedEmployees.AddRange(employees.Where(e => e.EmploymentDate <= _date && ((e.DismissalDate == null) || (e.DismissalDate >= _date))));
                 foreach(var employee in employees)
                 {
-                    if (!_includedCurrencies.Contains(employee.CurrencyNavigation))
+                    if ((_includedCurrencies.Where(c => c.Id == employee.CurrencyId).Count() == 0))
                     {
                         _includedCurrencies.Add(employee.CurrencyNavigation);
                         ExchangeRate rate = exchangeRateReader.GetByDateAndCurrency(_date, employee.CurrencyNavigation.Abbreviation);
