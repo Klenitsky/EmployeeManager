@@ -2,10 +2,12 @@ using ReportService.Structures.Reports.ExchangeRateOnDateRange;
 using ReportService.Structures.Reports.PaymentOnDateRange;
 using ReportService.Structures.Reports.SalarySummary;
 
-string _exchangeRateApiConnectionString = "https://localhost:44341/api/ExchangeRate";
- string _employeeApiConnectionString = "https://localhost:44316/api/EmployeeService";
+
 var builder = WebApplication.CreateBuilder(args);
 
+
+string _exchangeRateApiUrl = builder.Configuration.GetValue<string>("ExchangeRateServiceUrl"); 
+string _employeeApiUrl = builder.Configuration.GetValue<string>("EmployeeServiceUrl"); 
 // Add services to the container.
 
 builder.Services.AddControllers().AddJsonOptions(opts =>
@@ -17,9 +19,9 @@ builder.Services.AddControllers().AddJsonOptions(opts =>
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddSingleton(new ExchangeRateOnDateRangeReportBuilder(_exchangeRateApiConnectionString));
-builder.Services.AddSingleton(new SalarySummaryReportBuilder(_employeeApiConnectionString, _exchangeRateApiConnectionString));
-builder.Services.AddSingleton(new PaymentOnDateRangeReportBuilder(_employeeApiConnectionString, _exchangeRateApiConnectionString));
+builder.Services.AddSingleton(new ExchangeRateOnDateRangeReportBuilder(_exchangeRateApiUrl));
+builder.Services.AddSingleton(new SalarySummaryReportBuilder(_employeeApiUrl, _exchangeRateApiUrl));
+builder.Services.AddSingleton(new PaymentOnDateRangeReportBuilder(_employeeApiUrl, _exchangeRateApiUrl));
 
 var app = builder.Build();
 
