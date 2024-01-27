@@ -21,7 +21,7 @@ namespace ReportService.Structures.DataReaders
         {
             try
             {
-                string url = _connectionString + "api/ExchangeRate/OnDate" + "?Date=" + date.ToString("yyyy-MM-dd");
+                string url = _connectionString + "/OnDate" + "?Date=" + date.ToString("yyyy-MM-dd");
                 List <ExchangeRate> rates = httpClient.GetFromJsonAsync<IEnumerable<ExchangeRate>>(url).Result.ToList();
                 return rates;
             }
@@ -36,7 +36,7 @@ namespace ReportService.Structures.DataReaders
         {
             try
             {
-               string url =  _connectionString + "api/ExchangeRate/OnDateRange" + "?startDate=" + startDate.ToString("yyyy-MM-dd") + "&endDate=" + endDate.ToString("yyyy - MM - dd");
+               string url =  _connectionString + "/OnDateRange" + "?startDate=" + startDate.ToString("yyyy-MM-dd") + "&endDate=" + endDate.ToString("yyyy - MM - dd");
                 List<ExchangeRate> rates = httpClient.GetFromJsonAsync<IEnumerable<ExchangeRate>>(url)
                                                      .Result
                                                      .ToList();
@@ -53,7 +53,7 @@ namespace ReportService.Structures.DataReaders
         {
             try
             {
-                string url = _connectionString + "api/ExchangeRate/OnDateAndCurrency" + "?date=" + date.ToString("yyyy-MM-dd") + "&currencyAbbreviation=" + currency.ToUpper();
+                string url = _connectionString + "/OnDateAndCurrency" + "?date=" + date.ToString("yyyy-MM-dd") + "&currencyAbbreviation=" + currency.ToUpper();
                 ExchangeRate rate = httpClient.GetFromJsonAsync<ExchangeRate>(url).Result;
                 return rate;
             }
