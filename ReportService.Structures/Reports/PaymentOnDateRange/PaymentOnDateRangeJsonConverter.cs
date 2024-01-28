@@ -45,7 +45,7 @@ namespace ReportService.Structures.Reports.PaymentOnDateRange
             resultString.AppendLine("\"PaymentOnCountries\": [");
             for (int i = 0; i < countries.Count; i++)
             {
-                resultString.Append(value.IncludedCountriesMetrics[countries[i]]);
+                resultString.Append(value.IncludedCountriesMetrics[countries[i]].ToString(System.Globalization.CultureInfo.GetCultureInfo("en-US")));
                 if (i != countries.Count - 1)
                 {
                     resultString.Append(",");
@@ -70,7 +70,7 @@ namespace ReportService.Structures.Reports.PaymentOnDateRange
             resultString.AppendLine("\"PaymentOnOffices\": [");
             for (int i = 0; i < offices.Count; i++)
             {
-                resultString.Append(value.IncludedOfficesMetrics[offices[i]]);
+                resultString.Append(value.IncludedOfficesMetrics[offices[i]].ToString(System.Globalization.CultureInfo.GetCultureInfo("en-US")));
                 if (i != offices.Count - 1)
                 {
                     resultString.Append(",");
@@ -95,7 +95,7 @@ namespace ReportService.Structures.Reports.PaymentOnDateRange
             resultString.AppendLine("\"PaymentOnEmployees\": [");
             for (int i = 0; i < employees.Count; i++)
             {
-                resultString.Append(value.IncludedEmployees[employees[i]]);
+                resultString.Append(value.IncludedEmployees[employees[i]].ToString(System.Globalization.CultureInfo.GetCultureInfo("en-US")));
                 if (i != employees.Count - 1)
                 {
                     resultString.Append(",");
@@ -104,7 +104,7 @@ namespace ReportService.Structures.Reports.PaymentOnDateRange
             }
             resultString.AppendLine("],");
 
-            resultString.AppendLine("\"TotalPayment\": " + value.TotalPayment);
+            resultString.AppendLine("\"TotalPayment\": " + value.TotalPayment.ToString(System.Globalization.CultureInfo.GetCultureInfo("en-US")));
             resultString.AppendLine("}");
 
             return resultString.ToString();

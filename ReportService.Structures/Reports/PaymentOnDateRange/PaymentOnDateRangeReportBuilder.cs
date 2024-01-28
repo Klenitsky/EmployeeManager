@@ -164,16 +164,20 @@ namespace ReportService.Structures.Reports.PaymentOnDateRange
 
         public void LoadData()
         {
+            _includedEmployees.Clear();
+            _includedExchangeRates.Clear();
+            _includedCurrencies.Clear();
             CompanyInfoReader companyInfoReader = new CompanyInfoReader(connectionStringEmployeeService);
             ExchangeRateReader exchangeRateReader = new ExchangeRateReader(connectionStringExchangeRateService);
             foreach (var office in _includedOfficesMetrics)
             {
 
                 List<Employee> employees = companyInfoReader.FindEmployeesByOffice(office.Key.Id).ToList();
+                employees = employees.Where(e => (e.EmploymentDate <= _endDate) && (e.DismissalDate == null || e.DismissalDate >= _startDate) ).ToList();
                 foreach (var employee in employees)
                 {
                     _includedEmployees.Add(employee, 0);
-                    if (!_includedCurrencies.Contains(employee.CurrencyNavigation))
+                    if (_includedCurrencies.Where(c => c.Id == employee.CurrencyId).Count() == 0)
                     {
                         _includedCurrencies.Add(employee.CurrencyNavigation);
                         var currentDate = _startDate;
