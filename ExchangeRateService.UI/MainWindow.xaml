@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ExchangeRateService.UI"
+        xmlns:lvc ="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="600">
     <Grid>
@@ -19,9 +20,26 @@
         </Menu>
         <TabControl Grid.Row="1">
             <TabItem Header="Graphics">
-
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition MaxHeight="25"></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <StackPanel Orientation="Horizontal" Grid.Row="0">
+                        <Label>MinDate</Label>
+                        <DatePicker x:Name="StartDateGraphics"></DatePicker>
+                        <Label>MaxDate</Label>
+                        <DatePicker x:Name="EndDateGraphics"></DatePicker>
+                        <Label>Currency</Label>
+                        <ComboBox x:Name="CurrencyGraphics"></ComboBox>
+                        <Button Margin="25 0 0 0 " Width="50" Height="20" >Show</Button>
+                    </StackPanel>
+                    <lvc:CartesianChart Grid.Row="1">
+                        
+                    </lvc:CartesianChart>
+                </Grid>
             </TabItem>
-            <TabItem Header="Rates" Height="20" VerticalAlignment="Top">
+            <TabItem Header="Rates" VerticalAlignment="Top">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition MaxHeight="25"></RowDefinition>
@@ -47,7 +65,7 @@
                    
                 </Grid>
             </TabItem>
-            <TabItem Header="System Warehouse">
+            <TabItem Header="System Warehouse" HorizontalAlignment="Left">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition MaxHeight="25"></RowDefinition>
