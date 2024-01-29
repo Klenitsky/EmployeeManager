@@ -5,8 +5,28 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ExchangeRateService.UI"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="450" Width="450">
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition MaxHeight="20"></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <Menu Grid.Row="0">
+            <MenuItem Header="Menu">
+                <MenuItem Header="Load Active Currencies"></MenuItem>
+                <MenuItem Header="Exit"></MenuItem>
+            </MenuItem>
+        </Menu>
+        <TabControl Grid.Row="1">
+            <TabItem Header="Graphics">
 
+            </TabItem>
+            <TabItem Header="Rates">
+
+            </TabItem>
+            <TabItem Header="System Warehouse">
+
+            </TabItem>
+        </TabControl>
     </Grid>
 </Window>
