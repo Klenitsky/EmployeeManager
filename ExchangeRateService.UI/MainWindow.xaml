@@ -29,12 +29,12 @@
                     </Grid.RowDefinitions>
                     <StackPanel Orientation="Horizontal" Grid.Row="0">
                         <Label>StartDate</Label>
-                        <DatePicker x:Name="startDateOnRequest"></DatePicker>
+                        <DatePicker x:Name="StartDateOnRequest"></DatePicker>
                         <Label>EndDate</Label>
-                        <DatePicker x:Name="endDateOnRequest"></DatePicker>
+                        <DatePicker x:Name="EndDateOnRequest"></DatePicker>
                         <Label>Currency</Label>
-                        <ComboBox x:Name="currencyOnRequest"></ComboBox>
-                        <Button Margin="25 0 0 0 " Width="50" >Get</Button>
+                        <ComboBox x:Name="CurrencyOnRequest"></ComboBox>
+                        <Button Margin="25 0 0 0 " Width="50" Height="20" >Get</Button>
                     </StackPanel>
                     <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Visible">
                         <DataGrid>
@@ -48,7 +48,31 @@
                 </Grid>
             </TabItem>
             <TabItem Header="System Warehouse">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition MaxHeight="25"></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <StackPanel Orientation="Horizontal" Grid.Row="0">
+                        <Label>MinDate</Label>
+                        <DatePicker x:Name="MinDateInSystem"></DatePicker>
+                        <Label>MaxDate</Label>
+                        <DatePicker x:Name="MaxDateInSystem"></DatePicker>
+                        <Label>Currency</Label>
+                        <ComboBox x:Name="CurrencyInSystem"></ComboBox>
+                        <Button Margin="25 0 0 0 " Width="50" Height="20" >Get</Button>
+                        <Button Margin="25 0 0 0 " Width="50" Height="20" >Load</Button>
+                    </StackPanel>
+                    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Visible">
+                        <DataGrid>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Date" Width="*"></DataGridTextColumn>
+                                <DataGridTextColumn Header="Exchange Rate" Width="*"></DataGridTextColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </ScrollViewer >
 
+                </Grid>
             </TabItem>
         </TabControl>
     </Grid>
