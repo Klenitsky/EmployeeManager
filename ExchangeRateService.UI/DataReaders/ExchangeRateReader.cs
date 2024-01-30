@@ -80,6 +80,14 @@ namespace ExchangeRateService.UI.DataReaders
                 return new List<ExchangeRate>();
             }
         }
+
+
+        public IEnumerable<ActiveCurrency> GetActiveCurrencies()
+        {
+            string url = _connectionString + "/ExchangeRateInSystem/Currencies";
+            List<ActiveCurrency> currencies = httpClient.GetFromJsonAsync<IEnumerable<ActiveCurrency>>(url).Result.ToList();
+            return currencies;
+        }
     }
 }
 
