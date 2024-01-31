@@ -25,7 +25,7 @@ namespace ExchangeRateService.UI
         {      
             InitializeComponent();
 
-            DataContext = new ApplicationViewModel("");
+            DataContext = new ApplicationViewModel("https://localhost:44341/api");
         }
     }
 }
