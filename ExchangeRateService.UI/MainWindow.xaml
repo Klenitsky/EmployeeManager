@@ -53,18 +53,18 @@
                     </Grid.RowDefinitions>
                     <StackPanel Orientation="Horizontal" Grid.Row="0">
                         <Label Style="{DynamicResource LabelStyle}" >StartDate</Label>
-                        <DatePicker x:Name="StartDateOnRequest"></DatePicker>
+                        <DatePicker x:Name="StartDateOnRequest" SelectedDate="{Binding StartDateOnRequest}"></DatePicker>
                         <Label Style="{DynamicResource LabelStyle}" >EndDate</Label>
-                        <DatePicker x:Name="EndDateOnRequest"></DatePicker>
+                        <DatePicker x:Name="EndDateOnRequest" SelectedDate="{Binding EndDateOnRequest}"></DatePicker>
                         <Label Style="{DynamicResource LabelStyle}" >Currency</Label>
-                        <ComboBox x:Name="CurrencyOnRequest"></ComboBox>
-                        <Button Style="{DynamicResource ButtonStyle}" Margin="25 0 0 0 " Width="50" Height="20" >Get</Button>
+                        <ComboBox x:Name="CurrencyOnRequest" MinWidth="60" ItemsSource="{Binding ActiveCurrenciesOnRequest}" SelectedItem="{Binding CurrencyOnRequest}"></ComboBox>
+                        <Button Style="{DynamicResource ButtonStyle}" Command="{Binding GetOnRequestCommand}" Margin="25 0 0 0 " Width="50" Height="20" >Get</Button>
                     </StackPanel>
                     <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Visible">
-                        <DataGrid>
+                        <DataGrid ItemsSource ="{Binding RatesOnRequest}" AutoGenerateColumns="False">
                             <DataGrid.Columns>
-                                <DataGridTextColumn Header="Date" Width="*"></DataGridTextColumn>
-                                <DataGridTextColumn Header="Exchange Rate" Width="*"></DataGridTextColumn>
+                                <DataGridTextColumn Header="Date" Binding="{Binding Path=Date,StringFormat=d, ConverterCulture=de-DE}" Width="*"></DataGridTextColumn>
+                                <DataGridTextColumn Header="Exchange Rate" Binding="{Binding Path=Rate}" Width="*"></DataGridTextColumn>
                             </DataGrid.Columns>
                         </DataGrid>
                     </ScrollViewer >
@@ -73,6 +73,9 @@
             </TabItem>
             <TabItem Header="System Warehouse" HorizontalAlignment="Left">
                 <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition MaxHeight="25"></RowDefinition>
                         <RowDefinition></RowDefinition>
