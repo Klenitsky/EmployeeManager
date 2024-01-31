@@ -19,26 +19,12 @@ namespace ExchangeRateService.UI.DataReaders
             _connectionString = connectionString;
         }
 
-        public IEnumerable<ExchangeRate> GetRatesOnDate(DateTime date)
+
+        public IEnumerable<ExchangeRate> GetRatesOnDateRangeInSystem(DateTime startDate, DateTime endDate)
         {
             try
             {
-                string url = _connectionString + "/OnDate" + "?Date=" + date.ToString("yyyy-MM-dd");
-                List<ExchangeRate> rates = httpClient.GetFromJsonAsync<IEnumerable<ExchangeRate>>(url).Result.ToList();
-                return rates;
-            }
-            catch (Exception ex)
-            {
-
-                return new List<ExchangeRate>();
-            }
-        }
-
-        public IEnumerable<ExchangeRate> GetRatesOnDateRange(DateTime startDate, DateTime endDate)
-        {
-            try
-            {
-                string url = _connectionString + "/OnDateRange" + "?startDate=" + startDate.ToString("yyyy-MM-dd") + "&endDate=" + endDate.ToString("yyyy - MM - dd");
+                string url = _connectionString + "/ExchangeRateInSystem/OnDateRange" + "?startDate=" + startDate.ToString("yyyy-MM-dd") + "&endDate=" + endDate.ToString("yyyy - MM - dd");
                 List<ExchangeRate> rates = httpClient.GetFromJsonAsync<IEnumerable<ExchangeRate>>(url)
                                                      .Result
                                                      .ToList();
@@ -51,22 +37,22 @@ namespace ExchangeRateService.UI.DataReaders
             }
         }
 
-        public ExchangeRate GetByDateAndCurrency(DateTime date, string currency)
+        public IEnumerable<ExchangeRate> GetRatesOnDateRangeAndCurrencyInSystem(DateTime startDate, DateTime endDate, string currency)
         {
             try
             {
-                string url = _connectionString + "/OnDateAndCurrency" + "?date=" + date.ToString("yyyy-MM-dd") + "&currencyAbbreviation=" + currency.ToUpper();
-                ExchangeRate rate = httpClient.GetFromJsonAsync<ExchangeRate>(url).Result;
-                return rate;
+                string url = _connectionString + "/ExchangeRateInSystem/OnDateRangeAndCurrency" + "?startDate=" + startDate.ToString("yyyy-MM-dd") + "&endDate=" + endDate.ToString("yyyy-MM-dd") + "&currencyAbbreviation=" + currency.ToUpper();
+                List<ExchangeRate> rates = httpClient.GetFromJsonAsync<IEnumerable<ExchangeRate>>(url).Result.ToList();
+                return rates;
             }
             catch (Exception ex)
             {
 
-                return null;
+                return new List<ExchangeRate>();
             }
         }
 
-        public IEnumerable<ExchangeRate> GetRatesOnDateRangeAndCurrency(DateTime startDate, DateTime endDate, string currency)
+        public IEnumerable<ExchangeRate> GetRatesOnDateRangeAndCurrencyOnRequest(DateTime startDate, DateTime endDate, string currency)
         {
             try
             {

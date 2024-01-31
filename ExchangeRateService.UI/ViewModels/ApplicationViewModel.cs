@@ -92,7 +92,7 @@ namespace ExchangeRateService.UI.ViewModels
                 return _getOnRequestCommand ??
                         (_getOnRequestCommand = new RelayCommand(obj =>
                         {
-                            RatesOnRequest = new ObservableCollection<ExchangeRate>(_reader.GetRatesOnDateRangeAndCurrency(_startDateOnRequest, _endDateOnRequest, _activeCurrenciesOnRequest[_currencyOnRequest]));
+                            RatesOnRequest = new ObservableCollection<ExchangeRate>(_reader.GetRatesOnDateRangeAndCurrencyOnRequest(_startDateOnRequest, _endDateOnRequest, _activeCurrenciesOnRequest[_currencyOnRequest]));
                         }));
             }
         }
