@@ -54,7 +54,8 @@
                         <DatePicker x:Name="EndDateOnRequest" SelectedDate="{Binding EndDateOnRequest}"></DatePicker>
                         <Label Style="{DynamicResource LabelStyle}" >Currency</Label>
                         <ComboBox x:Name="CurrencyOnRequest" MinWidth="60" ItemsSource="{Binding ActiveCurrenciesOnRequest}" SelectedItem="{Binding CurrencyOnRequest}"></ComboBox>
-                        <Button Style="{DynamicResource ButtonStyle}" Command="{Binding GetOnRequestCommand}" Margin="25 0 0 0 " Width="50" Height="20" >Get</Button>
+                        <Button Style="{DynamicResource ButtonStyle}" Command="{Binding GetOnRequestCommand}" Margin="25 0 25 0 " Width="50" Height="20" >Get</Button>
+                        <TextBlock Text ="{Binding ScaleOnRequest}" />
                     </StackPanel>
                     <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Visible">
                         <DataGrid ItemsSource ="{Binding RatesOnRequest}" AutoGenerateColumns="False">

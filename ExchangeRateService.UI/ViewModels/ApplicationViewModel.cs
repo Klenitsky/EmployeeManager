@@ -97,7 +97,15 @@ namespace ExchangeRateService.UI.ViewModels
                 OnPropertyChanged("RatesOnRequest");
             }
         }
-
+        private string _scaleOnRequest;
+        public string ScaleOnRequest
+        {
+            get { return _scaleOnRequest; }
+            set
+            {
+                _scaleOnRequest = value; OnPropertyChanged("ScaleOnRequest");
+            }
+        }
         private RelayCommand _getOnRequestCommand;
         public RelayCommand GetOnRequestCommand
         {
@@ -107,6 +115,7 @@ namespace ExchangeRateService.UI.ViewModels
                         (_getOnRequestCommand = new RelayCommand(obj =>
                         {
                             RatesOnRequest = new ObservableCollection<ExchangeRate>(_reader.GetRatesOnDateRangeAndCurrencyOnRequest(_startDateOnRequest, _endDateOnRequest, _currencyOnRequest).OrderBy(r=>r.Date));
+                            ScaleOnRequest = "Scale: " + _ratesOnRequest.First().Scale;
                         }));
             }
         }
@@ -167,6 +176,7 @@ namespace ExchangeRateService.UI.ViewModels
                 OnPropertyChanged("RatesInSystem");
             }
         }
+
 
         private RelayCommand _getInSystemCommand;
         public RelayCommand GetInSystemCommand
