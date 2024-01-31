@@ -24,9 +24,17 @@ namespace ExchangeRateService.UI.ViewModels
             _activeCurrenciesOnRequest = new ObservableCollection<string> { "USD", "GBR", "BYN" };
             _ratesOnRequest = new ObservableCollection<ExchangeRate>( new List<ExchangeRate> { new ExchangeRate { Date= DateTime.Today, Rate = 1}, new ExchangeRate { Date = DateTime.MinValue, Rate = 2 }, }
                 );
-            //Main currency Loading
-           // _activeCurrenciesOnRequest= new ObservableCollection<string>(_reader.GetActiveCurrencies().Select(c => c.Abbreviation).ToList());
 
+            //Main currency Loading
+            var loadedCurrencies = _reader.GetActiveCurrencies().Select(c => c.Abbreviation).ToList();
+            // _activeCurrenciesOnRequest= new ObservableCollection<string>(loadedCurrencies);
+            _activeCurrenciesInSystem = new ObservableCollection<string>();
+            _activeCurrenciesInSystem.Add("NONE");
+            foreach(var currency in loadedCurrencies)
+            {
+                _activeCurrenciesInSystem.Add(currency);
+            }
+            
         }
 
         private DateTime _startDateOnRequest = DateTime.Today;
@@ -92,11 +100,110 @@ namespace ExchangeRateService.UI.ViewModels
                 return _getOnRequestCommand ??
                         (_getOnRequestCommand = new RelayCommand(obj =>
                         {
-                            RatesOnRequest = new ObservableCollection<ExchangeRate>(_reader.GetRatesOnDateRangeAndCurrencyOnRequest(_startDateOnRequest, _endDateOnRequest, _activeCurrenciesOnRequest[_currencyOnRequest]));
+                            RatesOnRequest = new ObservableCollection<ExchangeRate>(_reader.GetRatesOnDateRangeAndCurrencyOnRequest(_startDateOnRequest, _endDateOnRequest, _activeCurrenciesOnRequest[_currencyOnRequest]).OrderBy(r=>r.Date));
                         }));
             }
         }
 
+
+        //InSystemPart
+        private DateTime _startDateInSystem = DateTime.Today;
+        public DateTime StartDateInSystem
+        {
+            get { return _startDateInSystem; }
+            set
+            {
+                _startDateInSystem = value;
+                OnPropertyChanged("StartDateInSystem");
+            }
+        }
+
+        private DateTime _endDateInSystem = DateTime.Today;
+        public DateTime EndDateInSystem
+        {
+            get { return _endDateInSystem; }
+            set
+            {
+                _endDateInSystem = value;
+                OnPropertyChanged("EndDateInSystem");
+            }
+        }
+
+        private ObservableCollection<string> _activeCurrenciesInSystem;
+        public ObservableCollection<string> ActiveCurrenciesInSystem
+        {
+            get { return _activeCurrenciesInSystem; }
+            set
+            {
+                _activeCurrenciesInSystem = value;
+                OnPropertyChanged("ActiveCurrenciesOnRequestInSystem");
+            }
+        }
+
+        private int _currencyInSystem = 0;
+
+        public int CurrencyInSystem
+        {
+            get { return _currencyInSystem; }
+            set
+            {
+                _currencyInSystem = value; OnPropertyChanged("CurrencyInSystem");
+            }
+        }
+
+        private ObservableCollection<ExchangeRate> _ratesInSystem;
+        public ObservableCollection<ExchangeRate> RatesInSystem
+        {
+            get { return _ratesInSystem; }
+            set
+            {
+                _ratesInSystem = value;
+                OnPropertyChanged("RatesInSystem");
+            }
+        }
+
+        private RelayCommand _getInSystemCommand;
+        public RelayCommand GetInSystemCommand
+        {
+            get
+            {
+                return _getInSystemCommand ??
+                        (_getInSystemCommand = new RelayCommand(obj =>
+                        {
+                            if (_activeCurrenciesInSystem[_currencyInSystem].ToUpper() == "NONE".ToUpper())
+                            {
+                                RatesInSystem = new ObservableCollection<ExchangeRate>(_reader.GetRatesOnDateRangeInSystem(_startDateInSystem, _endDateInSystem).OrderBy(r=> r.Date).ThenBy(r=>r.Abbreviation));
+                            }
+                            else
+                            {
+                                RatesInSystem = new ObservableCollection<ExchangeRate>(_reader.GetRatesOnDateRangeAndCurrencyInSystem(_startDateInSystem, _endDateInSystem, _activeCurrenciesInSystem[_currencyInSystem]).OrderBy(r=>r.Date));
+                            }
+                            
+                        }));
+            }
+        }
+
+        private RelayCommand _loadInSystemCommand;
+        public RelayCommand LoadInSystemCommand
+        {
+            get
+            {
+                return _loadInSystemCommand ??
+                        (_loadInSystemCommand = new RelayCommand(obj =>
+                        {
+                            RatesInSystem = new ObservableCollection<ExchangeRate>();
+                            if (_activeCurrenciesInSystem[_currencyInSystem].ToUpper() == "NONE".ToUpper())
+                            {
+                                RatesInSystem = new ObservableCollection<ExchangeRate>(_reader.GetRatesOnDateRangeOnRequest(_startDateInSystem, _endDateInSystem).OrderBy(r => r.Date).ThenBy(r => r.Abbreviation));
+                            }
+                            else
+                            {
+                                RatesInSystem = new ObservableCollection<ExchangeRate>(_reader.GetRatesOnDateRangeAndCurrencyOnRequest(_startDateInSystem, _endDateInSystem, _activeCurrenciesInSystem[_currencyInSystem]).OrderBy(r => r.Date));
+                            }
+
+                        }));
+            }
+        }
         public event PropertyChangedEventHandler? PropertyChanged;
         public void OnPropertyChanged([CallerMemberName] string property= "")
         {

@@ -67,6 +67,23 @@ namespace ExchangeRateService.UI.DataReaders
             }
         }
 
+        public IEnumerable<ExchangeRate> GetRatesOnDateRangeOnRequest(DateTime startDate, DateTime endDate)
+        {
+            try
+            {
+                string url = _connectionString + "/OnDateRange" + "?startDate=" + startDate.ToString("yyyy-MM-dd") + "&endDate=" + endDate.ToString("yyyy - MM - dd");
+                List<ExchangeRate> rates = httpClient.GetFromJsonAsync<IEnumerable<ExchangeRate>>(url)
+                                                     .Result
+                                                     .ToList();
+                return rates;
+            }
+            catch (Exception ex)
+            {
+
+                return new List<ExchangeRate>();
+            }
+        }
+
 
         public IEnumerable<ActiveCurrency> GetActiveCurrencies()
         {

@@ -82,19 +82,19 @@
                     </Grid.RowDefinitions>
                     <StackPanel Orientation="Horizontal" Grid.Row="0">
                         <Label Style="{DynamicResource LabelStyle}" >MinDate</Label>
-                        <DatePicker x:Name="MinDateInSystem"></DatePicker>
+                        <DatePicker DisplayDate="{Binding StartDateInSystem}" x:Name="MinDateInSystem"></DatePicker>
                         <Label Style="{DynamicResource LabelStyle}" >MaxDate</Label>
-                        <DatePicker x:Name="MaxDateInSystem"></DatePicker>
+                        <DatePicker x:Name="MaxDateInSystem"  DisplayDate="{Binding EndDateInSystem}"></DatePicker>
                         <Label Style="{DynamicResource LabelStyle}" >Currency</Label>
-                        <ComboBox x:Name="CurrencyInSystem"></ComboBox>
-                        <Button Style="{DynamicResource ButtonStyle}" Margin="25 0 0 0 " Width="50" Height="20" >Get</Button>
-                        <Button Style="{DynamicResource ButtonStyle}" Margin="25 0 0 0 " Width="50" Height="20" >Load</Button>
+                        <ComboBox x:Name="CurrencyInSystem" ItemsSource="{Binding ActiveCurrenciesInSystem}" SelectedItem="CurrencyInSystem"></ComboBox>
+                        <Button Command ="{Binding GetInSystemCommand}" Style="{DynamicResource ButtonStyle}" Margin="25 0 0 0 " Width="50" Height="20" >Get</Button>
+                        <Button Command="{Binding LoadInSystemCommand}" Style="{DynamicResource ButtonStyle}" Margin="25 0 0 0 " Width="50" Height="20" >Load</Button>
                     </StackPanel>
                     <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Visible">
-                        <DataGrid>
+                        <DataGrid ItemsSource="{Binding RatesInSystem}" AutoGenerateColumns="False" >
                             <DataGrid.Columns>
-                                <DataGridTextColumn Header="Date" Width="*"></DataGridTextColumn>
-                                <DataGridTextColumn Header="Exchange Rate" Width="*"></DataGridTextColumn>
+                                <DataGridTextColumn Header="Date" Binding="{Binding Path=Date,StringFormat=d, ConverterCulture=de-DE}" Width="*"></DataGridTextColumn>
+                                <DataGridTextColumn Header="Exchange Rate" Binding="{Binding Path=Rate}" Width="*"></DataGridTextColumn>
                             </DataGrid.Columns>
                         </DataGrid>
                     </ScrollViewer >
