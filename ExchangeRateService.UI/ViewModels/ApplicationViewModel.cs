@@ -9,6 +9,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace ExchangeRateService.UI.ViewModels
 {
@@ -21,19 +22,24 @@ namespace ExchangeRateService.UI.ViewModels
             _reader = new ExchangeRateReader(connectionString);
 
             //for testing purposes when we don't have access to db
-            _activeCurrenciesOnRequest = new ObservableCollection<string> { "USD", "GBR", "BYN" };
-            _ratesOnRequest = new ObservableCollection<ExchangeRate>( new List<ExchangeRate> { new ExchangeRate { Date= DateTime.Today, Rate = 1}, new ExchangeRate { Date = DateTime.MinValue, Rate = 2 }, }
-                );
+            //_activeCurrenciesOnRequest = new ObservableCollection<string> { "USD", "GBR", "BYN" };
+            //_ratesOnRequest = new ObservableCollection<ExchangeRate>( new List<ExchangeRate> { new ExchangeRate { Date= DateTime.Today, Rate = 1}, new ExchangeRate { Date = DateTime.MinValue, Rate = 2 }, }
+            //    );
 
             //Main currency Loading
             var loadedCurrencies = _reader.GetActiveCurrencies().Select(c => c.Abbreviation).ToList();
-            // _activeCurrenciesOnRequest= new ObservableCollection<string>(loadedCurrencies);
-            _activeCurrenciesInSystem = new ObservableCollection<string>();
-            _activeCurrenciesInSystem.Add("NONE");
-            foreach(var currency in loadedCurrencies)
+             _activeCurrenciesOnRequest= new ObservableCollection<string>(loadedCurrencies);
+            _activeCurrenciesInSystem = new ObservableCollection<string>
+            {
+                "NONE"
+            };
+            foreach (var currency in loadedCurrencies)
             {
                 _activeCurrenciesInSystem.Add(currency);
             }
+
+            CurrencyInSystem = _activeCurrenciesInSystem[0];
+            CurrencyOnRequest = _activeCurrenciesOnRequest[0];
             
         }
 
@@ -70,9 +76,9 @@ namespace ExchangeRateService.UI.ViewModels
             }
         }
 
-        private int _currencyOnRequest = 0;
+        private string _currencyOnRequest;
 
-        public int CurrencyOnRequest
+        public string CurrencyOnRequest
         {
             get { return _currencyOnRequest; }
             set
@@ -100,7 +106,7 @@ namespace ExchangeRateService.UI.ViewModels
                 return _getOnRequestCommand ??
                         (_getOnRequestCommand = new RelayCommand(obj =>
                         {
-                            RatesOnRequest = new ObservableCollection<ExchangeRate>(_reader.GetRatesOnDateRangeAndCurrencyOnRequest(_startDateOnRequest, _endDateOnRequest, _activeCurrenciesOnRequest[_currencyOnRequest]).OrderBy(r=>r.Date));
+                            RatesOnRequest = new ObservableCollection<ExchangeRate>(_reader.GetRatesOnDateRangeAndCurrencyOnRequest(_startDateOnRequest, _endDateOnRequest, _currencyOnRequest).OrderBy(r=>r.Date));
                         }));
             }
         }
@@ -140,9 +146,9 @@ namespace ExchangeRateService.UI.ViewModels
             }
         }
 
-        private int _currencyInSystem = 0;
+        private string _currencyInSystem;
 
-        public int CurrencyInSystem
+        public string CurrencyInSystem
         {
             get { return _currencyInSystem; }
             set
@@ -170,13 +176,13 @@ namespace ExchangeRateService.UI.ViewModels
                 return _getInSystemCommand ??
                         (_getInSystemCommand = new RelayCommand(obj =>
                         {
-                            if (_activeCurrenciesInSystem[_currencyInSystem].ToUpper() == "NONE".ToUpper())
+                            if (_currencyInSystem.ToUpper() == "NONE".ToUpper())
                             {
                                 RatesInSystem = new ObservableCollection<ExchangeRate>(_reader.GetRatesOnDateRangeInSystem(_startDateInSystem, _endDateInSystem).OrderBy(r=> r.Date).ThenBy(r=>r.Abbreviation));
                             }
                             else
                             {
-                                RatesInSystem = new ObservableCollection<ExchangeRate>(_reader.GetRatesOnDateRangeAndCurrencyInSystem(_startDateInSystem, _endDateInSystem, _activeCurrenciesInSystem[_currencyInSystem]).OrderBy(r=>r.Date));
+                                RatesInSystem = new ObservableCollection<ExchangeRate>(_reader.GetRatesOnDateRangeAndCurrencyInSystem(_startDateInSystem, _endDateInSystem, _currencyInSystem).OrderBy(r=>r.Date));
                             }
                             
                         }));
@@ -192,13 +198,13 @@ namespace ExchangeRateService.UI.ViewModels
                         (_loadInSystemCommand = new RelayCommand(obj =>
                         {
                             RatesInSystem = new ObservableCollection<ExchangeRate>();
-                            if (_activeCurrenciesInSystem[_currencyInSystem].ToUpper() == "NONE".ToUpper())
+                            if (_currencyInSystem.ToUpper() == "NONE".ToUpper())
                             {
                                 RatesInSystem = new ObservableCollection<ExchangeRate>(_reader.GetRatesOnDateRangeOnRequest(_startDateInSystem, _endDateInSystem).OrderBy(r => r.Date).ThenBy(r => r.Abbreviation));
                             }
                             else
                             {
-                                RatesInSystem = new ObservableCollection<ExchangeRate>(_reader.GetRatesOnDateRangeAndCurrencyOnRequest(_startDateInSystem, _endDateInSystem, _activeCurrenciesInSystem[_currencyInSystem]).OrderBy(r => r.Date));
+                                RatesInSystem = new ObservableCollection<ExchangeRate>(_reader.GetRatesOnDateRangeAndCurrencyOnRequest(_startDateInSystem, _endDateInSystem, _currencyInSystem).OrderBy(r => r.Date));
                             }
 
                         }));

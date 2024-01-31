@@ -4,9 +4,9 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ExchangeRateService.UI"
-        xmlns:lvc ="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
+        xmlns:lvc ="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF" xmlns:viewmodels="clr-namespace:ExchangeRateService.UI.ViewModels" d:DataContext="{d:DesignInstance Type=viewmodels:ApplicationViewModel}"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="600">
+        Title="MainWindow" Height="450" Width="650">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition MaxHeight="20"></RowDefinition>
@@ -21,10 +21,6 @@
         <TabControl Grid.Row="1">
             <TabItem Header="Graphics">
                 <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="40*"/>
-                        <ColumnDefinition Width="257*"/>
-                    </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition MaxHeight="25"></RowDefinition>
                         <RowDefinition></RowDefinition>
@@ -82,11 +78,11 @@
                     </Grid.RowDefinitions>
                     <StackPanel Orientation="Horizontal" Grid.Row="0">
                         <Label Style="{DynamicResource LabelStyle}" >MinDate</Label>
-                        <DatePicker DisplayDate="{Binding StartDateInSystem}" x:Name="MinDateInSystem"></DatePicker>
+                        <DatePicker x:Name="MinDateInSystem" SelectedDate="{Binding StartDateInSystem}" ></DatePicker>
                         <Label Style="{DynamicResource LabelStyle}" >MaxDate</Label>
-                        <DatePicker x:Name="MaxDateInSystem"  DisplayDate="{Binding EndDateInSystem}"></DatePicker>
+                        <DatePicker x:Name="MaxDateInSystem"  SelectedDate="{Binding EndDateInSystem}"></DatePicker>
                         <Label Style="{DynamicResource LabelStyle}" >Currency</Label>
-                        <ComboBox x:Name="CurrencyInSystem" ItemsSource="{Binding ActiveCurrenciesInSystem}" SelectedItem="CurrencyInSystem"></ComboBox>
+                        <ComboBox x:Name="CurrencyInSystem" ItemsSource="{Binding ActiveCurrenciesInSystem}" SelectedItem="{Binding CurrencyInSystem}" MinWidth="60"></ComboBox>
                         <Button Command ="{Binding GetInSystemCommand}" Style="{DynamicResource ButtonStyle}" Margin="25 0 0 0 " Width="50" Height="20" >Get</Button>
                         <Button Command="{Binding LoadInSystemCommand}" Style="{DynamicResource ButtonStyle}" Margin="25 0 0 0 " Width="50" Height="20" >Load</Button>
                     </StackPanel>
@@ -95,6 +91,17 @@
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Date" Binding="{Binding Path=Date,StringFormat=d, ConverterCulture=de-DE}" Width="*"></DataGridTextColumn>
                                 <DataGridTextColumn Header="Exchange Rate" Binding="{Binding Path=Rate}" Width="*"></DataGridTextColumn>
+                                <DataGridTemplateColumn Header="Scale" Width="*">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="{Binding Scale}"/>
+                                                <TextBlock Text=" "/>
+                                                <TextBlock Text="{Binding Abbreviation}"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
                             </DataGrid.Columns>
                         </DataGrid>
                     </ScrollViewer >
