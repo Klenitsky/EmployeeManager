@@ -1,6 +1,7 @@
 ﻿using ExchangeRateService.UI.Commands;
 using ExchangeRateService.UI.DataReaders;
 using ExchangeRateService.UI.Model;
+using ExchangeRateService.UI.Validators;
 using LiveChartsCore;
 using LiveChartsCore.Defaults;
 using LiveChartsCore.SkiaSharpView;
@@ -19,11 +20,11 @@ namespace ExchangeRateService.UI.ViewModels
     public class ApplicationViewModel : INotifyPropertyChanged
     {
         private ExchangeRateReader _reader;
-
+        private DateRangeValidator _validator;
         public ApplicationViewModel(string connectionString)
         {
             _reader = new ExchangeRateReader(connectionString);
-
+            _validator = new DateRangeValidator(DateTime.Today.AddYears(-5), DateTime.Today);
             //for testing purposes when we don't have access to db
             //_activeCurrenciesOnRequest = new ObservableCollection<string> { "USD", "GBR", "BYN" };
             //_ratesOnRequest = new ObservableCollection<ExchangeRate>( new List<ExchangeRate> { new ExchangeRate { Date= DateTime.Today, Rate = 1}, new ExchangeRate { Date = DateTime.MinValue, Rate = 2 }, }
@@ -118,8 +119,15 @@ namespace ExchangeRateService.UI.ViewModels
                 return _getOnRequestCommand ??
                         (_getOnRequestCommand = new RelayCommand(obj =>
                         {
-                            RatesOnRequest = new ObservableCollection<ExchangeRate>(_reader.GetRatesOnDateRangeAndCurrencyOnRequest(_startDateOnRequest, _endDateOnRequest, _currencyOnRequest).OrderBy(r => r.Date));
-                            ScaleOnRequest = "Scale: " + _ratesOnRequest.First().Scale;
+                            if (_validator.Validate(_startDateOnRequest, _endDateOnRequest))
+                            {
+                                RatesOnRequest = new ObservableCollection<ExchangeRate>(_reader.GetRatesOnDateRangeAndCurrencyOnRequest(_startDateOnRequest, _endDateOnRequest, _currencyOnRequest).OrderBy(r => r.Date));
+                                ScaleOnRequest = "Scale: " + _ratesOnRequest.First().Scale;
+                            }
+                            else
+                            {
+                                MessageBox.Show("Invalid Date Range!");
+                            }
                         }));
             }
         }
@@ -190,15 +198,21 @@ namespace ExchangeRateService.UI.ViewModels
                 return _getInSystemCommand ??
                         (_getInSystemCommand = new RelayCommand(obj =>
                         {
-                            if (_currencyInSystem.ToUpper() == "NONE".ToUpper())
+                            if (_validator.Validate(_startDateInSystem, _endDateInSystem))
                             {
-                                RatesInSystem = new ObservableCollection<ExchangeRate>(_reader.GetRatesOnDateRangeInSystem(_startDateInSystem, _endDateInSystem).OrderBy(r => r.Date).ThenBy(r => r.Abbreviation));
+                                if (_currencyInSystem.ToUpper() == "NONE".ToUpper())
+                                {
+                                    RatesInSystem = new ObservableCollection<ExchangeRate>(_reader.GetRatesOnDateRangeInSystem(_startDateInSystem, _endDateInSystem).OrderBy(r => r.Date).ThenBy(r => r.Abbreviation));
+                                }
+                                else
+                                {
+                                    RatesInSystem = new ObservableCollection<ExchangeRate>(_reader.GetRatesOnDateRangeAndCurrencyInSystem(_startDateInSystem, _endDateInSystem, _currencyInSystem).OrderBy(r => r.Date));
+                                }
                             }
                             else
                             {
-                                RatesInSystem = new ObservableCollection<ExchangeRate>(_reader.GetRatesOnDateRangeAndCurrencyInSystem(_startDateInSystem, _endDateInSystem, _currencyInSystem).OrderBy(r => r.Date));
+                                MessageBox.Show("Invalid Date Range!");
                             }
-
                         }));
             }
         }
@@ -211,16 +225,22 @@ namespace ExchangeRateService.UI.ViewModels
                 return _loadInSystemCommand ??
                         (_loadInSystemCommand = new RelayCommand(obj =>
                         {
-                            RatesInSystem = new ObservableCollection<ExchangeRate>();
-                            if (_currencyInSystem.ToUpper() == "NONE".ToUpper())
+                            if (_validator.Validate(_startDateInSystem, _endDateInSystem))
                             {
-                                RatesInSystem = new ObservableCollection<ExchangeRate>(_reader.GetRatesOnDateRangeOnRequest(_startDateInSystem, _endDateInSystem).OrderBy(r => r.Date).ThenBy(r => r.Abbreviation));
+                                RatesInSystem = new ObservableCollection<ExchangeRate>();
+                                if (_currencyInSystem.ToUpper() == "NONE".ToUpper())
+                                {
+                                    RatesInSystem = new ObservableCollection<ExchangeRate>(_reader.GetRatesOnDateRangeOnRequest(_startDateInSystem, _endDateInSystem).OrderBy(r => r.Date).ThenBy(r => r.Abbreviation));
+                                }
+                                else
+                                {
+                                    RatesInSystem = new ObservableCollection<ExchangeRate>(_reader.GetRatesOnDateRangeAndCurrencyOnRequest(_startDateInSystem, _endDateInSystem, _currencyInSystem).OrderBy(r => r.Date));
+                                }
                             }
                             else
                             {
-                                RatesInSystem = new ObservableCollection<ExchangeRate>(_reader.GetRatesOnDateRangeAndCurrencyOnRequest(_startDateInSystem, _endDateInSystem, _currencyInSystem).OrderBy(r => r.Date));
+                                MessageBox.Show("Invalid Date Range!");
                             }
-
                         }));
             }
         }
@@ -307,10 +327,17 @@ namespace ExchangeRateService.UI.ViewModels
                 return _showGraphicsCommand ??
                         (_showGraphicsCommand = new RelayCommand(obj =>
                         {
-                            RatesGraphics = new ObservableCollection<ExchangeRate>(_reader.GetRatesOnDateRangeAndCurrencyOnRequest(_startDateGraphics, _endDateGraphics, _currencyGraphics).OrderBy(r => r.Date));
-                            Series = new ObservableCollection<ISeries> { new LineSeries<float> { Values = new ObservableCollection<float>(RatesGraphics.Select(r => r.Rate)) } };
-                            XAxes = new Axis[] { new Axis { Labels = RatesGraphics.Select(r=>r.Date.ToString("dd.MM.yyyy")).ToArray() } };
-                            ScaleGraphics = "Scale: " + _ratesGraphics.First().Scale;
+                            if (_validator.Validate(_startDateGraphics, _endDateGraphics))
+                            {
+                                RatesGraphics = new ObservableCollection<ExchangeRate>(_reader.GetRatesOnDateRangeAndCurrencyOnRequest(_startDateGraphics, _endDateGraphics, _currencyGraphics).OrderBy(r => r.Date));
+                                Series = new ObservableCollection<ISeries> { new LineSeries<float> { Values = new ObservableCollection<float>(RatesGraphics.Select(r => r.Rate)) } };
+                                XAxes = new Axis[] { new Axis { Labels = RatesGraphics.Select(r=>r.Date.ToString("dd.MM.yyyy")).ToArray() } };
+                                ScaleGraphics = "Scale: " + _ratesGraphics.First().Scale;
+                            }
+                            else
+                            {
+                                MessageBox.Show("Invalid Date Range!");
+                            }
                         }));
             }
         }
