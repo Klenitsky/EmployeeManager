@@ -1,6 +1,9 @@
 ﻿using ExchangeRateService.UI.Commands;
 using ExchangeRateService.UI.DataReaders;
 using ExchangeRateService.UI.Model;
+using LiveChartsCore;
+using LiveChartsCore.Defaults;
+using LiveChartsCore.SkiaSharpView;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -28,7 +31,7 @@ namespace ExchangeRateService.UI.ViewModels
 
             //Main currency Loading
             var loadedCurrencies = _reader.GetActiveCurrencies().Select(c => c.Abbreviation).ToList();
-             _activeCurrenciesOnRequest= new ObservableCollection<string>(loadedCurrencies);
+            _activeCurrenciesOnRequest = new ObservableCollection<string>(loadedCurrencies);
             _activeCurrenciesInSystem = new ObservableCollection<string>
             {
                 "NONE"
@@ -37,10 +40,11 @@ namespace ExchangeRateService.UI.ViewModels
             {
                 _activeCurrenciesInSystem.Add(currency);
             }
+            _activeCurrenciesGraphics = new ObservableCollection<string>(loadedCurrencies);
 
             CurrencyInSystem = _activeCurrenciesInSystem[0];
             CurrencyOnRequest = _activeCurrenciesOnRequest[0];
-            
+            CurrencyGraphics = _activeCurrenciesGraphics[0];
         }
 
         private DateTime _startDateOnRequest = DateTime.Today;
@@ -48,7 +52,7 @@ namespace ExchangeRateService.UI.ViewModels
         {
             get { return _startDateOnRequest; }
             set
-            { 
+            {
                 _startDateOnRequest = value;
                 OnPropertyChanged("StartDateOnRequest");
             }
@@ -72,7 +76,7 @@ namespace ExchangeRateService.UI.ViewModels
             set
             {
                 _activeCurrenciesOnRequest = value;
-                OnPropertyChanged("ActiveCurrenciesOnRequestOnRequest");
+                OnPropertyChanged("ActiveCurrenciesOnRequest");
             }
         }
 
@@ -86,14 +90,14 @@ namespace ExchangeRateService.UI.ViewModels
                 _currencyOnRequest = value; OnPropertyChanged("CurrencyOnRequest");
             }
         }
-        
+
         private ObservableCollection<ExchangeRate> _ratesOnRequest;
         public ObservableCollection<ExchangeRate> RatesOnRequest
         {
             get { return _ratesOnRequest; }
             set
             {
-                _ratesOnRequest = value; 
+                _ratesOnRequest = value;
                 OnPropertyChanged("RatesOnRequest");
             }
         }
@@ -114,7 +118,7 @@ namespace ExchangeRateService.UI.ViewModels
                 return _getOnRequestCommand ??
                         (_getOnRequestCommand = new RelayCommand(obj =>
                         {
-                            RatesOnRequest = new ObservableCollection<ExchangeRate>(_reader.GetRatesOnDateRangeAndCurrencyOnRequest(_startDateOnRequest, _endDateOnRequest, _currencyOnRequest).OrderBy(r=>r.Date));
+                            RatesOnRequest = new ObservableCollection<ExchangeRate>(_reader.GetRatesOnDateRangeAndCurrencyOnRequest(_startDateOnRequest, _endDateOnRequest, _currencyOnRequest).OrderBy(r => r.Date));
                             ScaleOnRequest = "Scale: " + _ratesOnRequest.First().Scale;
                         }));
             }
@@ -188,13 +192,13 @@ namespace ExchangeRateService.UI.ViewModels
                         {
                             if (_currencyInSystem.ToUpper() == "NONE".ToUpper())
                             {
-                                RatesInSystem = new ObservableCollection<ExchangeRate>(_reader.GetRatesOnDateRangeInSystem(_startDateInSystem, _endDateInSystem).OrderBy(r=> r.Date).ThenBy(r=>r.Abbreviation));
+                                RatesInSystem = new ObservableCollection<ExchangeRate>(_reader.GetRatesOnDateRangeInSystem(_startDateInSystem, _endDateInSystem).OrderBy(r => r.Date).ThenBy(r => r.Abbreviation));
                             }
                             else
                             {
-                                RatesInSystem = new ObservableCollection<ExchangeRate>(_reader.GetRatesOnDateRangeAndCurrencyInSystem(_startDateInSystem, _endDateInSystem, _currencyInSystem).OrderBy(r=>r.Date));
+                                RatesInSystem = new ObservableCollection<ExchangeRate>(_reader.GetRatesOnDateRangeAndCurrencyInSystem(_startDateInSystem, _endDateInSystem, _currencyInSystem).OrderBy(r => r.Date));
                             }
-                            
+
                         }));
             }
         }
@@ -220,6 +224,100 @@ namespace ExchangeRateService.UI.ViewModels
                         }));
             }
         }
+
+        private DateTime _startDateGraphics = DateTime.Today;
+        public DateTime StartDateGraphics
+        {
+            get { return _startDateGraphics; }
+            set
+            {
+                _startDateGraphics = value;
+                OnPropertyChanged("StartDateGraphics");
+            }
+        }
+
+        private DateTime _endDateGraphics = DateTime.Today;
+        public DateTime EndDateGraphics
+        {
+            get { return _endDateGraphics; }
+            set
+            {
+                _endDateGraphics = value;
+                OnPropertyChanged("EndDateGraphics");
+            }
+        }
+
+        private ObservableCollection<string> _activeCurrenciesGraphics;
+        public ObservableCollection<string> ActiveCurrenciesGraphics
+        {
+            get { return _activeCurrenciesGraphics; }
+            set
+            {
+                _activeCurrenciesGraphics = value;
+                OnPropertyChanged("ActiveCurrenciesGraphics");
+            }
+        }
+
+        private string _currencyGraphics;
+
+        public string CurrencyGraphics
+        {
+            get { return _currencyGraphics; }
+            set
+            {
+                _currencyGraphics = value; OnPropertyChanged("CurrencyGraphics");
+            }
+        }
+
+        private ObservableCollection<ExchangeRate> _ratesGraphics;
+        public ObservableCollection<ExchangeRate> RatesGraphics
+        {
+            get { return _ratesGraphics; }
+            set
+            {
+                _ratesGraphics = value;
+                OnPropertyChanged("RatesGraphics");
+            }
+        }
+        private string _scaleGraphics;
+        public string ScaleGraphics
+        {
+            get { return _scaleGraphics; }
+            set
+            {
+                _scaleGraphics = value; OnPropertyChanged("ScaleGraphics");
+            }
+        }
+
+        public ObservableCollection<ISeries> Series { get; set; } = new ObservableCollection<ISeries>
+        {
+            new LineSeries<double>
+            {
+                Values = new ObservableCollection<double>()
+            }
+        };
+
+        public Axis[] XAxes { get; set; } = new Axis[] { new Axis { Labels = new string[] { } } };
+
+        private RelayCommand _showGraphicsCommand;
+        public RelayCommand ShowGraphicsCommand
+        {
+            get
+            {
+                return _showGraphicsCommand ??
+                        (_showGraphicsCommand = new RelayCommand(obj =>
+                        {
+                            RatesGraphics = new ObservableCollection<ExchangeRate>(_reader.GetRatesOnDateRangeAndCurrencyOnRequest(_startDateGraphics, _endDateGraphics, _currencyGraphics).OrderBy(r => r.Date));
+                            Series = new ObservableCollection<ISeries> { new LineSeries<float> { Values = new ObservableCollection<float>(RatesGraphics.Select(r => r.Rate)) } };
+                            XAxes = new Axis[] { new Axis { Labels = RatesGraphics.Select(r=>r.Date.ToString("dd.MM.yyyy")).ToArray() } };
+                            ScaleGraphics = "Scale: " + _ratesGraphics.First().Scale;
+                        }));
+            }
+        }
+
+
+
+
         public event PropertyChangedEventHandler? PropertyChanged;
         public void OnPropertyChanged([CallerMemberName] string property= "")
         {
