@@ -46,6 +46,15 @@ namespace ExchangeRateService.UI.ViewModels
             CurrencyInSystem = _activeCurrenciesInSystem[0];
             CurrencyOnRequest = _activeCurrenciesOnRequest[0];
             CurrencyGraphics = _activeCurrenciesGraphics[0];
+
+            Series = new ObservableCollection<ISeries>
+            {
+                new LineSeries<double>
+                {
+                    Values = new ObservableCollection<double>()
+                }
+            };
+            XAxes  = new Axis[] { new Axis { Labels = new string[] { } } };
         }
 
         private DateTime _startDateOnRequest = DateTime.Today;
@@ -309,15 +318,25 @@ namespace ExchangeRateService.UI.ViewModels
             }
         }
 
-        public ObservableCollection<ISeries> Series { get; set; } = new ObservableCollection<ISeries>
-        {
-            new LineSeries<double>
+        private ObservableCollection<ISeries> _series;
+        public ObservableCollection<ISeries> Series {
+            get { return _series; } 
+            set
             {
-                Values = new ObservableCollection<double>()
+                _series = value;
+                OnPropertyChanged("Series");
             }
-        };
+        }
 
-        public Axis[] XAxes { get; set; } = new Axis[] { new Axis { Labels = new string[] { } } };
+        private Axis[] _xAxes;
+        public Axis[] XAxes {
+            get { return _xAxes; }
+            set
+            {
+                _xAxes = value;
+                OnPropertyChanged("XAxes");
+            }
+        } 
 
         private RelayCommand _showGraphicsCommand;
         public RelayCommand ShowGraphicsCommand
@@ -330,7 +349,17 @@ namespace ExchangeRateService.UI.ViewModels
                             if (_validator.Validate(_startDateGraphics, _endDateGraphics))
                             {
                                 RatesGraphics = new ObservableCollection<ExchangeRate>(_reader.GetRatesOnDateRangeAndCurrencyOnRequest(_startDateGraphics, _endDateGraphics, _currencyGraphics).OrderBy(r => r.Date));
-                                Series = new ObservableCollection<ISeries> { new LineSeries<float> { Values = new ObservableCollection<float>(RatesGraphics.Select(r => r.Rate)) } };
+                                Series = new ObservableCollection<ISeries>
+                                {
+                                    new LineSeries<float>
+                                    {
+                                        Values = new ObservableCollection<float>(RatesGraphics.Select(r => r.Rate)),
+                                        LineSmoothness =0.85,
+                                        GeometrySize = 5,
+                                        
+
+                                    } 
+                                };
                                 XAxes = new Axis[] { new Axis { Labels = RatesGraphics.Select(r=>r.Date.ToString("dd.MM.yyyy")).ToArray() } };
                                 ScaleGraphics = "Scale: " + _ratesGraphics.First().Scale;
                             }

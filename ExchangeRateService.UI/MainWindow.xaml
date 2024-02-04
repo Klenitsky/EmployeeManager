@@ -32,12 +32,12 @@
                         <DatePicker x:Name="EndDateGraphics" SelectedDate="{Binding EndDateGraphics}"></DatePicker>
                         <Label Style="{DynamicResource LabelStyle}">Currency</Label>
                         <ComboBox x:Name="CurrencyGraphics" MinWidth="60" ItemsSource="{Binding ActiveCurrenciesGraphics}" SelectedItem="{Binding CurrencyGraphics}"></ComboBox>
-                        <Button Style="{DynamicResource ButtonStyle}" Margin="25 0 25 0 " Width="50" Height="20">
+                        <Button Style="{DynamicResource ButtonStyle}"  Command ="{Binding ShowGraphicsCommand}" Margin="25 0 25 0 " Width="50" Height="20">
                             Show
                         </Button>
                         <TextBlock Text ="{Binding ScaleGraphics}" />
                     </StackPanel>
-                    <lvc:CartesianChart Grid.Row="1" Series="{Binding Series}" XAxes="{Binding XAxes}" >
+                    <lvc:CartesianChart Grid.Row="1" Series="{Binding Series}" XAxes="{Binding XAxes}"  >
                     </lvc:CartesianChart>
                 </Grid>
             </TabItem>
