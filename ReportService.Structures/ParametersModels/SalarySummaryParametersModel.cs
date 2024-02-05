@@ -2,7 +2,7 @@
 
 namespace ReportService.Structures.ParameterModels
 {
-    public class SalaryOnDayParametersModel
+    public class SalarySummaryParametersModel
     {
         public DateTime Date { get; set; }
         public List<Country> IncludedCountries { get; set; }

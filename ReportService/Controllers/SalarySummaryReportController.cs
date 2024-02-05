@@ -23,7 +23,7 @@ namespace ReportService.Controllers
         }
 
         [HttpPost]
-        public IActionResult SetParameters(SalaryOnDayParametersModel args)
+        public IActionResult SetParameters(SalarySummaryParametersModel args)
         {
             _salarySummaryReportBuilder.SetDate(args.Date);
             _salarySummaryReportBuilder.IncludeOfficeParams(args.IncludedOffices);

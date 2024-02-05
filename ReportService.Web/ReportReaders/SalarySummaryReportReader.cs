@@ -17,9 +17,9 @@ namespace ReportService.Web.ReportReaders
         }
 
 
-        public SalarySummaryReport GetReport(SalaryOnDayParametersModel args)
+        public SalarySummaryReport GetReport(SalarySummaryParametersModel args)
         {
-            var postResult = _httpClient.PostAsJsonAsync<SalaryOnDayParametersModel>(_connectionString, args).Result;
+            var postResult = _httpClient.PostAsJsonAsync<SalarySummaryParametersModel>(_connectionString, args).Result;
             if (postResult.IsSuccessStatusCode)
             {
                 JsonSerializerOptions options = new JsonSerializerOptions()
