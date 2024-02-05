@@ -1,6 +1,6 @@
 ﻿using EmployeeService.DAL.Models;
 
-namespace ReportService.DataModels
+namespace ReportService.Structures.ParameterModels
 {
     public class ExchangeRateParametersModel
     {

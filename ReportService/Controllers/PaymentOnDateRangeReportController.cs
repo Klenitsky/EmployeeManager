@@ -1,7 +1,7 @@
 ﻿using EmployeeService.DAL.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using ReportService.DataModels;
+using ReportService.Structures.ParameterModels;
 using ReportService.Structures.Reports.ExchangeRateOnDateRange;
 using ReportService.Structures.Reports.PaymentOnDateRange;
 using ReportService.Structures.Reports.SalarySummary;

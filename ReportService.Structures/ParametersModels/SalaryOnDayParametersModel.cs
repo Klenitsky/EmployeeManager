@@ -1,11 +1,10 @@
 ﻿using EmployeeService.DAL.Models;
 
-namespace ReportService.DataModels
+namespace ReportService.Structures.ParameterModels
 {
-    public class PaymentParametersModel
+    public class SalaryOnDayParametersModel
     {
-        public DateTime StartDate { get; set; }
-        public DateTime EndDate { get; set; }
+        public DateTime Date { get; set; }
         public List<Country> IncludedCountries { get; set; }
         public List<Office> IncludedOffices { get; set; }
     }

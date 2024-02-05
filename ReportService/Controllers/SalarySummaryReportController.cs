@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
-using ReportService.DataModels;
+using ReportService.Structures.ParameterModels;
 using ReportService.Structures.Reports.PaymentOnDateRange;
 using ReportService.Structures.Reports.SalarySummary;
 
