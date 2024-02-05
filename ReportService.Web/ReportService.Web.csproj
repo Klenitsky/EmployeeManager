@@ -13,10 +13,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="ReportReaders\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\ReportService.Structures\ReportService.Structures.csproj" />
   </ItemGroup>
 

@@ -1,6 +1,6 @@
 ﻿namespace ReportService.Web.ReportReaders
 {
-    public class SalaryOnDateReportReader
+    public class SalarySummaryReportReader
     {
     }
 }
