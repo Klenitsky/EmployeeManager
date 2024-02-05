@@ -9,6 +9,7 @@ string _reportServiceUrl = builder.Configuration.GetValue<string>("ReportService
 builder.Services.AddControllersWithViews();
 builder.Services.AddSingleton(new ExchangeRateOnDateRangeReportReader(_reportServiceUrl));
 builder.Services.AddSingleton(new PaymentOnDateRangeReportReader(_reportServiceUrl));
+builder.Services.AddSingleton(new SalarySummaryReportReader(_reportServiceUrl));
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
