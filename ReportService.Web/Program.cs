@@ -7,7 +7,8 @@ var builder = WebApplication.CreateBuilder(args);
 string _reportServiceUrl = builder.Configuration.GetValue<string>("ReportServiceUrl");
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-builder.Services.AddSingleton<ExchangeRateOnDateRangeReportReader>(new ExchangeRateOnDateRangeReportReader(_reportServiceUrl));
+builder.Services.AddSingleton(new ExchangeRateOnDateRangeReportReader(_reportServiceUrl));
+builder.Services.AddSingleton(new PaymentOnDateRangeReportReader(_reportServiceUrl));
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
