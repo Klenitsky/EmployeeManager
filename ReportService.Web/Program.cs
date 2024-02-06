@@ -1,15 +1,18 @@
-using ReportService.Web.ReportReaders;
+using ReportService.Web.DataReaders.EmployeeServiceReaders;
+using ReportService.Web.DataReaders.ReportReaders;
 
 
 
 var builder = WebApplication.CreateBuilder(args);
 
 string _reportServiceUrl = builder.Configuration.GetValue<string>("ReportServiceUrl");
+string _employeeServiceUrl = builder.Configuration.GetValue<string>("EmployeeServiceUrl");
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddSingleton(new ExchangeRateOnDateRangeReportReader(_reportServiceUrl));
 builder.Services.AddSingleton(new PaymentOnDateRangeReportReader(_reportServiceUrl));
 builder.Services.AddSingleton(new SalarySummaryReportReader(_reportServiceUrl));
+builder.Services.AddSingleton(new CurrencyReader(_employeeServiceUrl));
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
