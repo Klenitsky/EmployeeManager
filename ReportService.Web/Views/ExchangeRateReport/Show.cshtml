@@ -1,0 +1,20 @@
+﻿@model ReportService.Structures.Reports.ExchangeRateOnDateRange.ExchangeRateOnDateRangeReport
+
+<h2>Отчет о курсах валют за период с @Model.StartDate по @Model.EndDate </h2>
+@foreach(var currency in Model.IncludedCurrencies)
+{
+    <h3>@currency.Key.Abbreviation</h3>
+    <h3>Количество валюты:  @Model.ExchangeRates.Where(r=>r.Abbreviation == currency.Key.Abbreviation).First().Scale</h3>
+    <table class="table">
+        <tr><td>Дата</td><td>Курс</td></tr>
+        @foreach(var rate in Model.ExchangeRates.Where(r=>r.Abbreviation == currency.Key.Abbreviation))
+        {
+           <tr>
+               <td>@rate.Date</td>
+               <td>@rate.Rate</td>
+           </tr>
+        }
+    </table>
+    <h3>Средний курс: @currency.Value</h3>
+    <br />
+}
