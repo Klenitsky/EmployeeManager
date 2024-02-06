@@ -3,7 +3,7 @@ using ReportService.Structures.Reports.ExchangeRateOnDateRange;
 using ReportService.Structures.Reports.PaymentOnDateRange;
 using System.Text.Json;
 
-namespace ReportService.Web.ReportReaders
+namespace ReportService.Web.DataReaders.ReportReaders
 {
     public class PaymentOnDateRangeReportReader
     {
@@ -19,7 +19,7 @@ namespace ReportService.Web.ReportReaders
 
         public PaymentOnDateRangeReport GetReport(PaymentParametersModel args)
         {
-            var postResult = _httpClient.PostAsJsonAsync<PaymentParametersModel>(_connectionString, args).Result;
+            var postResult = _httpClient.PostAsJsonAsync(_connectionString, args).Result;
             if (postResult.IsSuccessStatusCode)
             {
                 JsonSerializerOptions options = new JsonSerializerOptions()

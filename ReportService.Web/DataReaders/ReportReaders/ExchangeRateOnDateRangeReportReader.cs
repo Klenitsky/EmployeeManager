@@ -4,23 +4,23 @@ using System.Net.Http.Json;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace ReportService.Web.ReportReaders
+namespace ReportService.Web.DataReaders.ReportReaders
 {
     public class ExchangeRateOnDateRangeReportReader
     {
         private HttpClient _httpClient;
         private string _connectionString;
-        private static ExchangeRateOnDateRangeJsonConverter _converter = new ExchangeRateOnDateRangeJsonConverter(); 
+        private static ExchangeRateOnDateRangeJsonConverter _converter = new ExchangeRateOnDateRangeJsonConverter();
         public ExchangeRateOnDateRangeReportReader(string connectionString)
         {
-            _httpClient= new HttpClient();
-            _connectionString = connectionString+"/ExchangeRateOnDateRangeReport";
+            _httpClient = new HttpClient();
+            _connectionString = connectionString + "/ExchangeRateOnDateRangeReport";
         }
 
 
         public ExchangeRateOnDateRangeReport GetReport(ExchangeRateParametersModel args)
         {
-           var postResult =  _httpClient.PostAsJsonAsync<ExchangeRateParametersModel>(_connectionString,args).Result;
+            var postResult = _httpClient.PostAsJsonAsync(_connectionString, args).Result;
             if (postResult.IsSuccessStatusCode)
             {
                 JsonSerializerOptions options = new JsonSerializerOptions()
@@ -37,7 +37,7 @@ namespace ReportService.Web.ReportReaders
             {
                 throw new ArgumentException("Response with such args is unsuccessful");
             }
-           
+
         }
 
     }

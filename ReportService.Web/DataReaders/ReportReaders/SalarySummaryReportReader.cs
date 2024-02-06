@@ -3,7 +3,7 @@ using ReportService.Structures.Reports.PaymentOnDateRange;
 using ReportService.Structures.Reports.SalarySummary;
 using System.Text.Json;
 
-namespace ReportService.Web.ReportReaders
+namespace ReportService.Web.DataReaders.ReportReaders
 {
     public class SalarySummaryReportReader
     {
@@ -19,7 +19,7 @@ namespace ReportService.Web.ReportReaders
 
         public SalarySummaryReport GetReport(SalarySummaryParametersModel args)
         {
-            var postResult = _httpClient.PostAsJsonAsync<SalarySummaryParametersModel>(_connectionString, args).Result;
+            var postResult = _httpClient.PostAsJsonAsync(_connectionString, args).Result;
             if (postResult.IsSuccessStatusCode)
             {
                 JsonSerializerOptions options = new JsonSerializerOptions()
