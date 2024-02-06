@@ -1,0 +1,24 @@
+﻿@model ReportService.Structures.ParameterModels.ExchangeRateParametersModel
+
+<h2>Введите параметры для отчета</h2>
+<form method="post" asp-antiforgery="true">
+       <p>
+           <label>Начальная дата</label><br />
+           <input type="date" name="startDate" />
+       </p>
+       <p>
+            <label>Конечная дата</label><br />
+            <input type="date" name="endDate" />
+       </p>
+    <p>
+        <label>Включенные валюты:</label><br />
+        <select multiple  name="currencies">
+            @foreach(var item in ViewBag["currencies"])
+            {
+                <option name="@item">@item</option>
+            }
+        </select>
+    </p>
+</form>
+
+
