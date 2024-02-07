@@ -1,0 +1,26 @@
+﻿@model ReportService.Structures.Reports.PaymentOnDateRange.PaymentOnDateRangeReport
+<h2>Отчет о выплатах за период с @Model.StartDate по @Model.EndDate </h2>
+@foreach (var countryMetric in Model.IncludedCountriesMetrics)
+{
+    <h3>@countryMetric.Key.Name</h3>
+    <h3>Общая выплата:  @countryMetric.Value</h3>
+    <h3>Распределение по офисам:</h3>
+    @foreach (var officeMetric in Model.IncludedOfficesMetrics.Where(o=>o.Key.CountryId == countryMetric.Key.Id))
+    {
+        <h4>Наименование офиса: @officeMetric.Key.Name</h4>
+        <h4>Выплата по офису: @officeMetric.Value</h4>
+        <table class="table">
+            <thead>
+                <tr><th>Имя</th><th>Зарплата</th><th>Выплата за период(USD)</th></tr>
+            </thead>
+            @foreach (var employee in Model.IncludedEmployees.Where(e => e.Key.OfficeId == officeMetric.Key.Id))
+            {
+                <tr>
+                    <td>@employee.Key.FirstName @employee.Key.LastName</td>
+                    <td>@employee.Key.Salary  @employee.Key.CurrencyNavigation.Abbreviation</td>
+                    <td>@employee.Value</td>
+                </tr>
+            }
+        </table>
+    }
+}
