@@ -1,0 +1,40 @@
+﻿@model ReportService.Structures.Reports.SalarySummary.SalarySummaryReport
+<h2>Отчет о зарплате на дату:  @Model.Date </h2>
+<h3>Общая статистика</h3>
+<p>Суммарная зарплата: @Model.GeneralStatistics.SalarySummary</p><br/>
+<p>Количество сотрудников: @Model.GeneralStatistics.NumberOfEmployees</p><br/>
+<p>Средняя зарплата: @Model.GeneralStatistics.AverageSalary</p>
+<br />
+@foreach (var countryMetric in Model.IncludedCountriesMetrics)
+{
+    <h3>@countryMetric.Key.Name</h3>
+    <h3>Общая статистика</h3>
+    <p>Суммарная зарплата: @countryMetric.Value.SalarySummary</p><br/>
+    <p>Количество сотрудников: @countryMetric.Value.NumberOfEmployees</p>
+    <br />
+    <p>Средняя зарплата: @countryMetric.Value.AverageSalary</p>
+    <br />
+    <h3>Распределение по офисам:</h3>
+    @foreach (var officeMetric in Model.IncludedOfficesMetrics.Where(o => o.Key.CountryId == countryMetric.Key.Id))
+    {
+        <h4>Наименование офиса: @officeMetric.Key.Name</h4>
+        <p>Суммарная зарплата: @officeMetric.Value.SalarySummary</p>
+        <br />
+        <p>Количество сотрудников: @officeMetric.Value.NumberOfEmployees</p>
+        <br />
+        <p>Средняя зарплата: @officeMetric.Value.AverageSalary</p>
+        <br />
+        <table class="table">
+            <thead>
+                <tr><th>Имя</th><th>Зарплата</th></tr>
+            </thead>
+            @foreach (var employee in Model.IncludedEmployees.Where(e => e.OfficeId == officeMetric.Key.Id))
+            {
+                <tr>
+                    <td>@employee.FirstName @employee.LastName</td>
+                    <td>@employee.Salary  @employee.CurrencyNavigation.Abbreviation</td>
+                </tr>
+            }
+        </table>
+    }
+}

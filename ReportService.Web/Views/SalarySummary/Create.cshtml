@@ -1,0 +1,27 @@
+﻿@model ReportService.Structures.ParameterModels.SalarySummaryParametersModel
+
+<h2>Введите параметры для отчета</h2>
+<form method="post" asp-antiforgery="true">
+    <p>
+        <label>Дата дата</label><br />
+        <input type="date" name="date" />
+    </p>
+    <p>
+        <label>Включенные Офисы:</label><br />
+        <select multiple name="offices">
+            @foreach (var item in ViewBag["Offices"])
+            {
+                <option name="@item">@item</option>
+            }
+        </select>
+    </p>
+    <p>
+        <label>Включенные Страны(все офисы выбранных стран будут включены в отчет):</label><br />
+        <select multiple name="countries">
+            @foreach (var item in ViewBag["Countries"])
+            {
+                <option name="@item">@item</option>
+            }
+        </select>
+    </p>
+</form>
