@@ -1,5 +1,5 @@
 using ReportService.Web.DataReaders.EmployeeServiceReaders;
-using ReportService.Web.DataReaders.ReportReaders;
+using ReportService.Web.DataReaders.ReportServiceReaders;
 
 
 
@@ -13,6 +13,8 @@ builder.Services.AddSingleton(new ExchangeRateOnDateRangeReportReader(_reportSer
 builder.Services.AddSingleton(new PaymentOnDateRangeReportReader(_reportServiceUrl));
 builder.Services.AddSingleton(new SalarySummaryReportReader(_reportServiceUrl));
 builder.Services.AddSingleton(new CurrencyReader(_employeeServiceUrl));
+builder.Services.AddSingleton(new OfficeReader(_employeeServiceUrl));
+builder.Services.AddSingleton(new CountryReader(_employeeServiceUrl));
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

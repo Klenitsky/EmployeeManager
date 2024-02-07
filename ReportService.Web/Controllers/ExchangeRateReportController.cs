@@ -2,7 +2,7 @@
 using ReportService.Structures.ParameterModels;
 using ReportService.Structures.Reports.ExchangeRateOnDateRange;
 using ReportService.Web.DataReaders.EmployeeServiceReaders;
-using ReportService.Web.DataReaders.ReportReaders;
+using ReportService.Web.DataReaders.ReportServiceReaders;
 
 namespace ReportService.Web.Controllers
 {

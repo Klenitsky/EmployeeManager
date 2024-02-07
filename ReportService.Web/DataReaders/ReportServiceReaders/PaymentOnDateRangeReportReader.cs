@@ -1,24 +1,23 @@
 ﻿using ReportService.Structures.ParameterModels;
 using ReportService.Structures.Reports.ExchangeRateOnDateRange;
-using System.Net.Http.Json;
+using ReportService.Structures.Reports.PaymentOnDateRange;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 
-namespace ReportService.Web.DataReaders.ReportReaders
+namespace ReportService.Web.DataReaders.ReportServiceReaders
 {
-    public class ExchangeRateOnDateRangeReportReader
+    public class PaymentOnDateRangeReportReader
     {
         private HttpClient _httpClient;
         private string _connectionString;
-        private static ExchangeRateOnDateRangeJsonConverter _converter = new ExchangeRateOnDateRangeJsonConverter();
-        public ExchangeRateOnDateRangeReportReader(string connectionString)
+        private static PaymentOnDateRangeJsonConverter _converter = new PaymentOnDateRangeJsonConverter();
+        public PaymentOnDateRangeReportReader(string connectionString)
         {
             _httpClient = new HttpClient();
-            _connectionString = connectionString + "/ExchangeRateOnDateRangeReport";
+            _connectionString = connectionString + "/PaymentOnDateRangeReport";
         }
 
 
-        public ExchangeRateOnDateRangeReport GetReport(ExchangeRateParametersModel args)
+        public PaymentOnDateRangeReport GetReport(PaymentParametersModel args)
         {
             var postResult = _httpClient.PostAsJsonAsync(_connectionString, args).Result;
             if (postResult.IsSuccessStatusCode)
@@ -30,7 +29,7 @@ namespace ReportService.Web.DataReaders.ReportReaders
                         _converter
                     }
                 };
-                var result = _httpClient.GetFromJsonAsync<ExchangeRateOnDateRangeReport>(_connectionString, options).Result;
+                var result = _httpClient.GetFromJsonAsync<PaymentOnDateRangeReport>(_connectionString, options).Result;
                 return result;
             }
             else
@@ -39,6 +38,5 @@ namespace ReportService.Web.DataReaders.ReportReaders
             }
 
         }
-
     }
 }

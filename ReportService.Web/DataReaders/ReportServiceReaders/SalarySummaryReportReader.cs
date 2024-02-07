@@ -3,7 +3,7 @@ using ReportService.Structures.Reports.PaymentOnDateRange;
 using ReportService.Structures.Reports.SalarySummary;
 using System.Text.Json;
 
-namespace ReportService.Web.DataReaders.ReportReaders
+namespace ReportService.Web.DataReaders.ReportServiceReaders
 {
     public class SalarySummaryReportReader
     {
