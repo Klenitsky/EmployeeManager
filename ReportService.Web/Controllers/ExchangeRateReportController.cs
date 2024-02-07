@@ -21,7 +21,7 @@ namespace ReportService.Web.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            return RedirectToAction("Create");
         }
 
         [HttpGet]
