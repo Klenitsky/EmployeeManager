@@ -1,4 +1,7 @@
 ﻿@model ReportService.Structures.Reports.PaymentOnDateRange.PaymentOnDateRangeReport
+@{
+    ViewData["Title"] = "Payment report";
+}
 <h2>Отчет о выплатах за период с @Model.StartDate по @Model.EndDate </h2>
 @foreach (var countryMetric in Model.IncludedCountriesMetrics)
 {

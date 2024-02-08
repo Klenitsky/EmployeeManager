@@ -1,5 +1,7 @@
 ﻿@model ReportService.Structures.Reports.ExchangeRateOnDateRange.ExchangeRateOnDateRangeReport
-
+@{
+    ViewData["Title"] = "Exchange rates report";
+}
 <h2>Отчет о курсах валют за период с @Model.StartDate по @Model.EndDate </h2>
 @foreach(var currency in Model.IncludedCurrencies)
 {

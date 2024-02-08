@@ -1,4 +1,8 @@
 ﻿@model ReportService.Structures.Reports.SalarySummary.SalarySummaryReport
+@{
+    ViewData["Title"] = "Salary report";
+}
+
 <h2>Отчет о зарплате на дату:  @Model.Date </h2>
 <h3>Общая статистика</h3>
 <p>Суммарная зарплата: @Model.GeneralStatistics.SalarySummary</p><br/>
