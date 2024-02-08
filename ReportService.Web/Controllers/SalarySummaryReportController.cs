@@ -6,13 +6,13 @@ using ReportService.Web.DataReaders.ReportServiceReaders;
 
 namespace ReportService.Web.Controllers
 {
-    public class SalarySummaryController : Controller
+    public class SalarySummaryReportController : Controller
     {
         private SalarySummaryReportReader _reportReader;
         private OfficeReader _officeReader;
         private CountryReader _countryReader;
 
-        public SalarySummaryController(SalarySummaryReportReader reportReader, OfficeReader officeReader, CountryReader countryReader)
+        public SalarySummaryReportController(SalarySummaryReportReader reportReader, OfficeReader officeReader, CountryReader countryReader)
         {
             _reportReader = reportReader;
             _officeReader = officeReader;
