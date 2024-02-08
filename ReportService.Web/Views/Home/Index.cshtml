@@ -1,8 +1,13 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "ReportList";
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h1 class="display-4">Сервис предоставления отчетов</h1>
+    <h3>Список отчетов:</h3>
+    <a asp-action="Index" asp-controller="ExchangeRateReport">Отчет по курсам валют </a> <br/>
+    <a asp-action="Index" asp-controller="PaymentOnDateRangeReport">Отчет по зарплатам сотрудников </a><br/>
+    <a asp-action="Index" asp-controller="ExchangeRateReport">Отчет по выплатам сотрудникам </a><br/>
 </div>
+
+
