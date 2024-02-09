@@ -3,6 +3,7 @@ using ReportService.Structures.ParameterModels;
 using ReportService.Structures.Reports.ExchangeRateOnDateRange;
 using ReportService.Web.DataReaders.EmployeeServiceReaders;
 using ReportService.Web.DataReaders.ReportServiceReaders;
+using System.Text.Json;
 
 namespace ReportService.Web.Controllers
 {
@@ -41,13 +42,28 @@ namespace ReportService.Web.Controllers
                 IncludedCurrencies = _currencyReader.Read().Where(c => currencies.Contains(c.Abbreviation)).ToList(),
             };
             var report = _reportReader.GetReport(args);
-            return RedirectToAction("Show",report);
+            TempData["report"] = JsonSerializer.Serialize<ExchangeRateOnDateRangeReport>(report, new JsonSerializerOptions
+            {
+                Converters =
+                {
+                    new ExchangeRateOnDateRangeJsonConverter()
+                }
+            });
+            return RedirectToAction("Show");
         }
 
 
         [HttpGet]
-        public IActionResult Show(ExchangeRateOnDateRangeReport report)
+        public IActionResult Show()
         {
+            var report = JsonSerializer.Deserialize<ExchangeRateOnDateRangeReport>((string)TempData["report"], new JsonSerializerOptions
+            {
+                Converters =
+                {
+                    new ExchangeRateOnDateRangeJsonConverter()
+                }
+            });
+
             return View(report);
         }
 
