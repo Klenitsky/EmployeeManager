@@ -5,22 +5,23 @@
 <h2>Введите параметры для отчета</h2>
 <form method="post" asp-antiforgery="true">
        <p>
-           <label>Начальная дата</label><br />
+           <label>Начальная дата: </label>
            <input type="date" name="startDate" />
        </p>
        <p>
-            <label>Конечная дата</label><br />
+            <label>Конечная дата: </label>
             <input type="date" name="endDate" />
        </p>
-    <p>
-        <label>Включенные валюты:</label><br />
+       <p>
+        <label>Включенные валюты: </label>
         <select multiple  name="currencies">
-            @foreach(var item in ViewBag["currencies"])
+            @foreach(var item in ViewBag.Currencies)
             {
                 <option name="@item">@item</option>
             }
         </select>
-    </p>
+       </p>
+    <input type="submit" value="Сгенерировать" />
 </form>
 
 
