@@ -10,7 +10,7 @@ namespace ReportService.Web.DataReaders.EmployeeServiceReaders
         public OfficeReader(string connectionString)
         {
             _httpClient = new HttpClient();
-            _connectionString = connectionString + "EmployeeService/Office";
+            _connectionString = connectionString + "/EmployeeService/Office";
         }
 
         public IEnumerable<Office> Read()

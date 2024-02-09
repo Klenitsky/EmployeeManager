@@ -10,7 +10,7 @@ namespace ReportService.Web.DataReaders.EmployeeServiceReaders
         public CountryReader(string connectionString)
         {
             _httpClient = new HttpClient();
-            _connectionString = connectionString + "EmployeeService/Country";
+            _connectionString = connectionString + "/EmployeeService/Country";
         }
 
         public IEnumerable<Country> Read()

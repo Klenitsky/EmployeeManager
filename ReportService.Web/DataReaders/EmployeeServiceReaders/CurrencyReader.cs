@@ -10,7 +10,7 @@ namespace ReportService.Web.DataReaders.EmployeeServiceReaders
         public CurrencyReader(string connectionString)
         {
             _httpClient = new HttpClient();
-            _connectionString = connectionString + "EmployeeService/Currency";
+            _connectionString = connectionString + "/EmployeeService/Currency";
         }
 
         public IEnumerable<Currency> Read()
