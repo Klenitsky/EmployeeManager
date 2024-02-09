@@ -1,5 +1,6 @@
 ﻿using EmployeeService.DAL.Models;
 using ExchangeRateService.DAL.BasicStructures.Models;
+using OfficeOpenXml.FormulaParsing.Ranges;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +15,11 @@ namespace ReportService.Structures.Reports.ExchangeRateOnDateRange
     {
         public override ExchangeRateOnDateRangeReport? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            return Parse(reader.GetString()!);
+            using (var jsonDoc = JsonDocument.ParseValue(ref reader))
+            {
+                string jsonText = jsonDoc.RootElement.GetRawText();
+                return Parse(jsonText);
+            }
         }
 
         public override void Write(Utf8JsonWriter writer, ExchangeRateOnDateRangeReport value, JsonSerializerOptions options)
@@ -86,43 +91,46 @@ namespace ReportService.Structures.Reports.ExchangeRateOnDateRange
             resultReport.EndDate = DateTime.Parse(currentLine);
 
             List<Currency> currencyList = new List<Currency>();
-
+            reader.ReadLine();
             currentLine = reader.ReadLine();
-            while (currentLine != "],")
-            {
-                currentLine = reader.ReadLine();
+            while (!currentLine.StartsWith(']'))
+            {         
                 if (currentLine[currentLine.Length - 1] == ',')
                 {
                     currentLine = currentLine.Substring(0, currentLine.Length - 1);
                 }
                 currencyList.Add(JsonSerializer.Deserialize<Currency>(currentLine));
+                currentLine = reader.ReadLine();
             }
 
             List<float> averageRates = new List<float>();
+            reader.ReadLine();
             currentLine = reader.ReadLine();
-            while (currentLine != "],")
+            while (!currentLine.StartsWith(']'))
             {
-                currentLine = reader.ReadLine();
                 if (currentLine[currentLine.Length - 1] == ',')
                 {
                     currentLine = currentLine.Substring(0, currentLine.Length - 1);
                 }
                 averageRates.Add(float.Parse(currentLine));
+                currentLine = reader.ReadLine();
             }
 
             List<ExchangeRate> exchangeRates = new List<ExchangeRate>();
+            reader.ReadLine();
             currentLine = reader.ReadLine();
-            while (currentLine != "]")
+            while (!currentLine.StartsWith(']'))
             {
-                currentLine = reader.ReadLine();
                 if (currentLine[currentLine.Length - 1] == ',')
                 {
                     currentLine = currentLine.Substring(0, currentLine.Length - 1);
                 }
                 exchangeRates.Add(JsonSerializer.Deserialize<ExchangeRate>(currentLine));
+                currentLine = reader.ReadLine();
             }
 
             resultReport.ExchangeRates = exchangeRates;
+            resultReport.IncludedCurrencies = new Dictionary<Currency, float>();
             for (int i = 0; i < currencyList.Count; i++)
             {
                 resultReport.IncludedCurrencies.Add(currencyList[i], averageRates[i]);
