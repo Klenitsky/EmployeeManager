@@ -14,7 +14,11 @@ namespace ReportService.Structures.Reports.PaymentOnDateRange
     {
         public override PaymentOnDateRangeReport? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            return Parse(reader.GetString()!);
+            using (var jsonDoc = JsonDocument.ParseValue(ref reader))
+            {
+                string jsonText = jsonDoc.RootElement.GetRawText();
+                return Parse(jsonText);
+            }
         }
 
         public override void Write(Utf8JsonWriter writer, PaymentOnDateRangeReport value, JsonSerializerOptions options)
@@ -127,29 +131,32 @@ namespace ReportService.Structures.Reports.PaymentOnDateRange
 
             List<Country> countryList = new List<Country>();
 
+            reader.ReadLine();
             currentLine = reader.ReadLine();
-            while (currentLine != "],")
+            while (!currentLine.StartsWith(']'))
             {
-                currentLine = reader.ReadLine();
                 if (currentLine[currentLine.Length - 1] == ',')
                 {
                     currentLine = currentLine.Substring(0, currentLine.Length - 1);
                 }
                 countryList.Add(JsonSerializer.Deserialize<Country>(currentLine));
+                currentLine = reader.ReadLine();
             }
 
             List<float> totalOnCountries = new List<float>();
+            reader.ReadLine();
             currentLine = reader.ReadLine();
-            while (currentLine != "],")
+            while (!currentLine.StartsWith(']'))
             {
-                currentLine = reader.ReadLine();
                 if (currentLine[currentLine.Length - 1] == ',')
                 {
                     currentLine = currentLine.Substring(0, currentLine.Length - 1);
                 }
-                totalOnCountries.Add(float.Parse(currentLine));
+                totalOnCountries.Add(float.Parse(currentLine, System.Globalization.CultureInfo.GetCultureInfo("en-US")));
+                currentLine = reader.ReadLine();
             }
 
+            resultReport.IncludedCountriesMetrics = new Dictionary<Country, float>();
             for (int i = 0; i < countryList.Count; i++)
             {
                 resultReport.IncludedCountriesMetrics.Add(countryList[i], totalOnCountries[i]);
@@ -157,60 +164,64 @@ namespace ReportService.Structures.Reports.PaymentOnDateRange
 
 
             List<Office> officeList = new List<Office>();
-
+            reader.ReadLine();
             currentLine = reader.ReadLine();
-            while (currentLine != "],")
+            while (!currentLine.StartsWith(']'))
             {
-                currentLine = reader.ReadLine();
                 if (currentLine[currentLine.Length - 1] == ',')
                 {
                     currentLine = currentLine.Substring(0, currentLine.Length - 1);
                 }
                 officeList.Add(JsonSerializer.Deserialize<Office>(currentLine));
+                currentLine = reader.ReadLine();
             }
 
             List<float> totalOnOffices = new List<float>();
+            reader.ReadLine();
             currentLine = reader.ReadLine();
-            while (currentLine != "],")
+            while (!currentLine.StartsWith(']'))
             {
-                currentLine = reader.ReadLine();
                 if (currentLine[currentLine.Length - 1] == ',')
                 {
                     currentLine = currentLine.Substring(0, currentLine.Length - 1);
                 }
-                totalOnOffices.Add(float.Parse(currentLine));
+                totalOnOffices.Add(float.Parse(currentLine, System.Globalization.CultureInfo.GetCultureInfo("en-US")));
+                currentLine = reader.ReadLine();
             }
 
+            resultReport.IncludedOfficesMetrics = new Dictionary<Office, float>();
             for (int i = 0; i < officeList.Count; i++)
             {
                 resultReport.IncludedOfficesMetrics.Add(officeList[i], totalOnOffices[i]);
             }
 
             List<Employee> employeeList = new List<Employee>();
-
+            reader.ReadLine();
             currentLine = reader.ReadLine();
-            while (currentLine != "],")
+            while (!currentLine.StartsWith(']'))
             {
-                currentLine = reader.ReadLine();
                 if (currentLine[currentLine.Length - 1] == ',')
                 {
                     currentLine = currentLine.Substring(0, currentLine.Length - 1);
                 }
                 employeeList.Add(JsonSerializer.Deserialize<Employee>(currentLine));
+                currentLine = reader.ReadLine();
             }
 
             List<float> paymentOnEmployees = new List<float>();
+            reader.ReadLine();
             currentLine = reader.ReadLine();
-            while (currentLine != "],")
+            while (!currentLine.StartsWith(']'))
             {
-                currentLine = reader.ReadLine();
                 if (currentLine[currentLine.Length - 1] == ',')
                 {
                     currentLine = currentLine.Substring(0, currentLine.Length - 1);
                 }
-                paymentOnEmployees.Add(float.Parse(currentLine));
+                paymentOnEmployees.Add(float.Parse(currentLine, System.Globalization.CultureInfo.GetCultureInfo("en-US")));
+                currentLine = reader.ReadLine();
             }
 
+            resultReport.IncludedEmployees = new Dictionary<Employee, float>();
             for (int i = 0; i < employeeList.Count; i++)
             {
                 resultReport.IncludedEmployees.Add(employeeList[i], paymentOnEmployees[i]);
@@ -218,7 +229,7 @@ namespace ReportService.Structures.Reports.PaymentOnDateRange
 
             currentLine = reader.ReadLine();
             currentLine = currentLine.Substring(16);
-            resultReport.TotalPayment = float.Parse(currentLine);
+            resultReport.TotalPayment = float.Parse(currentLine, System.Globalization.CultureInfo.GetCultureInfo("en-US"));
 
             return resultReport;
         }
