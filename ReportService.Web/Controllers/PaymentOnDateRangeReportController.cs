@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ReportService.Structures.ParameterModels;
 using ReportService.Structures.Reports.ExchangeRateOnDateRange;
+using ReportService.Structures.Reports.PaymentOnDateRange;
 using ReportService.Web.DataReaders.EmployeeServiceReaders;
 using ReportService.Web.DataReaders.ReportServiceReaders;
+using System.Text.Json;
 
 namespace ReportService.Web.Controllers
 {
@@ -44,13 +46,28 @@ namespace ReportService.Web.Controllers
                 IncludedCountries = _countryReader.Read().Where(c => countries.Contains(c.Id + " " + c.Abbreviation)).ToList(),
             };
             var report = _reportReader.GetReport(args);
-            return RedirectToAction("Show", report);
+            TempData["report"] = JsonSerializer.Serialize<PaymentOnDateRangeReport>(report, new JsonSerializerOptions
+            {
+                Converters =
+                {
+                    new PaymentOnDateRangeJsonConverter()
+                }
+            });
+
+            return RedirectToAction("Show");
         }
 
 
         [HttpGet]
-        public IActionResult Show(ExchangeRateOnDateRangeReport report)
+        public IActionResult Show()
         {
+            var report = JsonSerializer.Deserialize<PaymentOnDateRangeReport>((string)TempData["report"], new JsonSerializerOptions
+            {
+                Converters =
+                {
+                    new PaymentOnDateRangeJsonConverter()
+                }
+            });
             return View(report);
         }
 
