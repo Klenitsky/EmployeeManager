@@ -10,7 +10,7 @@
     <p>
         <label>Включенные Офисы:</label><br />
         <select multiple name="offices">
-            @foreach (var item in ViewBag["Offices"])
+            @foreach (var item in ViewBag.Offices)
             {
                 <option name="@item">@item</option>
             }
@@ -19,10 +19,11 @@
     <p>
         <label>Включенные Страны(все офисы выбранных стран будут включены в отчет):</label><br />
         <select multiple name="countries">
-            @foreach (var item in ViewBag["Countries"])
+            @foreach (var item in ViewBag.Countries)
             {
                 <option name="@item">@item</option>
             }
         </select>
     </p>
+    <input type="submit" value="Сгенерировать" />
 </form>
