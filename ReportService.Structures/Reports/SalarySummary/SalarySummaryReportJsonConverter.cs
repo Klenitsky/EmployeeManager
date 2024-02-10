@@ -14,7 +14,11 @@ namespace ReportService.Structures.Reports.SalarySummary
     {
         public override SalarySummaryReport? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            return Parse(reader.GetString()!);
+            using (var jsonDoc = JsonDocument.ParseValue(ref reader))
+            {
+                string jsonText = jsonDoc.RootElement.GetRawText();
+                return Parse(jsonText);
+            }
         }
 
         public override void Write(Utf8JsonWriter writer, SalarySummaryReport value, JsonSerializerOptions options)
@@ -109,30 +113,32 @@ namespace ReportService.Structures.Reports.SalarySummary
 
 
             List<Country> countryList = new List<Country>();
-
+            reader.ReadLine();
             currentLine = reader.ReadLine();
-            while (currentLine != "],")
+            while (!currentLine.StartsWith(']'))
             {
-                currentLine = reader.ReadLine();
                 if (currentLine[currentLine.Length - 1] == ',')
                 {
                     currentLine = currentLine.Substring(0, currentLine.Length - 1);
                 }
                 countryList.Add(JsonSerializer.Deserialize<Country>(currentLine));
+                currentLine = reader.ReadLine();
             }
 
             List<StatisticMetric> statisticsOnCountries = new List<StatisticMetric>();
+            reader.ReadLine();
             currentLine = reader.ReadLine();
-            while (currentLine != "],")
-            {
-                currentLine = reader.ReadLine();
+            while (!currentLine.StartsWith(']'))
+            {     
                 if (currentLine[currentLine.Length - 1] == ',')
                 {
                     currentLine = currentLine.Substring(0, currentLine.Length - 1);
                 }
                 statisticsOnCountries.Add(JsonSerializer.Deserialize<StatisticMetric>(currentLine));
+                currentLine = reader.ReadLine();
             }
 
+            resultReport.IncludedCountriesMetrics = new Dictionary<Country, StatisticMetric>();
             for (int i = 0; i < countryList.Count; i++)
             {
                 resultReport.IncludedCountriesMetrics.Add(countryList[i], statisticsOnCountries[i]);
@@ -140,46 +146,48 @@ namespace ReportService.Structures.Reports.SalarySummary
 
 
             List<Office> officeList = new List<Office>();
-
+            reader.ReadLine();
             currentLine = reader.ReadLine();
-            while (currentLine != "],")
-            {
-                currentLine = reader.ReadLine();
+            while (!currentLine.StartsWith(']'))
+            {       
                 if (currentLine[currentLine.Length - 1] == ',')
                 {
                     currentLine = currentLine.Substring(0, currentLine.Length - 1);
                 }
                 officeList.Add(JsonSerializer.Deserialize<Office>(currentLine));
+                currentLine = reader.ReadLine();
             }
 
             List<StatisticMetric> statisticsOnOffices = new List<StatisticMetric>();
+            reader.ReadLine();
             currentLine = reader.ReadLine();
-            while (currentLine != "],")
-            {
-                currentLine = reader.ReadLine();
+            while (!currentLine.StartsWith(']'))
+            {      
                 if (currentLine[currentLine.Length - 1] == ',')
                 {
                     currentLine = currentLine.Substring(0, currentLine.Length - 1);
                 }
                 statisticsOnOffices.Add(JsonSerializer.Deserialize<StatisticMetric>(currentLine));
+                currentLine = reader.ReadLine();
             }
 
+            resultReport.IncludedOfficesMetrics = new Dictionary<Office, StatisticMetric>();
             for (int i = 0; i < officeList.Count; i++)
             {
                 resultReport.IncludedOfficesMetrics.Add(officeList[i], statisticsOnOffices[i]);
             }
 
             List<Employee> employeeList = new List<Employee>();
-
+            reader.ReadLine();
             currentLine = reader.ReadLine();
-            while (currentLine != "],")
-            {
-                currentLine = reader.ReadLine();
+            while (!currentLine.StartsWith(']'))
+            {              
                 if (currentLine[currentLine.Length - 1] == ',')
                 {
                     currentLine = currentLine.Substring(0, currentLine.Length - 1);
                 }
                 employeeList.Add(JsonSerializer.Deserialize<Employee>(currentLine));
+                currentLine = reader.ReadLine();
             }
 
             resultReport.IncludedEmployees = employeeList;
