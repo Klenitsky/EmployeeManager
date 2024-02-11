@@ -30,7 +30,7 @@ namespace ReportService.Web.Controllers
         public IActionResult Create()
         {
             var offices = _officeReader.Read();
-            ViewBag.Offices = offices.Select(o => (o.Id +" "+ o.Name)).ToArray();
+            ViewBag.Offices = offices.Select(o => (o.Id + " " + o.Name + " (" + o.CountryNavigation.Abbreviation + ")")).ToArray();
             var countries = _countryReader.Read();
             ViewBag.Countries = countries.Select(c => (c.Id + " " + c.Abbreviation)).ToArray();
             return View();
@@ -42,7 +42,7 @@ namespace ReportService.Web.Controllers
             {
                 StartDate = startDate,
                 EndDate = endDate,
-                IncludedOffices = _officeReader.Read().Where(o => offices.Contains(o.Id + " " + o.Name)).ToList(),
+                IncludedOffices = _officeReader.Read().Where(o => offices.Contains(o.Id + " " + o.Name + " (" + o.CountryNavigation.Abbreviation + ")")).ToList(),
                 IncludedCountries = _countryReader.Read().Where(c => countries.Contains(c.Id + " " + c.Abbreviation)).ToList(),
             };
             var report = _reportReader.GetReport(args);
