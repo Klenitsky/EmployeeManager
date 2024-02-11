@@ -2,7 +2,7 @@
 @{
     ViewData["Title"] = "Payment report";
 }
-<h2>Отчет о выплатах за период с @Model.StartDate по @Model.EndDate </h2>
+<h2>Отчет о выплатах за период с @Model.StartDate.ToString("dd.MM.yyyy") по @Model.EndDate.ToString("dd.MM.yyyy")</h2>
 @foreach (var countryMetric in Model.IncludedCountriesMetrics)
 {
     <h3>@countryMetric.Key.Name</h3>

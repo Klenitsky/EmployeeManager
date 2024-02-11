@@ -2,7 +2,7 @@
 @{
     ViewData["Title"] = "Exchange rates report";
 }
-<h2>Отчет о курсах валют за период с @Model.StartDate по @Model.EndDate </h2>
+<h2>Отчет о курсах валют за период с @Model.StartDate.ToString("dd.MM.yyyy") по @Model.EndDate.ToString("dd.MM.yyyy") </h2>
 @foreach(var currency in Model.IncludedCurrencies)
 {
     <h3>@currency.Key.Abbreviation</h3>
@@ -12,7 +12,7 @@
         @foreach(var rate in Model.ExchangeRates.Where(r=>r.Abbreviation == currency.Key.Abbreviation))
         {
            <tr>
-               <td>@rate.Date</td>
+               <td>@rate.Date.ToString("dd.MM.yyyy")</td>
                <td>@rate.Rate</td>
            </tr>
         }
