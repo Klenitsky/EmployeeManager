@@ -54,7 +54,7 @@ namespace ServicesTests.EmployeeServiceTests
             Currency testCurrency = new Currency() { Name = "Russian Ruble", Abbreviation = "RUB", Code = 871 };
             var response = _controller.Add(testCurrency);
 
-            Assert.True(response is OkResult);
+            Assert.True(response is CreatedAtActionResult);
             Assert.True(_controller.GetAll().Value.Where(c => c.Abbreviation == testCurrency.Abbreviation).Count() > 0);
 
             testCurrency = _controller.GetAll().Value.Where(c => c.Abbreviation == testCurrency.Abbreviation).First();
@@ -69,8 +69,8 @@ namespace ServicesTests.EmployeeServiceTests
                 new Currency() { Name = "Russian Ruble", Abbreviation = "RUB", Code = 871 },
                 new Currency() { Name = "EURO", Abbreviation = "EUR", Code = 444 }
             };
-            var response = _controller.AddRange(testCurrencies);
-            Assert.True(response is OkResult);
+            var response = _controller.AddRange(testCurrencies) as CreatedAtActionResult;
+            Assert.True(response is CreatedAtActionResult);
             foreach (var currency in testCurrencies)
             {
                 Assert.True(_controller.GetAll().Value.Where(c => c.Abbreviation == currency.Abbreviation).Count() > 0);
