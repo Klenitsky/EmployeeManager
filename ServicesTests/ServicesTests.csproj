@@ -23,8 +23,11 @@
 
   <ItemGroup>
     <ProjectReference Include="..\EmployeeService.DAL\EmployeeService.DAL.csproj" />
+    <ProjectReference Include="..\EmployeeService\EmployeeService.csproj" />
     <ProjectReference Include="..\ExchangeRateService.DAL\ExchangeRateService.DAL.csproj" />
+    <ProjectReference Include="..\ExchangeRateService\ExchangeRateService.csproj" />
     <ProjectReference Include="..\ReportService.Structures\ReportService.Structures.csproj" />
+    <ProjectReference Include="..\ReportService\ReportService.csproj" />
   </ItemGroup>
 
   <ItemGroup>
