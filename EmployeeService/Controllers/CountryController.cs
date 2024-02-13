@@ -20,7 +20,7 @@ namespace EmployeeService.Controllers
 
 
         [HttpGet("")]
-        public ActionResult<IEnumerable<Currency>> GetAll()
+        public ActionResult<IEnumerable<Country>> GetAll()
         {
             try
             {
@@ -33,7 +33,7 @@ namespace EmployeeService.Controllers
         }
 
         [HttpGet("Find/{id}")]
-        public ActionResult<Currency> Find(int id)
+        public ActionResult<Country> Find(int id)
         {
             Country answer = _countryRepo.Find(id);
             if (answer != null)
