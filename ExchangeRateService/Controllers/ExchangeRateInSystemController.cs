@@ -19,7 +19,7 @@ namespace ExchangeRateService.Controllers
         }
 
         [HttpGet("Rates")]
-        public ActionResult<IEnumerable<ExchangeRate>> GetExchangeRates()
+        public IActionResult GetExchangeRates()
         {
             try
             {
@@ -33,7 +33,7 @@ namespace ExchangeRateService.Controllers
 
 
         [HttpGet("Currencies")]
-        public ActionResult<IEnumerable<ActiveCurrency>> GetActiveCurrencies()
+        public IActionResult GetActiveCurrencies()
         {
             try
             {
@@ -46,7 +46,7 @@ namespace ExchangeRateService.Controllers
         }
 
         [HttpGet("OnCurrency")]
-        public ActionResult<IEnumerable<ExchangeRate>> GetRatesByCurrency(string currencyAbbreviation)
+        public IActionResult GetRatesByCurrency(string currencyAbbreviation)
         {
             try
             {
@@ -73,7 +73,7 @@ namespace ExchangeRateService.Controllers
         }
 
         [HttpGet("OnDate")]
-        public ActionResult<IEnumerable<ExchangeRate>> GetByDate(DateTime Date)
+        public IActionResult GetByDate(DateTime Date)
         {
             try
             {
@@ -87,7 +87,7 @@ namespace ExchangeRateService.Controllers
         }
 
         [HttpGet("OnDateRange")]
-        public ActionResult<IEnumerable<ExchangeRate>> GetByDateRange(DateTime startDate, DateTime endDate)
+        public IActionResult GetByDateRange(DateTime startDate, DateTime endDate)
         {
             try
             {
@@ -101,7 +101,7 @@ namespace ExchangeRateService.Controllers
         }
 
         [HttpGet("OnDateAndCurrency")]
-        public ActionResult<ExchangeRate> GetByDateAndCurrency(DateTime date, string currencyAbbreviation)
+        public IActionResult GetByDateAndCurrency(DateTime date, string currencyAbbreviation)
         {
             try
             {
@@ -115,7 +115,7 @@ namespace ExchangeRateService.Controllers
         }
 
         [HttpGet("OnDateRangeAndCurrency")]
-        public ActionResult<IEnumerable<ExchangeRate>> GetByDateRangeAndCurrency(DateTime startDate, DateTime endDate, string currencyAbbreviation)
+        public IActionResult GetByDateRangeAndCurrency(DateTime startDate, DateTime endDate, string currencyAbbreviation)
         {
             try
             {

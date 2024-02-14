@@ -29,7 +29,8 @@ namespace ExchangeRateService.DAL.NbrbAPI.Repositories
 
         public IEnumerable<ActiveCurrency> GetActiveCurrencies()
         {
-            return _dbContext.ActiveCurrencies.ToList();
+            var currencies = _dbContext.ActiveCurrencies.ToList();
+            return currencies;
         }
 
         public ExchangeRate GetExchangeRateByDateAndCurrencyOnRequest(string currencyAbbreviation, DateTime date)
