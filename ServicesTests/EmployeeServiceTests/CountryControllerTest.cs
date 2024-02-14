@@ -13,11 +13,12 @@ namespace ServicesTests.EmployeeServiceTests
     public  class CountryControllerTest
     {
             private CountryController _controller;
-
+            private int _currencyForCountriesId;
             public CountryControllerTest()
             {
                 string[] args = { };
                 _controller = new CountryController(new ApplicationDbContextFactory().CreateDbContext(args));
+                _currencyForCountriesId = new CurrencyController(new ApplicationDbContextFactory().CreateDbContext(args)).GetAll().Value.First().Id;
             }
 
 
@@ -51,7 +52,7 @@ namespace ServicesTests.EmployeeServiceTests
             [Fact]
             public void AddTest()
             {
-                Country testCountry = new Country() { Name = "Republic of Poland", Abbreviation = "PLN", Currency= new Currency() { Name = "EURO", Abbreviation = "EUR", Code = 444 } };
+                Country testCountry = new Country() { Name = "Republic of Poland", Abbreviation = "PLN", CurrencyId = _currencyForCountriesId };
                 var response = _controller.Add(testCountry);
 
                 Assert.True(response is CreatedAtActionResult);
@@ -66,8 +67,8 @@ namespace ServicesTests.EmployeeServiceTests
             {
                 List<Country> testCountries = new List<Country>()
                 {
-                    new Country() { Name = "Republic of Poland", Abbreviation = "PLN", Currency= new Currency() { Name = "EURO", Abbreviation = "EUR", Code = 444 } },
-                    new Country() { Name = "Republic of France", Abbreviation = "FRC", Currency= new Currency() { Name = "EURO", Abbreviation = "EUR", Code = 444 } },
+                    new Country() { Name = "Republic of Poland", Abbreviation = "PLN", CurrencyId = _currencyForCountriesId },
+                    new Country() { Name = "Republic of France", Abbreviation = "FRC", CurrencyId = _currencyForCountriesId  },
                 };
                 var response = _controller.AddRange(testCountries);
                 Assert.True(response is CreatedAtActionResult);
@@ -84,7 +85,7 @@ namespace ServicesTests.EmployeeServiceTests
             [Fact]
             public void UpdateTest()
             {
-                Country testCountry = new Country() { Name = "Republic of Poland", Abbreviation = "PLN", Currency = new Currency() { Name = "EURO", Abbreviation = "EUR", Code = 444 } };
+                Country testCountry = new Country() { Name = "Republic of Poland", Abbreviation = "PLN", CurrencyId = _currencyForCountriesId };
                 _controller.Add(testCountry);
                 var addedCountryId = _controller.GetAll().Value.Where(c => c.Abbreviation == "PLN").First().Id;
                 testCountry.Abbreviation = "RRB";
@@ -104,8 +105,8 @@ namespace ServicesTests.EmployeeServiceTests
             {
                 List<Country> testCountries = new List<Country>()
                 {
-                    new Country() { Name = "Republic of Poland", Abbreviation = "PLN", Currency= new Currency() { Name = "EURO", Abbreviation = "EUR", Code = 444 } },
-                    new Country() { Name = "Republic of France", Abbreviation = "FRC", Currency= new Currency() { Name = "EURO", Abbreviation = "EUR", Code = 444 } },
+                    new Country() { Name = "Republic of Poland", Abbreviation = "PLN", CurrencyId = _currencyForCountriesId  },
+                    new Country() { Name = "Republic of France", Abbreviation = "FRC", CurrencyId = _currencyForCountriesId  },
                 };
                 _controller.AddRange(testCountries);
 
@@ -127,7 +128,7 @@ namespace ServicesTests.EmployeeServiceTests
             [Fact]
             public void DeleteTest()
             {
-                Country testCountry = new Country() { Name = "Republic of Poland", Abbreviation = "PLN", Currency = new Currency() { Name = "EURO", Abbreviation = "EUR", Code = 444 } };
+                Country testCountry = new Country() { Name = "Republic of Poland", Abbreviation = "PLN", CurrencyId = _currencyForCountriesId };
                 var response = _controller.Add(testCountry);
                 testCountry = _controller.GetAll().Value.Where(c => c.Abbreviation == testCountry.Abbreviation).First();
                 _controller.Delete(testCountry);
@@ -140,8 +141,8 @@ namespace ServicesTests.EmployeeServiceTests
             {
                 List<Country> testCountries = new List<Country>()
                 {
-                    new Country() { Name = "Republic of Poland", Abbreviation = "PLN", Currency= new Currency() { Name = "EURO", Abbreviation = "EUR", Code = 444 } },
-                    new Country() { Name = "Republic of France", Abbreviation = "FRC", Currency= new Currency() { Name = "EURO", Abbreviation = "EUR", Code = 444 } },
+                    new Country() { Name = "Republic of Poland", Abbreviation = "PLN", CurrencyId = _currencyForCountriesId  },
+                    new Country() { Name = "Republic of France", Abbreviation = "FRC", CurrencyId = _currencyForCountriesId },
                 };
                 var response = _controller.AddRange(testCountries);
                 testCountries = _controller.GetAll().Value.Where(c => c.Abbreviation == "PLN" || c.Abbreviation == "FRC").ToList();
@@ -156,7 +157,7 @@ namespace ServicesTests.EmployeeServiceTests
             [Fact]
             public void DeleteByIdTest()
             {
-            Country testCountry = new Country() { Name = "Republic of Poland", Abbreviation = "PLN", Currency = new Currency() { Name = "EURO", Abbreviation = "EUR", Code = 444 } };
+            Country testCountry = new Country() { Name = "Republic of Poland", Abbreviation = "PLN", CurrencyId = _currencyForCountriesId };
             var response = _controller.Add(testCountry);
                 testCountry = _controller.GetAll().Value.Where(c => c.Abbreviation == testCountry.Abbreviation).First();
                 _controller.Delete(testCountry.Id);
