@@ -77,7 +77,7 @@ namespace ServicesTests.EmployeeServiceTests
             Assert.True(response is CreatedAtActionResult);
             foreach (var office in testOffices)
             {
-                Assert.True(_controller.GetAll().Value.Where(c => c.Name == office.Name).Count() > 0);
+                Assert.True(_controller.GetAll().Value.Where(o => o.Name == office.Name).Count() > 0);
 
             }
             testOffices = _controller.GetAll().Value.Where(o => o.Name == "QA" || o.Name == "DevOps").ToList();
@@ -150,9 +150,9 @@ namespace ServicesTests.EmployeeServiceTests
             testOffices = _controller.GetAll().Value.Where(o => o.Name == "QA" || o.Name == "DevOps").ToList();
             _controller.DeleteRange(testOffices);
             Assert.True(response is OkResult);
-            foreach (var currency in testOffices)
+            foreach (var office in testOffices)
             {
-                Assert.True(_controller.GetAll().Value.Where(o => o.Name == o.Name).Count() == 0);
+                Assert.True(_controller.GetAll().Value.Where(o => o.Name == office.Name).Count() == 0);
             }
         }
 
