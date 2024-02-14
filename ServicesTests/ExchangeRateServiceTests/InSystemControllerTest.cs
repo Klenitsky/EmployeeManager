@@ -20,20 +20,32 @@ namespace ServicesTests.ExchangeRateServiceTests
         public InSystemControllerTest()
         {
             _controller = new ExchangeRateInSystemController(new NbrbExchangeRateRepo());
+           
         }
 
         [Fact]
         public void GetAllRatesInSystemTest()
         {
-           var result = _controller.GetExchangeRates().Value;
-           Assert.NotNull(result);
+           var resultAction = _controller.GetExchangeRates();
+           var result = resultAction as OkObjectResult;
+           IEnumerable<ExchangeRate> rates = result.Value as IEnumerable<ExchangeRate>;
+
+            Assert.True(result is OkObjectResult);
+            Assert.NotNull(result.Value);
+            Assert.True(rates.Count() > 0);
         }
 
         [Fact]
         public void GetActiveCurrenciesTest()
         {
-            var result = _controller.GetActiveCurrencies().Value;
-            Assert.NotNull(result);
+           
+            var resultAction = _controller.GetActiveCurrencies();          
+            var result = resultAction as OkObjectResult;
+            IEnumerable<ActiveCurrency> activeCurrencies = result.Value as IEnumerable<ActiveCurrency>; 
+
+            Assert.True(resultAction is OkObjectResult);
+            Assert.NotNull(result.Value);
+            Assert.Equal(3, activeCurrencies.Count());
         }
 
         [Theory]
@@ -42,9 +54,13 @@ namespace ServicesTests.ExchangeRateServiceTests
         [InlineData("GBP")]
         public void GetAllRatesByCurrencyTestSuccess(string abbreviation)
         {
-            var result = _controller.GetRatesByCurrency(abbreviation).Value;
-            Assert.NotNull(result);
-            foreach(var rate in result)
+            var resultAction = _controller.GetRatesByCurrency(abbreviation);
+            var result = resultAction as OkObjectResult;
+            IEnumerable<ExchangeRate> rates = result.Value as IEnumerable<ExchangeRate>;
+
+            Assert.True(resultAction is OkObjectResult);
+            Assert.NotNull(result.Value);
+            foreach (var rate in rates)
             {
                 Assert.NotNull(rate);
                 Assert.Equal(abbreviation, rate.Abbreviation);
@@ -57,8 +73,8 @@ namespace ServicesTests.ExchangeRateServiceTests
         [InlineData("www")]
         public void GetAllRatesByCurrencyTestBadCurrency(string abbreviation)
         {
-            var result = _controller.GetRatesByCurrency(abbreviation).Value;
-            Assert.Null(result);
+            var resultAction = _controller.GetRatesByCurrency(abbreviation);
+            Assert.False(resultAction is OkObjectResult);
         }
 
 
@@ -68,9 +84,13 @@ namespace ServicesTests.ExchangeRateServiceTests
         public void OnDateTestSuccess(string dateString)
         {
             DateTime date = DateTime.Parse(dateString);
-            var result = _controller.GetByDate(date).Value;
-            Assert.NotNull(result);
-            foreach (var rate in result)
+            var resultAction = _controller.GetByDate(date);
+            var result = resultAction as OkObjectResult;
+            IEnumerable<ExchangeRate> rates = result.Value as IEnumerable<ExchangeRate>;
+
+            Assert.True(resultAction is OkObjectResult);
+            Assert.NotNull(result.Value);
+            foreach (var rate in rates)
             {
                 Assert.NotNull(rate);
                 Assert.Equal(date, rate.Date);
@@ -84,8 +104,8 @@ namespace ServicesTests.ExchangeRateServiceTests
         public void OnDateTestBadDate(string dateString)
         {
             DateTime date = DateTime.Parse(dateString);
-            var result = _controller.GetByDate(date).Value;
-            Assert.Null(result);
+            var resultAction = _controller.GetByDate(date);
+            Assert.False(resultAction is OkObjectResult);
         }
 
 
@@ -96,9 +116,13 @@ namespace ServicesTests.ExchangeRateServiceTests
         {
             DateTime startDate = DateTime.Parse(startDateString);
             DateTime endDate = DateTime.Parse(endDateString);
-            var result = _controller.GetByDateRange(startDate,endDate).Value;
-            Assert.NotNull(result);
-            foreach (var rate in result)
+            var resultAction = _controller.GetByDateRange(startDate,endDate);
+            var result = resultAction as OkObjectResult;
+            IEnumerable<ExchangeRate> rates = result.Value as IEnumerable<ExchangeRate>;
+
+            Assert.True(resultAction is OkObjectResult);
+            Assert.NotNull(result.Value);
+            foreach (var rate in rates)
             {
                 Assert.NotNull(rate);
                 Assert.True(rate.Date >= startDate);
@@ -114,8 +138,8 @@ namespace ServicesTests.ExchangeRateServiceTests
         {
             DateTime startDate = DateTime.Parse(startDateString);
             DateTime endDate = DateTime.Parse(endDateString);
-            var result = _controller.GetByDateRange(startDate, endDate).Value;
-            Assert.Null(result);
+            var resultAction = _controller.GetByDateRange(startDate, endDate);
+            Assert.False(resultAction is OkObjectResult);
         }
 
 
@@ -125,10 +149,13 @@ namespace ServicesTests.ExchangeRateServiceTests
         public void OnDateAndCurrencyTestSuccess(string dateString, string abbreviation)
         {
             var date = DateTime.Parse(dateString);
-            var result = _controller.GetByDateAndCurrency(date,abbreviation).Value;
+            var resultAction = _controller.GetByDateAndCurrency(date,abbreviation);
+            var result = resultAction as OkObjectResult;
+            ExchangeRate rate = result.Value as ExchangeRate;
+
             Assert.NotNull(result);
-            Assert.Equal(date, result.Date);
-            Assert.Equal(abbreviation, result.Abbreviation);
+            Assert.Equal(date, rate.Date);
+            Assert.Equal(abbreviation, rate.Abbreviation);
         }
 
 
@@ -139,8 +166,8 @@ namespace ServicesTests.ExchangeRateServiceTests
         public void OnDateAndCurrencyTestBadDate(string dateString, string abbreviation)
         {
             var date = DateTime.Parse(dateString);
-            var result = _controller.GetByDateAndCurrency(date, abbreviation).Value;
-            Assert.Null(result);
+            var resultAction = _controller.GetByDateAndCurrency(date, abbreviation);
+            Assert.False(resultAction is OkObjectResult);
         }
 
 
@@ -150,8 +177,8 @@ namespace ServicesTests.ExchangeRateServiceTests
         public void OnDateAndCurrencyTestBadCurrency(string dateString, string abbreviation)
         {
             var date = DateTime.Parse(dateString);
-            var result = _controller.GetByDateAndCurrency(date, abbreviation).Value;
-            Assert.Null(result);
+            var resultAction = _controller.GetByDateAndCurrency(date, abbreviation);
+            Assert.False(resultAction is OkObjectResult);
         }
 
 
@@ -162,9 +189,13 @@ namespace ServicesTests.ExchangeRateServiceTests
         {
             DateTime startDate = DateTime.Parse(startDateString);
             DateTime endDate = DateTime.Parse(endDateString);
-            var result = _controller.GetByDateRangeAndCurrency(startDate, endDate,abbreviation).Value;
-            Assert.NotNull(result);
-            foreach (var rate in result)
+            var resultAction = _controller.GetByDateRangeAndCurrency(startDate, endDate,abbreviation);
+            var result = resultAction as OkObjectResult;
+            IEnumerable<ExchangeRate> rates = result.Value as IEnumerable<ExchangeRate>;
+
+            Assert.True(resultAction is OkObjectResult);
+            Assert.NotNull(result.Value);
+            foreach (var rate in rates)
             {
                 Assert.NotNull(rate);
                 Assert.True(rate.Date >= startDate);
@@ -181,8 +212,8 @@ namespace ServicesTests.ExchangeRateServiceTests
         {
             DateTime startDate = DateTime.Parse(startDateString);
             DateTime endDate = DateTime.Parse(endDateString);
-            var result = _controller.GetByDateRangeAndCurrency(startDate, endDate, abbreviation).Value;
-            Assert.Null(result);
+            var resultAction = _controller.GetByDateRangeAndCurrency(startDate, endDate, abbreviation);
+            Assert.False(resultAction is OkObjectResult);
         }
 
         [Theory]
@@ -192,8 +223,8 @@ namespace ServicesTests.ExchangeRateServiceTests
         {
             DateTime startDate = DateTime.Parse(startDateString);
             DateTime endDate = DateTime.Parse(endDateString);
-            var result = _controller.GetByDateRangeAndCurrency(startDate, endDate, abbreviation).Value;
-            Assert.Null(result);
+            var resultAction = _controller.GetByDateRangeAndCurrency(startDate, endDate, abbreviation);
+            Assert.False(resultAction is OkObjectResult);
         }
     }
 }
