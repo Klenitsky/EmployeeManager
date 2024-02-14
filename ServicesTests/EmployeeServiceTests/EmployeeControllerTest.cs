@@ -62,7 +62,7 @@ namespace ServicesTests.EmployeeServiceTests
             Assert.True(response is CreatedAtActionResult);
             Assert.True(_controller.GetAll().Value.Where(e => e.FirstName == testEmployee.FirstName).Count() > 0);
 
-            testEmployee = _controller.GetAll().Value.Where(o => e.FirstName == testEmployee.FirstName).First();
+            testEmployee = _controller.GetAll().Value.Where(e => e.FirstName == testEmployee.FirstName).First();
             _controller.Delete(testEmployee);
         }
 
