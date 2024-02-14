@@ -19,7 +19,7 @@ namespace ExchangeRateService.Controllers
         }
 
         [HttpGet("OnDate")]
-        public ActionResult<IEnumerable<ExchangeRate>> GetByDate(DateTime Date)
+        public IActionResult GetByDate(DateTime Date)
         {
             try
             {
@@ -33,7 +33,7 @@ namespace ExchangeRateService.Controllers
         }
 
         [HttpGet("OnDateRange")]
-        public ActionResult<IEnumerable<ExchangeRate>> GetByDateRange(DateTime startDate, DateTime endDate)
+        public IActionResult GetByDateRange(DateTime startDate, DateTime endDate)
         {
             try
             {
@@ -47,7 +47,7 @@ namespace ExchangeRateService.Controllers
         }
 
         [HttpGet("OnDateAndCurrency")]
-        public ActionResult<ExchangeRate> GetByDateAndCurrency(DateTime date, string currencyAbbreviation)
+        public IActionResult GetByDateAndCurrency(DateTime date, string currencyAbbreviation)
         {
             try
             {
@@ -61,7 +61,7 @@ namespace ExchangeRateService.Controllers
         }
 
         [HttpGet("OnDateRangeAndCurrency")]
-        public ActionResult<IEnumerable<ExchangeRate>> GetByDateRangeAndCurrency(DateTime startDate, DateTime endDate, string currencyAbbreviation)
+        public IActionResult GetByDateRangeAndCurrency(DateTime startDate, DateTime endDate, string currencyAbbreviation)
         {
             try
             {
