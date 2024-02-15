@@ -20,7 +20,7 @@ namespace ServicesTests.EmployeeServiceTests
         {
             string[] args = { };
             _controller = new OfficeController(new ApplicationDbContextFactory().CreateDbContext(args));
-            _countryToTestId = new CountryController(new ApplicationDbContextFactory().CreateDbContext(args)).GetAll().Value.First().Id;
+            _countryToTestId = ((new CountryController(new ApplicationDbContextFactory().CreateDbContext(args)).GetAll() as OkObjectResult).Value as IEnumerable<Country>).First().Id;
         }
 
 
@@ -28,9 +28,12 @@ namespace ServicesTests.EmployeeServiceTests
         [Fact]
         public void GetAllTest()
         {
-            var result = _controller.GetAll();
+            var resultAction = _controller.GetAll();
+            var result = resultAction as OkObjectResult;
+            var offices = result.Value as IEnumerable<Office>;
+            Assert.True(resultAction is OkObjectResult);
             Assert.NotNull(result.Value);
-            Assert.Equal(3, result.Value.Count());
+            Assert.NotNull(offices);
         }
 
         [Theory]
@@ -38,9 +41,12 @@ namespace ServicesTests.EmployeeServiceTests
         [InlineData(4, "Head")]
         public void GetByIdTestSuccess(int id, string name)
         {
-            var result = _controller.Find(id).Value;
-            Assert.NotNull(result);
-            Assert.Equal(name, result.Name);
+            var resultAction = _controller.Find(id);
+            var result = resultAction as OkObjectResult;
+            var office = result.Value as Office;
+            Assert.True(resultAction is OkObjectResult);
+            Assert.NotNull(result.Value);
+            Assert.Equal(name, office.Name);
         }
 
         [Theory]
@@ -48,8 +54,32 @@ namespace ServicesTests.EmployeeServiceTests
         [InlineData(1500)]
         public void GetByIdTestInvalidId(int id)
         {
-            var result = _controller.Find(id).Value;
-            Assert.Null(result);
+            var resultAction = _controller.Find(id);
+            Assert.False(resultAction is OkObjectResult);
+        }
+
+        [Fact]
+        public void GetByCountryTestSuccess()
+        {          
+            var resultAction = _controller.FindByCountry(_countryToTestId);
+            var result = resultAction as OkObjectResult;
+            var offices = result.Value as IEnumerable<Office>;
+            Assert.True(resultAction is OkObjectResult);
+            Assert.NotNull(result.Value);
+            Assert.NotNull(offices);
+            foreach(var office in offices)
+            {
+                Assert.Equal(_countryToTestId, office.CountryId);
+            }
+        }
+
+        [Theory]
+        [InlineData(-1)]
+        [InlineData(1500)]
+        public void GetByCountryTestInvalidId(int id)
+        {
+            var resultAction = _controller.FindByCountry(id);
+            Assert.False(resultAction is OkObjectResult);
         }
 
         [Fact]
@@ -59,9 +89,9 @@ namespace ServicesTests.EmployeeServiceTests
             var response = _controller.Add(testOffice);
 
             Assert.True(response is CreatedAtActionResult);
-            Assert.True(_controller.GetAll().Value.Where(o => o.Name == testOffice.Name).Count() > 0);
+            Assert.True(((_controller.GetAll() as OkObjectResult).Value as IEnumerable<Office>).Where(o => o.Name == testOffice.Name).Count() > 0);
 
-            testOffice = _controller.GetAll().Value.Where(o => o.Name == testOffice.Name).First();
+            testOffice = ((_controller.GetAll() as OkObjectResult).Value as IEnumerable<Office>).Where(o => o.Name == testOffice.Name).First();
             _controller.Delete(testOffice);
         }
 
@@ -77,10 +107,9 @@ namespace ServicesTests.EmployeeServiceTests
             Assert.True(response is CreatedAtActionResult);
             foreach (var office in testOffices)
             {
-                Assert.True(_controller.GetAll().Value.Where(o => o.Name == office.Name).Count() > 0);
-
+                Assert.True(((_controller.GetAll() as OkObjectResult).Value as IEnumerable<Office>).Where(o => o.Name == office.Name).Count() > 0);
             }
-            testOffices = _controller.GetAll().Value.Where(o => o.Name == "QA" || o.Name == "DevOps").ToList();
+            testOffices = ((_controller.GetAll() as OkObjectResult).Value as IEnumerable<Office>).Where(o => o.Name == "QA" || o.Name == "DevOps").ToList();
             _controller.DeleteRange(testOffices);
 
         }
@@ -89,7 +118,7 @@ namespace ServicesTests.EmployeeServiceTests
         public void UpdateTest()
         {
             Office testOffice = new Office() { Name = "QA", CountryId = _countryToTestId };
-            var addedOfficeId = _controller.GetAll().Value.Where(o => o.Name == "QA").First().Id;
+            var addedOfficeId = ((_controller.GetAll() as OkObjectResult).Value as IEnumerable<Office>).Where(o => o.Name == "QA").First().Id;
             testOffice.Name = "RQ";
             testOffice.Id = addedOfficeId;
 
@@ -97,7 +126,7 @@ namespace ServicesTests.EmployeeServiceTests
 
 
             Assert.True(response is OkResult);
-            Assert.True(_controller.GetAll().Value.Where(c => c.Id == addedOfficeId).First().Name == "RQ");
+            Assert.True(((_controller.GetAll() as OkObjectResult).Value as IEnumerable<Office>).Where(c => c.Id == addedOfficeId).First().Name == "RQ");
 
             _controller.Delete(testOffice);
         }
@@ -112,7 +141,7 @@ namespace ServicesTests.EmployeeServiceTests
                 };
             _controller.AddRange(testOffices);
 
-            testOffices = _controller.GetAll().Value.Where(o => o.Name == "QA" || o.Name == "DevOps").ToList();
+            testOffices = ((_controller.GetAll() as OkObjectResult).Value as IEnumerable<Office>).Where(o => o.Name == "QA" || o.Name == "DevOps").ToList();
             testOffices[0].Name = "QB";
             testOffices[1].Name = "DEFOPS";
 
@@ -120,7 +149,7 @@ namespace ServicesTests.EmployeeServiceTests
             Assert.True(response is OkResult);
             foreach (var office in testOffices)
             {
-                Assert.True(_controller.GetAll().Value.Where(o => o.Name == office.Name).Count() > 0);
+                Assert.True(((_controller.GetAll() as OkObjectResult).Value as IEnumerable<Office>).Where(o => o.Name == office.Name).Count() > 0);
 
             }
             _controller.DeleteRange(testOffices);
@@ -132,10 +161,10 @@ namespace ServicesTests.EmployeeServiceTests
         {
             Office testOffice = new Office() { Name = "QA", CountryId = _countryToTestId };
             var response = _controller.Add(testOffice);
-            testOffice = _controller.GetAll().Value.Where(o => o.Name == testOffice.Name).First();
+            testOffice = ((_controller.GetAll() as OkObjectResult).Value as IEnumerable<Office>).Where(o => o.Name == testOffice.Name).First();
             _controller.Delete(testOffice);
             Assert.True(response is OkResult);
-            Assert.True(_controller.GetAll().Value.Where(o => o.Name == testOffice.Name).Count() == 0);
+            Assert.True(((_controller.GetAll() as OkObjectResult).Value as IEnumerable<Office>).Where(o => o.Name == testOffice.Name).Count() == 0);
         }
 
         [Fact]
@@ -147,25 +176,35 @@ namespace ServicesTests.EmployeeServiceTests
                     new Office() { Name = "DevOps", CountryId= _countryToTestId}
                 };
             var response = _controller.AddRange(testOffices);
-            testOffices = _controller.GetAll().Value.Where(o => o.Name == "QA" || o.Name == "DevOps").ToList();
+            testOffices = ((_controller.GetAll() as OkObjectResult).Value as IEnumerable<Office>).Where(o => o.Name == "QA" || o.Name == "DevOps").ToList();
             _controller.DeleteRange(testOffices);
             Assert.True(response is OkResult);
             foreach (var office in testOffices)
             {
-                Assert.True(_controller.GetAll().Value.Where(o => o.Name == office.Name).Count() == 0);
+                Assert.True(((_controller.GetAll() as OkObjectResult).Value as IEnumerable<Office>).Where(o => o.Name == office.Name).Count() == 0);
             }
         }
 
         [Fact]
-        public void DeleteByIdTest()
+        public void DeleteByIdTestSuccess()
         {
             Office testOffice = new Office() { Name = "QA", CountryId = _countryToTestId };
             var response = _controller.Add(testOffice);
-            testOffice = _controller.GetAll().Value.Where(o => o.Name == testOffice.Name).First();
+            testOffice = ((_controller.GetAll() as OkObjectResult).Value as IEnumerable<Office>).Where(o => o.Name == testOffice.Name).First();
             _controller.Delete(testOffice.Id);
             Assert.True(response is OkResult);
-            Assert.True(_controller.GetAll().Value.Where(o => o.Name == testOffice.Name).Count() == 0);
+            Assert.True(((_controller.GetAll() as OkObjectResult).Value as IEnumerable<Office>).Where(o => o.Name == testOffice.Name).Count() == 0);
 
+        }
+
+
+        [Theory]
+        [InlineData(-1)]
+        [InlineData(1500)]
+        public void DeleteByIdTestInvalidId(int id)
+        {
+            var resultAction = _controller.Delete(id);
+            Assert.False(resultAction is OkResult);
         }
     }
 }

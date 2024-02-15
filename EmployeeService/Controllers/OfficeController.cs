@@ -22,7 +22,7 @@ namespace EmployeeService.Controllers
 
         [HttpGet]
         [Route("")]
-        public ActionResult<IEnumerable<Office>> GetAll()
+        public IActionResult GetAll()
         {
             try
             {
