@@ -34,8 +34,8 @@ namespace ServicesTests.EmployeeServiceTests
             }
 
             [Theory]
-            [InlineData(4, "USA")]
-            [InlineData(5, "GBR")]
+            [InlineData(3, "USA")]
+            [InlineData(4, "UK")]
             public void GetByIdTestSuccess(int id, string abbreviation)
             {
                 var resultAction = _controller.Find(id);
@@ -138,7 +138,7 @@ namespace ServicesTests.EmployeeServiceTests
                 Country testCountry = new Country() { Name = "Republic of Poland", Abbreviation = "PLN", CurrencyId = _currencyForCountriesId };
                 var response = _controller.Add(testCountry);
                 testCountry = ((_controller.GetAll() as OkObjectResult).Value as IEnumerable<Country>).Where(c => c.Abbreviation == testCountry.Abbreviation).First();
-                _controller.Delete(testCountry);
+                response = _controller.Delete(testCountry);
                 Assert.True(response is OkResult);
                 Assert.True(((_controller.GetAll() as OkObjectResult).Value as IEnumerable<Country>).Where(c => c.Abbreviation == testCountry.Abbreviation).Count() == 0);
             }
@@ -153,7 +153,7 @@ namespace ServicesTests.EmployeeServiceTests
                 };
                 var response = _controller.AddRange(testCountries);
                 testCountries = ((_controller.GetAll() as OkObjectResult).Value as IEnumerable<Country>).Where(c => c.Abbreviation == "PLN" || c.Abbreviation == "FRC").ToList();
-                _controller.DeleteRange(testCountries);
+                response = _controller.DeleteRange(testCountries);
                 Assert.True(response is OkResult);
                 foreach (var currency in testCountries)
                 {
@@ -167,7 +167,7 @@ namespace ServicesTests.EmployeeServiceTests
             Country testCountry = new Country() { Name = "Republic of Poland", Abbreviation = "PLN", CurrencyId = _currencyForCountriesId };
             var response = _controller.Add(testCountry);
                 testCountry = ((_controller.GetAll() as OkObjectResult).Value as IEnumerable<Country>).Where(c => c.Abbreviation == testCountry.Abbreviation).First();
-                _controller.Delete(testCountry.Id);
+                response = _controller.Delete(testCountry.Id);
                 Assert.True(response is OkResult);
                 Assert.True(((_controller.GetAll() as OkObjectResult).Value as IEnumerable<Country>).Where(c => c.Abbreviation == testCountry.Abbreviation).Count() == 0);
 
