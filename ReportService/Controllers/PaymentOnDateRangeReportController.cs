@@ -32,7 +32,7 @@ namespace ReportService.Controllers
         }
 
         [HttpGet("")]
-        public ActionResult<PaymentOnDateRangeReport> GetOnDateRange()
+        public IActionResult GetOnDateRange()
         {  
             _paymentOnDateRangeReportBuilder.LoadData();
             _paymentOnDateRangeReportBuilder.CountMetrics();

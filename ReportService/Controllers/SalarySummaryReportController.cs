@@ -32,7 +32,7 @@ namespace ReportService.Controllers
         }
 
         [HttpGet("")]
-        public ActionResult<SalarySummaryReport> GetOnDateRange()
+        public IActionResult GetOnDateRange()
         {
                 _salarySummaryReportBuilder.LoadData();
                 _salarySummaryReportBuilder.CountMetrics();

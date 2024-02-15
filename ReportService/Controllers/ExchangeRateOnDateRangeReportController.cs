@@ -33,7 +33,7 @@ namespace ReportService.Controllers
         }
 
         [HttpGet("")]
-        public ActionResult<ExchangeRateOnDateRangeReport> GetOnDateRange()
+        public IActionResult GetOnDateRange()
         {
             try
             {
