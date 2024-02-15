@@ -8,6 +8,7 @@ using ReportService.Structures.Reports.ExchangeRateOnDateRange;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Json;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -17,15 +18,14 @@ namespace ServicesTests.ReportServiceTests
     {
         private ExchangeRateOnDateRangeReportController _exchangeRateOnDateRangeReportController;
         private List<Currency> _includedCurrencies;
-
+        private HttpClient _httpClient = new HttpClient();
 
         public ExchangeRateOnDateRangeReportControllerTest()
         {
             _exchangeRateOnDateRangeReportController = new ExchangeRateOnDateRangeReportController(new ExchangeRateOnDateRangeReportBuilder("http://localhost:5027/api/ExchangeRate"));
             string[] args = Array.Empty<string>();
-            _includedCurrencies = (new CurrencyController(new ApplicationDbContextFactory().CreateDbContext(args)).GetAll() as OkObjectResult).Value as List<Currency>;
+            _includedCurrencies = _httpClient.GetFromJsonAsync<IEnumerable<Currency>>("http://localhost:5282/api/EmployeeService/Currency").Result.ToList();
         }
-
 
         [Fact]
         public void GenerateReportSuccessTest()

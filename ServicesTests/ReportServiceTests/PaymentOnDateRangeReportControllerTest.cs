@@ -9,6 +9,8 @@ using ReportService.Structures.Reports.PaymentOnDateRange;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Json;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -19,21 +21,13 @@ namespace ServicesTests.ReportServiceTests
             private PaymentOnDateRangeReportController _paymentOnDateRangeReportController;
             private List<Office> _includedOffices;
             private List<Country> _includedCountries;
-
+            private HttpClient _httpClient = new HttpClient();
 
             public PaymentOnDateRangeReportControllerTest()
             {
                 _paymentOnDateRangeReportController = new PaymentOnDateRangeReportController(new PaymentOnDateRangeReportBuilder("http://localhost:5282/api/EmployeeService","http://localhost:5027/api/ExchangeRate"));
-                string[] args = { };
-                _includedOffices = new List<Office>
-                {
-                        (new OfficeController(new ApplicationDbContextFactory().CreateDbContext(args)).Find(1) as OkObjectResult).Value as Office
-                };
-
-                _includedCountries = new List<Country>
-                {
-                        (new CountryController(new ApplicationDbContextFactory().CreateDbContext(args)).Find(2) as OkObjectResult).Value as Country
-                };
+                _includedOffices = _httpClient.GetFromJsonAsync<IEnumerable<Office>>("http://localhost:5282/api/EmployeeService/Office").Result.Where(o => o.Id == 4 || o.Id == 5 || o.Id == 7).ToList() ;
+                _includedCountries = _httpClient.GetFromJsonAsync<IEnumerable<Country>>("http://localhost:5282/api/EmployeeService/Country").Result.Where(o => o.Id == 3).ToList();
             }
 
 
