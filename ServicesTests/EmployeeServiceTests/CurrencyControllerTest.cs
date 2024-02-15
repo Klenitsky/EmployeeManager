@@ -24,9 +24,13 @@ namespace ServicesTests.EmployeeServiceTests
         [Fact]
         public void GetAllTest()
         {
-            var result = _controller.GetAll().Value;
-            Assert.NotNull(result);
-            Assert.Equal(3, result.Count());
+            var resultAction = _controller.GetAll();
+            var result = resultAction as OkObjectResult;
+            var currencies = result.Value as IEnumerable<Currency>;
+            Assert.True(resultAction is OkObjectResult);
+            Assert.NotNull(result.Value);
+            Assert.NotNull(currencies);
+            Assert.Equal(3, currencies.Count());
         }
 
         [Theory]
@@ -34,9 +38,13 @@ namespace ServicesTests.EmployeeServiceTests
         [InlineData(5, "GBP")]
         public void GetByIdTestSuccess(int id, string abbreviation)
         {
-            var result = _controller.Find(id).Value;
-            Assert.NotNull(result);
-            Assert.Equal(abbreviation, result.Abbreviation);
+            var resultAction = _controller.Find(id);
+            var result = resultAction as OkObjectResult;
+            var currency = result.Value as Currency;
+            Assert.True(resultAction is OkObjectResult);
+            Assert.NotNull(result.Value);
+            Assert.NotNull(currency);
+            Assert.Equal(abbreviation, currency.Abbreviation);
         }
 
         [Theory]
@@ -44,8 +52,8 @@ namespace ServicesTests.EmployeeServiceTests
         [InlineData(1500)]
         public void GetByIdTestInvalidId(int id)
         {
-            var result = _controller.Find(id).Value;
-            Assert.Null(result);
+            var resultAction = _controller.Find(id);
+            Assert.False(resultAction is OkObjectResult); 
         }
 
         [Fact]
@@ -55,9 +63,9 @@ namespace ServicesTests.EmployeeServiceTests
             var response = _controller.Add(testCurrency);
 
             Assert.True(response is CreatedAtActionResult);
-            Assert.True(_controller.GetAll().Value.Where(c => c.Abbreviation == testCurrency.Abbreviation).Count() > 0);
+            Assert.True(((_controller.GetAll() as OkObjectResult).Value as IEnumerable<Currency>).Where(c => c.Abbreviation == testCurrency.Abbreviation).Count() > 0);
 
-            testCurrency = _controller.GetAll().Value.Where(c => c.Abbreviation == testCurrency.Abbreviation).First();
+            testCurrency = ((_controller.GetAll() as OkObjectResult).Value as IEnumerable<Currency>).Where(c => c.Abbreviation == testCurrency.Abbreviation).First();
             _controller.Delete(testCurrency);
         }
 
@@ -70,13 +78,14 @@ namespace ServicesTests.EmployeeServiceTests
                 new Currency() { Name = "EURO", Abbreviation = "EUR", Code = 444 }
             };
             var response = _controller.AddRange(testCurrencies) as CreatedAtActionResult;
+
             Assert.True(response is CreatedAtActionResult);
             foreach (var currency in testCurrencies)
             {
-                Assert.True(_controller.GetAll().Value.Where(c => c.Abbreviation == currency.Abbreviation).Count() > 0);
+                Assert.True(((_controller.GetAll() as OkObjectResult).Value as IEnumerable<Currency>).Where(c => c.Abbreviation == currency.Abbreviation).Count() > 0);
 
             }
-            testCurrencies = _controller.GetAll().Value.Where(c => c.Abbreviation == "RUB" || c.Abbreviation == "EUR").ToList();
+            testCurrencies = ((_controller.GetAll() as OkObjectResult).Value as IEnumerable<Currency>).Where(c => c.Abbreviation == "RUB" || c.Abbreviation == "EUR").ToList();
             _controller.DeleteRange(testCurrencies);
 
         }
@@ -86,15 +95,14 @@ namespace ServicesTests.EmployeeServiceTests
         {
             Currency testCurrency = new Currency() { Name = "Russian Ruble", Abbreviation = "RUB", Code = 871 };
             _controller.Add(testCurrency);
-            var addedCurrencyId = _controller.GetAll().Value.Where(c => c.Abbreviation == "RUB").First().Id;
+            var addedCurrencyId = ((_controller.GetAll() as OkObjectResult).Value as IEnumerable<Currency>).Where(c => c.Abbreviation == "RUB").First().Id;
             testCurrency.Abbreviation = "RRB";
             testCurrency.Id = addedCurrencyId;
 
             var response = _controller.Update(testCurrency);
 
-
             Assert.True(response is OkResult);
-            Assert.True(_controller.GetAll().Value.Where(c => c.Id == addedCurrencyId).First().Abbreviation == "RRB");
+            Assert.True(((_controller.GetAll() as OkObjectResult).Value as IEnumerable<Currency>).Where(c => c.Id == addedCurrencyId).First().Abbreviation == "RRB");
 
             _controller.Delete(testCurrency);
         }
@@ -109,17 +117,19 @@ namespace ServicesTests.EmployeeServiceTests
             };
             _controller.AddRange(testCurrencies);
 
-            testCurrencies = _controller.GetAll().Value.Where(c => c.Abbreviation == "RUB" || c.Abbreviation == "EUR").ToList();
+            testCurrencies = ((_controller.GetAll() as OkObjectResult).Value as IEnumerable<Currency>).Where(c => c.Abbreviation == "RUB" || c.Abbreviation == "EUR").ToList();
             testCurrencies[0].Abbreviation = "ABC";
             testCurrencies[1].Abbreviation = "DEF";
 
             var response = _controller.UpdateRange(testCurrencies);
+
             Assert.True(response is OkResult);
             foreach (var currency in testCurrencies)
             {
-                Assert.True(_controller.GetAll().Value.Where(c => c.Abbreviation == currency.Abbreviation).Count() > 0);
+                Assert.True(((_controller.GetAll() as OkObjectResult).Value as IEnumerable<Currency>).Where(c => c.Abbreviation == currency.Abbreviation).Count() > 0);
 
             }
+
             _controller.DeleteRange(testCurrencies);
 
         }
@@ -129,10 +139,10 @@ namespace ServicesTests.EmployeeServiceTests
         {
             Currency testCurrency = new Currency() { Name = "Russian Ruble", Abbreviation = "RUB", Code = 871 };
             var response = _controller.Add(testCurrency);
-            testCurrency = _controller.GetAll().Value.Where(c => c.Abbreviation == testCurrency.Abbreviation).First();
+            testCurrency = ((_controller.GetAll() as OkObjectResult).Value as IEnumerable<Currency>).Where(c => c.Abbreviation == testCurrency.Abbreviation).First();
             _controller.Delete(testCurrency);
             Assert.True(response is OkResult);
-            Assert.True(_controller.GetAll().Value.Where(c => c.Abbreviation == testCurrency.Abbreviation).Count() == 0);
+            Assert.True(((_controller.GetAll() as OkObjectResult).Value as IEnumerable<Currency>).Where(c => c.Abbreviation == testCurrency.Abbreviation).Count() == 0);
 
         }
 
@@ -145,12 +155,13 @@ namespace ServicesTests.EmployeeServiceTests
                 new Currency() { Name = "EURO", Abbreviation = "EUR", Code = 444 }
             };
             var response = _controller.AddRange(testCurrencies);
-            testCurrencies = _controller.GetAll().Value.Where(c => c.Abbreviation == "RUB" || c.Abbreviation == "EUR").ToList();
+            testCurrencies = ((_controller.GetAll() as OkObjectResult).Value as IEnumerable<Currency>).Where(c => c.Abbreviation == "RUB" || c.Abbreviation == "EUR").ToList();
             _controller.DeleteRange(testCurrencies);
+
             Assert.True(response is OkResult);
             foreach (var currency in testCurrencies)
             {
-                Assert.True(_controller.GetAll().Value.Where(c => c.Abbreviation == currency.Abbreviation).Count() == 0);
+                Assert.True(((_controller.GetAll() as OkObjectResult).Value as IEnumerable<Currency>).Where(c => c.Abbreviation == currency.Abbreviation).Count() == 0);
             }
         }
 
@@ -159,10 +170,10 @@ namespace ServicesTests.EmployeeServiceTests
         {
             Currency testCurrency = new Currency() { Name = "Russian Ruble", Abbreviation = "RUB", Code = 871 };
             var response = _controller.Add(testCurrency);
-            testCurrency = _controller.GetAll().Value.Where(c => c.Abbreviation == testCurrency.Abbreviation).First();
+            testCurrency = ((_controller.GetAll() as OkObjectResult).Value as IEnumerable<Currency>).Where(c => c.Abbreviation == testCurrency.Abbreviation).First();
             _controller.Delete(testCurrency.Id);
             Assert.True(response is OkResult);
-            Assert.True(_controller.GetAll().Value.Where(c => c.Abbreviation == testCurrency.Abbreviation).Count() == 0);
+            Assert.True(((_controller.GetAll() as OkObjectResult).Value as IEnumerable<Currency>).Where(c => c.Abbreviation == testCurrency.Abbreviation).Count() == 0);
 
         }
     }
