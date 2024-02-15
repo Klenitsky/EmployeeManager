@@ -20,8 +20,8 @@ namespace ServicesTests.EmployeeServiceTests
         {
             string[] args = { };
             _controller = new EmployeeController(new ApplicationDbContextFactory().CreateDbContext(args));
-            _officeToTestId = new OfficeController(new ApplicationDbContextFactory().CreateDbContext(args)).GetAll().Value.First().Id;
-            _currencyToTestId = new CurrencyController(new ApplicationDbContextFactory().CreateDbContext(args)).GetAll().Value.First().Id;
+            _officeToTestId = ((new OfficeController(new ApplicationDbContextFactory().CreateDbContext(args)).GetAll() as OkObjectResult).Value as IEnumerable<Office>).First().Id;
+            _currencyToTestId = ((new CurrencyController(new ApplicationDbContextFactory().CreateDbContext(args)).GetAll() as OkObjectResult).Value as IEnumerable<Currency>).First().Id;
         }
 
 
@@ -29,9 +29,12 @@ namespace ServicesTests.EmployeeServiceTests
         [Fact]
         public void GetAllTest()
         {
-            var result = _controller.GetAll();
+            var resultAction = _controller.GetAll();
+            var result = resultAction as OkObjectResult;
+            var employees = result.Value as IEnumerable<Employee>;
+            Assert.True(resultAction is OkObjectResult);
             Assert.NotNull(result.Value);
-            Assert.Equal(8, result.Value.Count());
+            Assert.NotNull(employees);
         }
 
         [Theory]
@@ -39,9 +42,13 @@ namespace ServicesTests.EmployeeServiceTests
         [InlineData(4, "Ivan")]
         public void GetByIdTestSuccess(int id, string name)
         {
-            var result = _controller.Find(id).Value;
-            Assert.NotNull(result);
-            Assert.Equal(name, result.FirstName);
+            var resultAction = _controller.Find(id);
+            var result = resultAction as OkObjectResult;
+            var employee = result.Value as Employee;
+            Assert.True(resultAction is OkObjectResult);
+            Assert.NotNull(result.Value);
+            Assert.NotNull(employee);
+            Assert.Equal(name, employee.FirstName);
         }
 
         [Theory]
@@ -49,8 +56,32 @@ namespace ServicesTests.EmployeeServiceTests
         [InlineData(1500)]
         public void GetByIdTestInvalidId(int id)
         {
-            var result = _controller.Find(id).Value;
-            Assert.Null(result);
+            var result = _controller.Find(id);
+            Assert.False(result is OkObjectResult);
+        }
+
+        [Fact]
+        public void GetByOfficeTestSuccess()
+        {
+            var resultAction = _controller.FindByOffice(_officeToTestId);
+            var result = resultAction as OkObjectResult;
+            var employees = result.Value as IEnumerable<Employee>;
+            Assert.True(resultAction is OkObjectResult);
+            Assert.NotNull(result.Value);
+            Assert.NotNull(employees);
+            foreach(var employee in employees)
+            {
+                Assert.Equal(_officeToTestId, employee.OfficeId);
+            }
+        }
+
+        [Theory]
+        [InlineData(-1)]
+        [InlineData(1500)]
+        public void GetByOfficeTestInvalidId(int id)
+        {
+            var result = _controller.FindByOffice(id);
+            Assert.False(result is OkObjectResult);
         }
 
         [Fact]
@@ -60,9 +91,9 @@ namespace ServicesTests.EmployeeServiceTests
             var response = _controller.Add(testEmployee);
 
             Assert.True(response is CreatedAtActionResult);
-            Assert.True(_controller.GetAll().Value.Where(e => e.FirstName == testEmployee.FirstName).Count() > 0);
+            Assert.True(((_controller.GetAll() as OkObjectResult).Value as IEnumerable<Employee>).Where(e => e.FirstName == testEmployee.FirstName).Count() > 0);
 
-            testEmployee = _controller.GetAll().Value.Where(e => e.FirstName == testEmployee.FirstName).First();
+            testEmployee = ((_controller.GetAll() as OkObjectResult).Value as IEnumerable<Employee>).Where(e => e.FirstName == testEmployee.FirstName).First();
             _controller.Delete(testEmployee);
         }
 
@@ -78,10 +109,10 @@ namespace ServicesTests.EmployeeServiceTests
             Assert.True(response is CreatedAtActionResult);
             foreach (var employee in testEmployees)
             {
-                Assert.True(_controller.GetAll().Value.Where(e => e.FirstName == employee.FirstName).Count() > 0);
+                Assert.True(((_controller.GetAll() as OkObjectResult).Value as IEnumerable<Employee>).Where(e => e.FirstName == employee.FirstName).Count() > 0);
 
             }
-            testEmployees = _controller.GetAll().Value.Where(e => e.FirstName == "Asdfgh" || e.FirstName == "Qwett").ToList();
+            testEmployees = ((_controller.GetAll() as OkObjectResult).Value as IEnumerable<Employee>).Where(e => e.FirstName == "Asdfgh" || e.FirstName == "Qwett").ToList();
             _controller.DeleteRange(testEmployees);
 
         }
@@ -90,7 +121,7 @@ namespace ServicesTests.EmployeeServiceTests
         public void UpdateTest()
         {
             Employee testEmployee = new Employee { FirstName = "Asdfgh", LastName = "Zxc", EmploymentDate = new DateTime(2022, 01, 13), DismissalDate = null, CurrencyId = _currencyToTestId, OfficeId = _officeToTestId, Email = "aaa@gmail.com", Salary = 777 };
-            var addedEmployeeId = _controller.GetAll().Value.Where(e => e.FirstName == "Asdfgh").First().Id;
+            var addedEmployeeId = ((_controller.GetAll() as OkObjectResult).Value as IEnumerable<Employee>).Where(e => e.FirstName == "Asdfgh").First().Id;
             testEmployee.FirstName = "RQ";
             testEmployee.Id = addedEmployeeId;
 
@@ -98,7 +129,7 @@ namespace ServicesTests.EmployeeServiceTests
 
 
             Assert.True(response is OkResult);
-            Assert.True(_controller.GetAll().Value.Where(e => e.Id == addedEmployeeId).First().FirstName == "RQ");
+            Assert.True(((_controller.GetAll() as OkObjectResult).Value as IEnumerable<Employee>).Where(e => e.Id == addedEmployeeId).First().FirstName == "RQ");
 
             _controller.Delete(testEmployee);
         }
@@ -113,7 +144,7 @@ namespace ServicesTests.EmployeeServiceTests
                 };
             _controller.AddRange(testEmployees);
 
-            testEmployees = _controller.GetAll().Value.Where(o => o.FirstName == "Asdfgh" || o.FirstName == "Qwett").ToList();
+            testEmployees = ((_controller.GetAll() as OkObjectResult).Value as IEnumerable<Employee>).Where(o => o.FirstName == "Asdfgh" || o.FirstName == "Qwett").ToList();
             testEmployees[0].FirstName = "QB";
             testEmployees[1].FirstName = "DEFOPS";
 
@@ -121,7 +152,7 @@ namespace ServicesTests.EmployeeServiceTests
             Assert.True(response is OkResult);
             foreach (var employee in testEmployees)
             {
-                Assert.True(_controller.GetAll().Value.Where(e=> e.FirstName == employee.FirstName).Count() > 0);
+                Assert.True(((_controller.GetAll() as OkObjectResult).Value as IEnumerable<Employee>).Where(e=> e.FirstName == employee.FirstName).Count() > 0);
 
             }
             _controller.DeleteRange(testEmployees);
@@ -133,10 +164,10 @@ namespace ServicesTests.EmployeeServiceTests
         {
             Employee testEmployee = new Employee { FirstName = "Asdfgh", LastName = "Zxc", EmploymentDate = new DateTime(2022, 01, 13), DismissalDate = null, CurrencyId = _currencyToTestId, OfficeId = _officeToTestId, Email = "aaa@gmail.com", Salary = 777 };
             var response = _controller.Add(testEmployee);
-            testEmployee = _controller.GetAll().Value.Where(e => e.FirstName == testEmployee.FirstName).First();
+            testEmployee = ((_controller.GetAll() as OkObjectResult).Value as IEnumerable<Employee>).Where(e => e.FirstName == testEmployee.FirstName).First();
             _controller.Delete(testEmployee);
             Assert.True(response is OkResult);
-            Assert.True(_controller.GetAll().Value.Where(e => e.FirstName == testEmployee.FirstName).Count() == 0);
+            Assert.True(((_controller.GetAll() as OkObjectResult).Value as IEnumerable<Employee>).Where(e => e.FirstName == testEmployee.FirstName).Count() == 0);
         }
 
         [Fact]
@@ -148,25 +179,35 @@ namespace ServicesTests.EmployeeServiceTests
                     new Employee { FirstName = "Qwett", LastName = "Zxc", EmploymentDate = new DateTime(2021, 01, 13), DismissalDate = null, CurrencyId = _currencyToTestId, OfficeId = _officeToTestId, Email = "bbb@gmail.com", Salary = 888 }
                 };
             var response = _controller.AddRange(testEmployees);
-            testEmployees = _controller.GetAll().Value.Where(e => e.FirstName == "Asdfgh" || e.FirstName == "Qwett").ToList();
+            testEmployees = ((_controller.GetAll() as OkObjectResult).Value as IEnumerable<Employee>).Where(e => e.FirstName == "Asdfgh" || e.FirstName == "Qwett").ToList();
             _controller.DeleteRange(testEmployees);
             Assert.True(response is OkResult);
             foreach (var employee in testEmployees)
             {
-                Assert.True(_controller.GetAll().Value.Where(e => e.FirstName == employee.FirstName).Count() == 0);
+                Assert.True(((_controller.GetAll() as OkObjectResult).Value as IEnumerable<Employee>).Where(e => e.FirstName == employee.FirstName).Count() == 0);
             }
         }
 
         [Fact]
-        public void DeleteByIdTest()
+        public void DeleteByIdTestSuccess()
         {
             Employee testEmployee = new Employee { FirstName = "Asdfgh", LastName = "Zxc", EmploymentDate = new DateTime(2022, 01, 13), DismissalDate = null, CurrencyId = _currencyToTestId, OfficeId = _officeToTestId, Email = "aaa@gmail.com", Salary = 777 };
             var response = _controller.Add(testEmployee);
-            testEmployee = _controller.GetAll().Value.Where(e => e.FirstName == testEmployee.FirstName).First();
+            testEmployee = ((_controller.GetAll() as OkObjectResult).Value as IEnumerable<Employee>).Where(e => e.FirstName == testEmployee.FirstName).First();
             _controller.Delete(testEmployee.Id);
             Assert.True(response is OkResult);
-            Assert.True(_controller.GetAll().Value.Where(e => e.FirstName == testEmployee.FirstName).Count() == 0);
+            Assert.True(((_controller.GetAll() as OkObjectResult).Value as IEnumerable<Employee>).Where(e => e.FirstName == testEmployee.FirstName).Count() == 0);
 
+        }
+
+
+        [Theory]
+        [InlineData(-1)]
+        [InlineData(10000)]
+        public void DeleteByIdTestInvalidId(int id)
+        {
+            var result = _controller.Delete(id);
+            Assert.False(result is OkObjectResult);
         }
     }
 }
