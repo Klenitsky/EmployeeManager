@@ -162,7 +162,7 @@ namespace ServicesTests.EmployeeServiceTests
             }
 
             [Fact]
-            public void DeleteByIdTest()
+            public void DeleteByIdTestSuccess()
             {
             Country testCountry = new Country() { Name = "Republic of Poland", Abbreviation = "PLN", CurrencyId = _currencyForCountriesId };
             var response = _controller.Add(testCountry);
@@ -172,5 +172,15 @@ namespace ServicesTests.EmployeeServiceTests
                 Assert.True(((_controller.GetAll() as OkObjectResult).Value as IEnumerable<Country>).Where(c => c.Abbreviation == testCountry.Abbreviation).Count() == 0);
 
             }
-        }
+
+
+            [Theory]
+            [InlineData(-1)]
+            [InlineData(1500)]
+            public void DeleteByIdTestInvalidId(int id)
+            {
+                var resultAction = _controller.Delete(id);
+                Assert.False(resultAction is OkResult);
+            }
+    }
 }

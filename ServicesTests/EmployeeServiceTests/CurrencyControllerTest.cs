@@ -166,7 +166,7 @@ namespace ServicesTests.EmployeeServiceTests
         }
 
         [Fact]
-        public void DeleteByIdTest()
+        public void DeleteByIdTestSuccess()
         {
             Currency testCurrency = new Currency() { Name = "Russian Ruble", Abbreviation = "RUB", Code = 871 };
             var response = _controller.Add(testCurrency);
@@ -175,6 +175,16 @@ namespace ServicesTests.EmployeeServiceTests
             Assert.True(response is OkResult);
             Assert.True(((_controller.GetAll() as OkObjectResult).Value as IEnumerable<Currency>).Where(c => c.Abbreviation == testCurrency.Abbreviation).Count() == 0);
 
+        }
+
+
+        [Theory]
+        [InlineData(-1)]
+        [InlineData(1500)]
+        public void DeleteByIdTestInvalidId(int id)
+        {
+            var resultAction = _controller.Delete(id);
+            Assert.False(resultAction is OkResult);
         }
     }
 }
