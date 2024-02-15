@@ -23,7 +23,7 @@ namespace ServicesTests.ReportServiceTests
         {
             _exchangeRateOnDateRangeReportController = new ExchangeRateOnDateRangeReportController(new ExchangeRateOnDateRangeReportBuilder("https://localhost:44341/api/ExchangeRate"));
             string[] args = Array.Empty<string>();
-            _includedCurrencies = new CurrencyController(new ApplicationDbContextFactory().CreateDbContext(args)).GetAll().Value.ToList();
+            _includedCurrencies = (new CurrencyController(new ApplicationDbContextFactory().CreateDbContext(args)).GetAll() as OkObjectResult).Value as List<Currency>;
         }
 
 
@@ -36,10 +36,13 @@ namespace ServicesTests.ReportServiceTests
                 EndDate = new DateTime(2024, 2, 5),
                 IncludedCurrencies = _includedCurrencies
             };
-            var result =  _exchangeRateOnDateRangeReportController.SetParameters(parametersModel);
-            Assert.True(result is OkResult);
+            var resultAction =  _exchangeRateOnDateRangeReportController.SetParameters(parametersModel);
+            resultAction = _exchangeRateOnDateRangeReportController.GetOnDateRange();
+            var result = resultAction as OkObjectResult;
+            var report = result.Value as ExchangeRateOnDateRangeReport;
 
-            var report = _exchangeRateOnDateRangeReportController.GetOnDateRange().Value;
+            Assert.True(resultAction is OkObjectResult);
+            Assert.NotNull(result.Value);
             Assert.NotNull(report);
             Assert.Equal(new DateTime(2024, 2, 1), report.StartDate);
             Assert.Equal(new DateTime(2024, 2, 5), report.EndDate);
@@ -59,7 +62,7 @@ namespace ServicesTests.ReportServiceTests
                 IncludedCurrencies = _includedCurrencies
             };
             var result = _exchangeRateOnDateRangeReportController.SetParameters(parametersModel);
-            Assert.False(result is OkResult);
+            Assert.False(result is OkObjectResult);
         }
 
         [Fact]
@@ -74,7 +77,7 @@ namespace ServicesTests.ReportServiceTests
                 IncludedCurrencies = _includedCurrencies
             };
             var result = _exchangeRateOnDateRangeReportController.SetParameters(parametersModel);
-            Assert.False(result is OkResult);
+            Assert.False(result is OkObjectResult);
         }
 
     }
