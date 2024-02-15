@@ -25,16 +25,15 @@ namespace ServicesTests.ReportServiceTests
             {
                 _paymentOnDateRangeReportController = new PaymentOnDateRangeReportController(new PaymentOnDateRangeReportBuilder("https://localhost:44316/api/EmployeeService","https://localhost:44341/api/ExchangeRate"));
                 string[] args = { };
-                 _includedOffices = new List<Office>
-                 {
-                    new OfficeController(new ApplicationDbContextFactory().CreateDbContext(args)).Find(1).Value
-                 };
+                _includedOffices = new List<Office>
+                {
+                        (new OfficeController(new ApplicationDbContextFactory().CreateDbContext(args)).Find(1) as OkObjectResult).Value as Office
+                };
 
-                 _includedCountries = new List<Country> 
-                 {
-                                new CountryController(new ApplicationDbContextFactory().CreateDbContext(args)).Find(2).Value
-                 };
-                
+                _includedCountries = new List<Country>
+                {
+                        (new CountryController(new ApplicationDbContextFactory().CreateDbContext(args)).Find(2) as OkObjectResult).Value as Country
+                };
             }
 
 
@@ -48,10 +47,13 @@ namespace ServicesTests.ReportServiceTests
                     IncludedCountries = _includedCountries,
                     IncludedOffices = _includedOffices
                 };
-                var result = _paymentOnDateRangeReportController.SetParameters(parametersModel);
-                Assert.True(result is OkResult);
-
-                var report = _paymentOnDateRangeReportController.GetOnDateRange().Value;
+                var resultAction  = _paymentOnDateRangeReportController.SetParameters(parametersModel);
+                resultAction = _paymentOnDateRangeReportController.GetOnDateRange();
+                var result = resultAction as OkObjectResult;
+                var report = result.Value as PaymentOnDateRangeReport;
+                
+                Assert.True(resultAction is OkObjectResult);
+                Assert.NotNull(result);
                 Assert.NotNull(report);
                 Assert.Equal(new DateTime(2024, 2, 1), report.StartDate);
                 Assert.Equal(new DateTime(2024, 2, 5), report.EndDate);
@@ -76,7 +78,7 @@ namespace ServicesTests.ReportServiceTests
                 IncludedOffices = _includedOffices
             };
             var result = _paymentOnDateRangeReportController.SetParameters(parametersModel);
-                Assert.False(result is OkResult);
+                Assert.False(result is OkObjectResult);
             }
 
             [Fact]
@@ -92,7 +94,7 @@ namespace ServicesTests.ReportServiceTests
                     IncludedOffices = offices
                 };
                 var result = _paymentOnDateRangeReportController.SetParameters(parametersModel);
-                Assert.False(result is OkResult);
+                Assert.False(result is OkObjectResult);
             }
 
             [Fact]
@@ -108,7 +110,7 @@ namespace ServicesTests.ReportServiceTests
                     IncludedOffices = _includedOffices
                 };
                 var result = _paymentOnDateRangeReportController.SetParameters(parametersModel);
-                Assert.False(result is OkResult);
+                Assert.False(result is OkObjectResult);
             }
     }
 }
