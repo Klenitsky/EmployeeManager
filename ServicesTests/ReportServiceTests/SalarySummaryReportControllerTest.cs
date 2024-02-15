@@ -27,12 +27,12 @@ namespace ServicesTests.ReportServiceTests
             string[] args = { };
             _includedOffices = new List<Office>
             {
-                    new OfficeController(new ApplicationDbContextFactory().CreateDbContext(args)).Find(1).Value
+                    (new OfficeController(new ApplicationDbContextFactory().CreateDbContext(args)).Find(1) as OkObjectResult).Value as Office
             };
 
             _includedCountries = new List<Country>
             {
-                    new CountryController(new ApplicationDbContextFactory().CreateDbContext(args)).Find(2).Value
+                    (new CountryController(new ApplicationDbContextFactory().CreateDbContext(args)).Find(2) as OkObjectResult).Value as Country
             };
 
         }
@@ -47,10 +47,14 @@ namespace ServicesTests.ReportServiceTests
                 IncludedCountries = _includedCountries,
                 IncludedOffices = _includedOffices
             };
-            var result = _SalarySummaryReportController.SetParameters(parametersModel);
-            Assert.True(result is OkResult);
+            var resultAction = _SalarySummaryReportController.SetParameters(parametersModel);
+           
 
-            var report = _SalarySummaryReportController.GetOnDateRange().Value;
+            resultAction = _SalarySummaryReportController.GetOnDateRange();
+            var result = resultAction as OkObjectResult;
+            var report = result.Value as SalarySummaryReport;
+            Assert.True(result is OkObjectResult);
+            Assert.NotNull(result.Value);
             Assert.NotNull(report);
             Assert.Equal(new DateTime(2023, 11, 1), report.Date);
             foreach (var includedCountry in _includedCountries)
@@ -72,8 +76,8 @@ namespace ServicesTests.ReportServiceTests
                 IncludedCountries = _includedCountries,
                 IncludedOffices = _includedOffices
             };
-            var result = _SalarySummaryReportController.SetParameters(parametersModel);
-            Assert.False(result is OkResult);
+            var resultAction = _SalarySummaryReportController.SetParameters(parametersModel);
+            Assert.False(resultAction is OkObjectResult);
         }
 
         [Fact]
@@ -87,8 +91,8 @@ namespace ServicesTests.ReportServiceTests
                 IncludedCountries = _includedCountries,
                 IncludedOffices = offices
             };
-            var result = _SalarySummaryReportController.SetParameters(parametersModel);
-            Assert.False(result is OkResult);
+            var resultAction = _SalarySummaryReportController.SetParameters(parametersModel);
+            Assert.False(resultAction is OkObjectResult);
         }
 
         [Fact]
@@ -103,7 +107,7 @@ namespace ServicesTests.ReportServiceTests
                 IncludedOffices = _includedOffices
             };
             var result = _SalarySummaryReportController.SetParameters(parametersModel);
-            Assert.False(result is OkResult);
+            Assert.False(result is OkObjectResult);
         }
     }
 }
