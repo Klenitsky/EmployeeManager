@@ -22,7 +22,7 @@ namespace EmployeeService.Controllers
 
         [HttpGet]
         [Route("")]
-        public ActionResult<IEnumerable<Employee>> GetAll()
+        public IActionResult GetAll()
         {
             try
             {
@@ -35,7 +35,7 @@ namespace EmployeeService.Controllers
         }
 
         [HttpGet("Find/{id}")]
-        public ActionResult<Employee> Find(int id)
+        public IActionResult Find(int id)
         {
             Employee answer = _employeeRepo.Find(id);
             if (answer != null)
@@ -49,7 +49,7 @@ namespace EmployeeService.Controllers
         }
 
         [HttpGet("FindByOffice/{officeId}")]
-        public ActionResult<IEnumerable<Employee>> FindByOffice(int officeId)
+        public IActionResult FindByOffice(int officeId)
         {
             IEnumerable<Employee> answer = _employeeRepo.GetAllByOffice(officeId);
             if (answer != null)

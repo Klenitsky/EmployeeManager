@@ -35,7 +35,7 @@ namespace EmployeeService.Controllers
         }
 
         [HttpGet("Find/{id}")]
-        public ActionResult<Office> Find(int id)
+        public IActionResult Find(int id)
         {
             Office answer = _officeRepo.Find(id);
             if (answer != null)
@@ -49,7 +49,7 @@ namespace EmployeeService.Controllers
         }
 
         [HttpGet("FindByCountry/{countryId}")]
-        public ActionResult<IEnumerable<Office>> FindByCountry(int countryId)
+        public IActionResult FindByCountry(int countryId)
         {
             IEnumerable<Office> offices = _officeRepo.GetAllByCountry(countryId);
             if (offices != null)
