@@ -35,6 +35,14 @@ namespace ExchangeRateService.DAL.NbrbAPI.Repositories
 
         public ExchangeRate GetExchangeRateByDateAndCurrencyOnRequest(string currencyAbbreviation, DateTime date)
         {
+            if (date < DateTime.Today.AddYears(-5) || date > DateTime.Now)
+            {
+                throw new ArgumentOutOfRangeException("Wrong date period");
+            }
+            if (!_dbContext.ActiveCurrencies.Select(c => c.Abbreviation.ToUpper()).Contains(currencyAbbreviation))
+            {
+                throw new ArgumentException("Impossible currency");
+            }
             var exchangeRate = LoadRateByDateRangeAndCurrency(currencyAbbreviation, date, date).First();
             return exchangeRate;
 
@@ -42,8 +50,16 @@ namespace ExchangeRateService.DAL.NbrbAPI.Repositories
 
         public IEnumerable<ExchangeRate> GetExchangeRatesByDateRangeAndCurrencyOnRequest(string currencyAbbreviation, DateTime startDate, DateTime endDate)
         {
-            var rates = LoadRateByDateRangeAndCurrency(currencyAbbreviation, startDate, endDate);
+            if (startDate > endDate || startDate < DateTime.Today.AddYears(-5) || endDate > DateTime.Now)
+            {
+                throw new ArgumentOutOfRangeException("Wrong date period");
+            }
+            if (!_dbContext.ActiveCurrencies.Select(c => c.Abbreviation.ToUpper()).Contains(currencyAbbreviation))
+            {
+                throw new ArgumentException("Impossible currency");
+            }
 
+            var rates = LoadRateByDateRangeAndCurrency(currencyAbbreviation, startDate, endDate);
             return rates.OrderBy(r => r.Date);
         }
     
@@ -52,6 +68,11 @@ namespace ExchangeRateService.DAL.NbrbAPI.Repositories
 
         public IEnumerable<ExchangeRate> GetExchangeRatesByDateOnRequest(DateTime date)
         {
+            if (date < DateTime.Today.AddYears(-5) || date > DateTime.Now)
+            {
+                throw new ArgumentOutOfRangeException("Wrong date period");
+            }
+
             List<ExchangeRate> rates = new List<ExchangeRate>();
 
             List<string?> currencyAbbreviations = _dbContext.ActiveCurrencies.Select(c=>c.Abbreviation).ToList();
@@ -66,6 +87,10 @@ namespace ExchangeRateService.DAL.NbrbAPI.Repositories
 
         public IEnumerable<ExchangeRate> GetExchangeRatesByDateRangeOnRequest(DateTime startDate, DateTime endDate)
         {
+            if (startDate > endDate || startDate < DateTime.Today.AddYears(-5) || endDate > DateTime.Now)
+            {
+                throw new ArgumentOutOfRangeException("Wrong date period");
+            }
             List<ExchangeRate> rates = new List<ExchangeRate>();
             while (startDate <= endDate)
             {
@@ -83,11 +108,19 @@ namespace ExchangeRateService.DAL.NbrbAPI.Repositories
 
         public IEnumerable<ExchangeRate>? GetExchangeRatesByCurrencyInSystem(string currencyAbbreviation)
         {
+            if (!_dbContext.ActiveCurrencies.Select(c => c.Abbreviation.ToUpper()).Contains(currencyAbbreviation))
+            {
+                throw new ArgumentException("Impossible currency");
+            }
             return _dbContext.ExchangeRates.Where(r => r.Abbreviation == currencyAbbreviation).OrderBy(r => r.Date);
         }
 
         public IEnumerable<ExchangeRate>? GetExchangeRatesByDateInSystem(DateTime date)
         {
+            if (date < DateTime.Today.AddYears(-5) || date > DateTime.Now)
+            {
+                throw new ArgumentOutOfRangeException("Wrong date period");
+            }
             List<ExchangeRate> rates = new List<ExchangeRate>();
 
             List<string?> currencyAbbreviations = _dbContext.ActiveCurrencies.Select(c => c.Abbreviation).ToList();
@@ -105,6 +138,10 @@ namespace ExchangeRateService.DAL.NbrbAPI.Repositories
 
         public IEnumerable<ExchangeRate>? GetExchangeRatesByDateRangeInSystem(DateTime startDate, DateTime endDate)
         {
+            if (startDate > endDate || startDate < DateTime.Today.AddYears(-5) || endDate > DateTime.Now)
+            {
+                throw new ArgumentOutOfRangeException("Wrong date period");
+            }
             List<ExchangeRate> rates = new List<ExchangeRate>();
             while (startDate <= endDate)
             {
@@ -121,6 +158,14 @@ namespace ExchangeRateService.DAL.NbrbAPI.Repositories
 
         public ExchangeRate? GetExchangeRateByDateAndCurrencyInSystem(string currencyAbbreviation, DateTime date)
         {
+            if (date < DateTime.Today.AddYears(-5) || date > DateTime.Now)
+            {
+                throw new ArgumentOutOfRangeException("Wrong date period");
+            }
+            if (!_dbContext.ActiveCurrencies.Select(c => c.Abbreviation.ToUpper()).Contains(currencyAbbreviation))
+            {
+                throw new ArgumentException("Impossible currency");
+            }
             return _dbContext.ExchangeRates
                                          .Where(r => (r.Abbreviation.ToUpper() == currencyAbbreviation.ToUpper()) && r.Date == date)
                                          .FirstOrDefault();
@@ -128,6 +173,14 @@ namespace ExchangeRateService.DAL.NbrbAPI.Repositories
 
         public IEnumerable<ExchangeRate>? GetExchangeRatesByDateRangeAndCurrencyInSystem(string currencyAbbreviation, DateTime startDate, DateTime endDate)
         {
+            if (startDate > endDate || startDate < DateTime.Today.AddYears(-5) || endDate > DateTime.Now)
+            {
+                throw new ArgumentOutOfRangeException("Wrong date period");
+            }
+            if (!_dbContext.ActiveCurrencies.Select(c => c.Abbreviation.ToUpper()).Contains(currencyAbbreviation))
+            {
+                throw new ArgumentException("Impossible currency");
+            }
             List<ExchangeRate> rates = new List<ExchangeRate>();
             while (startDate <= endDate)
             {
@@ -146,6 +199,14 @@ namespace ExchangeRateService.DAL.NbrbAPI.Repositories
         private IEnumerable<ExchangeRate> LoadRateByDateRangeAndCurrency(string currencyAbbreviation, DateTime startDate,DateTime endDate)
         {
             List<ExchangeRate> rates = new List<ExchangeRate>();
+            if(startDate> endDate || startDate< DateTime.Today.AddYears(-5) || endDate > DateTime.Now)
+            {
+                throw new ArgumentOutOfRangeException("Wrong date period");
+            }
+            if (!_dbContext.ActiveCurrencies.Select(c => c.Abbreviation.ToUpper()).Contains(currencyAbbreviation))
+            {
+                throw new ArgumentException("Impossible currency");
+            }
             while (startDate <= endDate)
             {
                 var rateInSystem = _dbContext.ExchangeRates
