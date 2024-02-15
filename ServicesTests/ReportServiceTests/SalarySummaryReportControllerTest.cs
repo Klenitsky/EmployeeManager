@@ -23,7 +23,7 @@ namespace ServicesTests.ReportServiceTests
 
         public SalarySummaryReportControllerTest()
         {
-            _SalarySummaryReportController = new SalarySummaryReportController(new SalarySummaryReportBuilder("https://localhost:44316/api/EmployeeService", "https://localhost:44341/api/ExchangeRate"));
+            _SalarySummaryReportController = new SalarySummaryReportController(new SalarySummaryReportBuilder("http://localhost:5282/api/EmployeeService", "https://localhost:5027/api/ExchangeRate"));
             string[] args = { };
             _includedOffices = new List<Office>
             {

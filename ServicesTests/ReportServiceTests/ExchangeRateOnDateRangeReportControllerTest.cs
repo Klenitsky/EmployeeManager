@@ -21,7 +21,7 @@ namespace ServicesTests.ReportServiceTests
 
         public ExchangeRateOnDateRangeReportControllerTest()
         {
-            _exchangeRateOnDateRangeReportController = new ExchangeRateOnDateRangeReportController(new ExchangeRateOnDateRangeReportBuilder("https://localhost:44341/api/ExchangeRate"));
+            _exchangeRateOnDateRangeReportController = new ExchangeRateOnDateRangeReportController(new ExchangeRateOnDateRangeReportBuilder("http://localhost:5027/api/ExchangeRate"));
             string[] args = Array.Empty<string>();
             _includedCurrencies = (new CurrencyController(new ApplicationDbContextFactory().CreateDbContext(args)).GetAll() as OkObjectResult).Value as List<Currency>;
         }

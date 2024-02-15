@@ -23,7 +23,7 @@ namespace ServicesTests.ReportServiceTests
 
             public PaymentOnDateRangeReportControllerTest()
             {
-                _paymentOnDateRangeReportController = new PaymentOnDateRangeReportController(new PaymentOnDateRangeReportBuilder("https://localhost:44316/api/EmployeeService","https://localhost:44341/api/ExchangeRate"));
+                _paymentOnDateRangeReportController = new PaymentOnDateRangeReportController(new PaymentOnDateRangeReportBuilder("http://localhost:5282/api/EmployeeService","http://localhost:5027/api/ExchangeRate"));
                 string[] args = { };
                 _includedOffices = new List<Office>
                 {
