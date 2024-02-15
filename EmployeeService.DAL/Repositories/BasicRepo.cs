@@ -76,8 +76,8 @@ namespace EmployeeService.DAL.Repositories
 
         public virtual  int Delete(int id, bool persist = true)
         {
-            var entity = new T { Id = id };
-            DbContext.Entry(entity).State = EntityState.Deleted;
+            var entity = Table.Where(o =>  o.Id == id).FirstOrDefault();
+            Delete(entity);
             return persist ? SaveChanges() : 0;
         }
 
