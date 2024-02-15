@@ -25,9 +25,13 @@ namespace ExchangeRateService.Controllers
             {
                 return Ok(_repo.GetExchangeRatesByDateOnRequest(Date));
             }
-            catch(Exception ex) 
+            catch (ArgumentOutOfRangeException ex)
             {
-                return NotFound();
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(503);
             }
 
         }
@@ -39,9 +43,13 @@ namespace ExchangeRateService.Controllers
             {
                 return Ok(_repo.GetExchangeRatesByDateRangeOnRequest(startDate,endDate));
             }
+            catch (ArgumentOutOfRangeException ex)
+            {
+                return BadRequest(ex.Message);
+            }
             catch (Exception ex)
             {
-                return NotFound();
+                return StatusCode(503);
             }
 
         }
@@ -53,9 +61,17 @@ namespace ExchangeRateService.Controllers
             {
                 return Ok(_repo.GetExchangeRateByDateAndCurrencyOnRequest(currencyAbbreviation,date));
             }
+            catch (ArgumentOutOfRangeException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
             catch (Exception ex)
             {
-                return NotFound();
+                return StatusCode(503);
             }
 
         }
@@ -67,9 +83,17 @@ namespace ExchangeRateService.Controllers
             {
                 return Ok(_repo.GetExchangeRatesByDateRangeAndCurrencyOnRequest(currencyAbbreviation,startDate, endDate));
             }
+            catch (ArgumentOutOfRangeException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
             catch (Exception ex)
             {
-                return NotFound();
+                return StatusCode(503);
             }
 
         }

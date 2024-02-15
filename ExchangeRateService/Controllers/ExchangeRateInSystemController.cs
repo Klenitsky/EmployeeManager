@@ -27,7 +27,7 @@ namespace ExchangeRateService.Controllers
             }
             catch (Exception ex)
             {
-                return NotFound();
+                return StatusCode(503);
             }
         }
 
@@ -41,7 +41,7 @@ namespace ExchangeRateService.Controllers
             }
             catch (Exception ex)
             {
-                return NotFound();
+                return StatusCode(503);
             }
         }
 
@@ -52,9 +52,13 @@ namespace ExchangeRateService.Controllers
             {
                 return Ok(_repo.GetExchangeRatesByCurrencyInSystem(currencyAbbreviation));
             }
-            catch (Exception ex)
+            catch (ArgumentException ex)
             {
-                return NotFound();
+                return BadRequest(ex.Message);
+            }
+            catch(Exception ex)
+            {
+                return StatusCode(503);
             }
         }
 
@@ -68,7 +72,7 @@ namespace ExchangeRateService.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return StatusCode(503);
             }
         }
 
@@ -79,9 +83,13 @@ namespace ExchangeRateService.Controllers
             {
                 return Ok(_repo.GetExchangeRatesByDateOnRequest(Date));
             }
+            catch (ArgumentOutOfRangeException ex)
+            {
+                return BadRequest(ex.Message);
+            }
             catch (Exception ex)
             {
-                return NotFound();
+                return StatusCode(503);
             }
 
         }
@@ -93,9 +101,13 @@ namespace ExchangeRateService.Controllers
             {
                 return Ok(_repo.GetExchangeRatesByDateRangeInSystem(startDate, endDate));
             }
+            catch (ArgumentOutOfRangeException ex)
+            {
+                return BadRequest(ex.Message);
+            }
             catch (Exception ex)
             {
-                return NotFound();
+                return StatusCode(503);
             }
 
         }
@@ -107,9 +119,17 @@ namespace ExchangeRateService.Controllers
             {
                 return Ok(_repo.GetExchangeRateByDateAndCurrencyInSystem(currencyAbbreviation, date));
             }
+            catch (ArgumentOutOfRangeException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
             catch (Exception ex)
             {
-                return NotFound();
+                return StatusCode(503);
             }
 
         }
@@ -121,9 +141,17 @@ namespace ExchangeRateService.Controllers
             {
                 return Ok(_repo.GetExchangeRatesByDateRangeAndCurrencyInSystem(currencyAbbreviation, startDate, endDate));
             }
+            catch (ArgumentOutOfRangeException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
             catch (Exception ex)
             {
-                return NotFound();
+                return StatusCode(503);
             }
 
         }
