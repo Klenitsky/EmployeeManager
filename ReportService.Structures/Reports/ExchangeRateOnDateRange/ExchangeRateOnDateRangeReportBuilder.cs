@@ -28,10 +28,19 @@ namespace ReportService.Structures.Reports.ExchangeRateOnDateRange
 
         public void SetProperties(DateTime startDate, DateTime endDate, IEnumerable<Currency> includedCurrencies)
         {
+            ExchangeRateReader reader = new ExchangeRateReader(_connectionStringExchangeRateService);
+            if(startDate> endDate || startDate < DateTime.Now.AddYears(-5) || endDate > DateTime.Now)
+            {
+                throw new ArgumentOutOfRangeException("Invalid date range");
+            }           
             _startDate = startDate;
             _endDate = endDate;
             foreach(var currency in includedCurrencies)
             {
+                if (!reader.GetActiveCurrencies().Select(c => c.Abbreviation.ToUpper()).Contains(currency.Abbreviation.ToUpper()))
+                {
+                    throw new ArgumentException("Invalid currency");
+                }
                 _includedCurrencies.Add(currency, 0);
             }
         }

@@ -78,5 +78,12 @@ namespace ReportService.Structures.DataReaders
                 return new List<ExchangeRate>();
             }
         }
+
+        public IEnumerable<ActiveCurrency> GetActiveCurrencies()
+        {
+            string url = _connectionString + "InSystem/Currencies";
+            List<ActiveCurrency> currencies = httpClient.GetFromJsonAsync<IEnumerable<ActiveCurrency>>(url).Result.ToList();
+            return currencies;
+        }
     }
 }

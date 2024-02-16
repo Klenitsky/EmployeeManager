@@ -24,12 +24,23 @@ namespace ReportService.Controllers
         [HttpPost]
         public IActionResult SetParameters(ExchangeRateParametersModel args)
         {
-            if (args.StartDate > args.EndDate)
+            try
             {
-                throw new ArgumentOutOfRangeException();
+                _exchangeRateOnDateRangeReportBuilder.SetProperties(args.StartDate, args.EndDate, args.IncludedCurrencies);
+                return Ok();
             }
-            _exchangeRateOnDateRangeReportBuilder.SetProperties(args.StartDate, args.EndDate, args.IncludedCurrencies);
-            return Ok();
+            catch (ArgumentOutOfRangeException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(503);
+            }
         }
 
         [HttpGet("")]
