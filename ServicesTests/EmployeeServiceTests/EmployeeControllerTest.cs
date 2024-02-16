@@ -38,8 +38,8 @@ namespace ServicesTests.EmployeeServiceTests
         }
 
         [Theory]
-        [InlineData(3, "Anna")]
-        [InlineData(4, "Ivan")]
+        [InlineData(17, "Anna")]
+        [InlineData(8, "Ivan")]
         public void GetByIdTestSuccess(int id, string name)
         {
             var resultAction = _controller.Find(id);
