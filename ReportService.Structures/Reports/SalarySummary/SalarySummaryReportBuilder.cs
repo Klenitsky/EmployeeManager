@@ -39,12 +39,21 @@ namespace ReportService.Structures.Reports.SalarySummary
 
         public void SetDate(DateTime date)
         {
+            if(date< DateTime.Now.AddYears(-5) || date > DateTime.Now)
+            {
+                throw new ArgumentOutOfRangeException("Invalid date");
+            }
             _date = date;
         }
         public void IncludeOfficeParams(IEnumerable<Office> offices)
         {
-            foreach( var office in offices)
+            CompanyInfoReader reader = new CompanyInfoReader(connectionStringEmployeeService);
+            foreach ( var office in offices)
             {
+                if(reader.GetOffices().Where(o=> o.Name == office.Name).Count() == 0)
+                {
+                    throw new ArgumentException("Invalid Office");
+                }
                 if (_includedOffices.Where(o => o.Key.Id == office.Id).Count() == 0)
                 {
                     _includedOffices.Add(office, new StatisticMetric());
@@ -62,6 +71,10 @@ namespace ReportService.Structures.Reports.SalarySummary
             CompanyInfoReader reader = new CompanyInfoReader(connectionStringEmployeeService); 
             foreach (var country in countries)
             {
+                if (reader.GetCountries().Where(c => c.Abbreviation == country.Abbreviation).Count() == 0)
+                {
+                    throw new ArgumentException("Invalid country");
+                }
                 if (_includedCountries.Where(c => c.Key.Id == country.Id).Count() == 0)
                 {
                     _includedCountries.Add(country, new StatisticMetric());

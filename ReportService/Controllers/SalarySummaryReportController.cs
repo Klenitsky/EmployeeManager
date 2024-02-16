@@ -25,18 +25,41 @@ namespace ReportService.Controllers
         [HttpPost]
         public IActionResult SetParameters(SalarySummaryParametersModel args)
         {
-            _salarySummaryReportBuilder.SetDate(args.Date);
-            _salarySummaryReportBuilder.IncludeOfficeParams(args.IncludedOffices);
-            _salarySummaryReportBuilder.IncludeFullCountriesParams(args.IncludedCountries);
-            return Ok();
+            try
+            {
+                _salarySummaryReportBuilder.SetDate(args.Date);
+                _salarySummaryReportBuilder.IncludeOfficeParams(args.IncludedOffices);
+                _salarySummaryReportBuilder.IncludeFullCountriesParams(args.IncludedCountries);
+                return Ok();
+            }
+            catch (ArgumentOutOfRangeException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(503);
+            }
+
         }
 
         [HttpGet("")]
         public IActionResult GetOnDateRange()
         {
+            try 
+            { 
                 _salarySummaryReportBuilder.LoadData();
                 _salarySummaryReportBuilder.CountMetrics();
                 return Ok(_salarySummaryReportBuilder.GetResult());
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(503);
+            }
         }
     }
 }
