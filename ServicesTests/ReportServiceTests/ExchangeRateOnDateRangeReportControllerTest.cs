@@ -36,11 +36,12 @@ namespace ServicesTests.ReportServiceTests
                 EndDate = new DateTime(2024, 2, 5),
                 IncludedCurrencies = _includedCurrencies
             };
-            var resultAction =  _exchangeRateOnDateRangeReportController.SetParameters(parametersModel);
-            resultAction = _exchangeRateOnDateRangeReportController.GetOnDateRange();
+            var resultActionSet =  _exchangeRateOnDateRangeReportController.SetParameters(parametersModel);
+            var resultAction = _exchangeRateOnDateRangeReportController.GetOnDateRange();
             var result = resultAction as OkObjectResult;
             var report = result.Value as ExchangeRateOnDateRangeReport;
 
+            Assert.True(resultActionSet is OkResult);
             Assert.True(resultAction is OkObjectResult);
             Assert.NotNull(result.Value);
             Assert.NotNull(report);
@@ -62,7 +63,7 @@ namespace ServicesTests.ReportServiceTests
                 IncludedCurrencies = _includedCurrencies
             };
             var result = _exchangeRateOnDateRangeReportController.SetParameters(parametersModel);
-            Assert.False(result is OkObjectResult);
+            Assert.False(result is OkResult);
         }
 
         [Fact]
@@ -77,7 +78,7 @@ namespace ServicesTests.ReportServiceTests
                 IncludedCurrencies = _includedCurrencies
             };
             var result = _exchangeRateOnDateRangeReportController.SetParameters(parametersModel);
-            Assert.False(result is OkObjectResult);
+            Assert.False(result is OkResult);
         }
 
     }

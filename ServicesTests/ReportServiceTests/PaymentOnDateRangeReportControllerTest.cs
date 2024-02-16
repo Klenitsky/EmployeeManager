@@ -41,11 +41,12 @@ namespace ServicesTests.ReportServiceTests
                     IncludedCountries = _includedCountries,
                     IncludedOffices = _includedOffices
                 };
-                var resultAction  = _paymentOnDateRangeReportController.SetParameters(parametersModel);
-                resultAction = _paymentOnDateRangeReportController.GetOnDateRange();
+                var resultActionSet  = _paymentOnDateRangeReportController.SetParameters(parametersModel);
+                var resultAction = _paymentOnDateRangeReportController.GetOnDateRange();
                 var result = resultAction as OkObjectResult;
                 var report = result.Value as PaymentOnDateRangeReport;
-                
+
+                Assert.True(resultActionSet is OkResult);
                 Assert.True(resultAction is OkObjectResult);
                 Assert.NotNull(result);
                 Assert.NotNull(report);
@@ -72,7 +73,7 @@ namespace ServicesTests.ReportServiceTests
                 IncludedOffices = _includedOffices
             };
             var result = _paymentOnDateRangeReportController.SetParameters(parametersModel);
-                Assert.False(result is OkObjectResult);
+                Assert.False(result is OkResult);
             }
 
             [Fact]
@@ -88,7 +89,7 @@ namespace ServicesTests.ReportServiceTests
                     IncludedOffices = offices
                 };
                 var result = _paymentOnDateRangeReportController.SetParameters(parametersModel);
-                Assert.False(result is OkObjectResult);
+                Assert.False(result is OkResult);
             }
 
             [Fact]
@@ -98,13 +99,13 @@ namespace ServicesTests.ReportServiceTests
                 countries.Add(new Country { Name="avs", Abbreviation="aaa", CurrencyId=1000} );
                 PaymentParametersModel parametersModel = new PaymentParametersModel()
                 {
-                    StartDate = new DateTime(2024, 2, 1),
+                    StartDate = new DateTime(2024, 2, 1),   
                     EndDate = new DateTime(2024, 2, 5),
                     IncludedCountries = countries,
                     IncludedOffices = _includedOffices
                 };
                 var result = _paymentOnDateRangeReportController.SetParameters(parametersModel);
-                Assert.False(result is OkObjectResult);
+                Assert.False(result is OkResult);
             }
     }
 }

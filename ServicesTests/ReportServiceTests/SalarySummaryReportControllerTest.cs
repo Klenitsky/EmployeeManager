@@ -41,13 +41,12 @@ namespace ServicesTests.ReportServiceTests
                 IncludedCountries = _includedCountries,
                 IncludedOffices = _includedOffices
             };
-            var resultAction = _SalarySummaryReportController.SetParameters(parametersModel);
-           
-
-            resultAction = _SalarySummaryReportController.GetOnDateRange();
+            var resultActionSet = _SalarySummaryReportController.SetParameters(parametersModel);
+            var resultAction = _SalarySummaryReportController.GetOnDateRange();
             var result = resultAction as OkObjectResult;
             var report = result.Value as SalarySummaryReport;
-            Assert.True(result is OkObjectResult);
+            Assert.True(resultActionSet is OkResult);
+            Assert.True(resultAction is OkObjectResult);
             Assert.NotNull(result.Value);
             Assert.NotNull(report);
             Assert.Equal(new DateTime(2023, 11, 1), report.Date);
@@ -71,7 +70,7 @@ namespace ServicesTests.ReportServiceTests
                 IncludedOffices = _includedOffices
             };
             var resultAction = _SalarySummaryReportController.SetParameters(parametersModel);
-            Assert.False(resultAction is OkObjectResult);
+            Assert.False(resultAction is OkResult);
         }
 
         [Fact]
@@ -86,7 +85,7 @@ namespace ServicesTests.ReportServiceTests
                 IncludedOffices = offices
             };
             var resultAction = _SalarySummaryReportController.SetParameters(parametersModel);
-            Assert.False(resultAction is OkObjectResult);
+            Assert.False(resultAction is OkResult);
         }
 
         [Fact]
@@ -101,7 +100,7 @@ namespace ServicesTests.ReportServiceTests
                 IncludedOffices = _includedOffices
             };
             var result = _SalarySummaryReportController.SetParameters(parametersModel);
-            Assert.False(result is OkObjectResult);
+            Assert.False(result is OkResult);
         }
     }
 }
