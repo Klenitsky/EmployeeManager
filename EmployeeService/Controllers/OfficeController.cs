@@ -100,9 +100,13 @@ namespace EmployeeService.Controllers
             {
                 _officeRepo.Update(office);
             }
-            catch (Exception ex)
+            catch (ArgumentException ex)
             {
                 return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(503);
             }
             return Ok();
         }
@@ -114,9 +118,13 @@ namespace EmployeeService.Controllers
             {
                 _officeRepo.UpdateRange(offices);
             }
-            catch (Exception ex)
+            catch (ArgumentException ex)
             {
                 return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(503);
             }
             return Ok();
         }
@@ -129,9 +137,13 @@ namespace EmployeeService.Controllers
             {
                 _officeRepo.Delete(office);
             }
-            catch (Exception ex)
+            catch (ArgumentException ex)
             {
                 return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(503);
             }
             return Ok();
         }
@@ -143,9 +155,13 @@ namespace EmployeeService.Controllers
             {
                 _officeRepo.DeleteRange(offices);
             }
-            catch (Exception ex)
+            catch (ArgumentException ex)
             {
                 return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(503);
             }
             return Ok();
         }
@@ -157,9 +173,13 @@ namespace EmployeeService.Controllers
             {
                 _officeRepo.Delete(id);
             }
-            catch (Exception ex)
+            catch (ArgumentException ex)
             {
                 return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(503);
             }
             return Ok();
         }

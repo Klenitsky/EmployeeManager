@@ -84,9 +84,13 @@ namespace EmployeeService.Controllers
             {
                 _countryRepo.Update(country);
             }
-            catch (Exception ex)
+            catch (ArgumentException ex)
             {
                 return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(503);
             }
             return Ok();
         }
@@ -98,9 +102,13 @@ namespace EmployeeService.Controllers
             {
                 _countryRepo.UpdateRange(countries);
             }
-            catch (Exception ex)
+            catch (ArgumentException ex)
             {
                 return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(503);
             }
             return Ok();
         }
@@ -113,9 +121,13 @@ namespace EmployeeService.Controllers
             {
                 _countryRepo.Delete(country);
             }
-            catch (Exception ex)
+            catch (ArgumentException ex)
             {
                 return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(503);
             }
             return Ok();
         }
@@ -127,9 +139,13 @@ namespace EmployeeService.Controllers
             {
                 _countryRepo.DeleteRange(countries);
             }
-            catch (Exception ex)
+            catch (ArgumentException ex)
             {
                 return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(503);
             }
             return Ok();
         }
@@ -141,9 +157,13 @@ namespace EmployeeService.Controllers
             {
                 _countryRepo.Delete(id);
             }
-            catch (Exception ex)
+            catch (ArgumentException ex)
             {
                 return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(503);
             }
             return Ok();
         }

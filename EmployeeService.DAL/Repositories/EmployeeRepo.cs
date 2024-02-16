@@ -98,6 +98,10 @@ namespace EmployeeService.DAL.Repositories
 
         public override int Update(Employee entity, bool persist = true)
         {
+            if (Table.Where(e => e.Id == entity.Id).Count() == 0)
+            {
+                throw new ArgumentException("Invalid entity to update");
+            }
             if (entity.DismissalDate != null && entity.DismissalDate < entity.EmploymentDate)
             {
                 throw new ArgumentException("Employment terms violated");
@@ -110,6 +114,10 @@ namespace EmployeeService.DAL.Repositories
         {
             foreach (var entity in entities)
             {
+                if (Table.Where(e => e.Id == entity.Id).Count() == 0)
+                {
+                   throw new ArgumentException("Invalid entity to update");
+                }
                 if (entity.DismissalDate != null && entity.DismissalDate < entity.EmploymentDate)
                 {
                     throw new ArgumentException("Employment terms violated");

@@ -83,9 +83,13 @@ namespace EmployeeService.Controllers
             {
                 _currencyRepo.Update(currency);
             }
-            catch (Exception ex)
+            catch (ArgumentException ex)
             {
                 return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(503);
             }
             return Ok();
         }
@@ -97,9 +101,13 @@ namespace EmployeeService.Controllers
             {
                 _currencyRepo.UpdateRange(currencies);
             }
-            catch (Exception ex)
+            catch (ArgumentException ex)
             {
                 return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(503);
             }
             return Ok();
         }
@@ -112,9 +120,13 @@ namespace EmployeeService.Controllers
             {
                 _currencyRepo.Delete(currency);
             }
-            catch (Exception ex)
+            catch (ArgumentException ex)
             {
                 return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(503);
             }
             return Ok();
         }
@@ -126,9 +138,13 @@ namespace EmployeeService.Controllers
             {
                 _currencyRepo.DeleteRange(currency);
             }
-            catch (Exception ex)
+            catch (ArgumentException ex)
             {
                 return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(503);
             }
             return Ok();
         }
@@ -140,9 +156,13 @@ namespace EmployeeService.Controllers
             {
                 _currencyRepo.Delete(id);
             }
-            catch (Exception ex)
+            catch (ArgumentException ex)
             {
                 return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(503);
             }
             return Ok();
         }

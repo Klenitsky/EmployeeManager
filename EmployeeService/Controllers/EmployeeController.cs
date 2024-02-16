@@ -100,9 +100,13 @@ namespace EmployeeService.Controllers
             {
                 _employeeRepo.Update(employee);
             }
-            catch (Exception ex)
+            catch (ArgumentException ex)
             {
                 return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(503);
             }
             return Ok();
         }
@@ -114,9 +118,13 @@ namespace EmployeeService.Controllers
             {
                 _employeeRepo.UpdateRange(employees);
             }
-            catch (Exception ex)
+            catch (ArgumentException ex)
             {
                 return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(503);
             }
             return Ok();
         }
@@ -129,9 +137,13 @@ namespace EmployeeService.Controllers
             {
                 _employeeRepo.Delete(employees);
             }
-            catch (Exception ex)
+            catch (ArgumentException ex)
             {
                 return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(503);
             }
             return Ok();
         }
@@ -143,9 +155,13 @@ namespace EmployeeService.Controllers
             {
                 _employeeRepo.DeleteRange(employees);
             }
-            catch (Exception ex)
+            catch (ArgumentException ex)
             {
                 return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(503);
             }
             return Ok();
         }
@@ -157,9 +173,13 @@ namespace EmployeeService.Controllers
             {
                 _employeeRepo.Delete(id);
             }
-            catch (Exception ex)
+            catch (ArgumentException ex)
             {
                 return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(503);
             }
             return Ok();
         }

@@ -64,18 +64,33 @@ namespace EmployeeService.DAL.Repositories
 
         public virtual int Update(T entity, bool persist = true)
         {
+            if(Table.Where(e=> e.Id == entity.Id).Count() == 0)
+            {
+                throw new ArgumentException("Invalid entity to update");
+            }
             Table.Update(entity);
             return persist ? SaveChanges() : 0;
         }
 
         public virtual int UpdateRange(IEnumerable<T> entities, bool persist = true)
         {
+            foreach(var entity in entities)
+            {
+                if (Table.Where(e => e.Id == entity.Id).Count() == 0)
+                {
+                    throw new ArgumentException("Invalid entity to update");
+                }
+            }
             Table.UpdateRange(entities);
             return persist ? SaveChanges() : 0;
         }
 
         public virtual  int Delete(int id, bool persist = true)
         {
+            if(Table.Where(o => o.Id == id).Count() == 0)
+            {
+                throw new ArgumentException("No entity to delete found");
+            }
             var entity = Table.Where(o =>  o.Id == id).FirstOrDefault();
             Delete(entity);
             return persist ? SaveChanges() : 0;
@@ -83,12 +98,23 @@ namespace EmployeeService.DAL.Repositories
 
         public virtual int Delete(T entity, bool persist = true)
         {
+            if (Table.Where(o => o.Id == entity.Id).Count() == 0)
+            {
+                throw new ArgumentException("No entity to delete found");
+            }
             Table.Remove(entity);
             return persist ? SaveChanges() : 0;
         }
 
         public virtual int DeleteRange(IEnumerable<T> entities, bool persist = true)
         {
+            foreach (var entity in entities)
+            {
+                if (Table.Where(e => e.Id == entity.Id).Count() == 0)
+                {
+                    throw new ArgumentException("Invalid entity to delete");
+                }
+            }
             Table.RemoveRange(entities);
             return persist ? SaveChanges() : 0;
         }
