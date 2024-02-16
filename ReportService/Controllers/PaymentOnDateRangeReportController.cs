@@ -25,18 +25,40 @@ namespace ReportService.Controllers
         [HttpPost]
         public IActionResult SetParameters(PaymentParametersModel args)
         {
-            _paymentOnDateRangeReportBuilder.SetDateRange(args.StartDate, args.EndDate);
-            _paymentOnDateRangeReportBuilder.IncludeOfficeParams(args.IncludedOffices);
-            _paymentOnDateRangeReportBuilder.IncludeFullCountriesParams(args.IncludedCountries);
-            return Ok();
+            try
+            {
+                _paymentOnDateRangeReportBuilder.SetDateRange(args.StartDate, args.EndDate);
+                _paymentOnDateRangeReportBuilder.IncludeOfficeParams(args.IncludedOffices);
+                _paymentOnDateRangeReportBuilder.IncludeFullCountriesParams(args.IncludedCountries);
+                return Ok();
+            }
+            catch (ArgumentOutOfRangeException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(503);
+            }
         }
 
         [HttpGet("")]
         public IActionResult GetOnDateRange()
-        {  
-            _paymentOnDateRangeReportBuilder.LoadData();
-            _paymentOnDateRangeReportBuilder.CountMetrics();
-            return Ok(_paymentOnDateRangeReportBuilder.GetResult());
+        {
+            try
+            {
+                _paymentOnDateRangeReportBuilder.LoadData();
+                _paymentOnDateRangeReportBuilder.CountMetrics();
+                return Ok(_paymentOnDateRangeReportBuilder.GetResult());
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(503);
+            }
         }
     }
 }

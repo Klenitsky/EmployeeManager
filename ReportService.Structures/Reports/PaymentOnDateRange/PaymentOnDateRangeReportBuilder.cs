@@ -26,13 +26,13 @@ namespace ReportService.Structures.Reports.PaymentOnDateRange
 
 
 
-        private string connectionStringEmployeeService;
-        private string connectionStringExchangeRateService;
+        private string _connectionStringEmployeeService;
+        private string _connectionStringExchangeRateService;
 
         public PaymentOnDateRangeReportBuilder(string connectionStringEmployeeService, string connectionStringExchangeRateService)
         {
-            this.connectionStringEmployeeService = connectionStringEmployeeService;
-            this.connectionStringExchangeRateService = connectionStringExchangeRateService;
+            this._connectionStringEmployeeService = connectionStringEmployeeService;
+            this._connectionStringExchangeRateService = connectionStringExchangeRateService;
             _includedEmployees = new Dictionary<Employee, float>();
             _includedCurrencies = new List<Currency>();
             _includedExchangeRates = new List<ExchangeRate>();
@@ -43,6 +43,10 @@ namespace ReportService.Structures.Reports.PaymentOnDateRange
 
         public void SetDateRange(DateTime startDate, DateTime endDate)
         {
+            if (startDate > endDate || startDate < DateTime.Now.AddYears(-5) || endDate > DateTime.Now)
+            {
+                throw new ArgumentOutOfRangeException("Invalid date range");
+            }
             _endDate = endDate;
             _startDate = startDate;
         }
@@ -50,8 +54,13 @@ namespace ReportService.Structures.Reports.PaymentOnDateRange
 
         public void IncludeOfficeParams(IEnumerable<Office> offices)
         {
+            CompanyInfoReader reader = new CompanyInfoReader(_connectionStringEmployeeService);
             foreach (var office in offices)
             {
+                if(reader.GetOffices().Where(o => o.Name== office.Name).Count() == 0)
+                {
+                    throw new ArgumentException("Unknown office");
+                }
                 if (_includedOfficesMetrics.Where(o => o.Key.Id == office.Id).Count() == 0)
                 {
                     _includedOfficesMetrics.Add(office, 0);
@@ -66,9 +75,13 @@ namespace ReportService.Structures.Reports.PaymentOnDateRange
 
         public void IncludeFullCountriesParams(IEnumerable<Country> countries)
         {
-            CompanyInfoReader reader = new CompanyInfoReader(connectionStringEmployeeService);
+            CompanyInfoReader reader = new CompanyInfoReader(_connectionStringEmployeeService);
             foreach (var country in countries)
             {
+                if (reader.GetCountries().Where(c => c.Abbreviation == country.Abbreviation).Count() == 0)
+                {
+                    throw new ArgumentException("Unknown country");
+                }
                 if (_includedCountriesMetrics.Where(c => c.Key.Id == country.Id).Count() == 0)
                 {
                     _includedCountriesMetrics.Add(country, 0);
@@ -167,8 +180,8 @@ namespace ReportService.Structures.Reports.PaymentOnDateRange
             _includedEmployees.Clear();
             _includedExchangeRates.Clear();
             _includedCurrencies.Clear();
-            CompanyInfoReader companyInfoReader = new CompanyInfoReader(connectionStringEmployeeService);
-            ExchangeRateReader exchangeRateReader = new ExchangeRateReader(connectionStringExchangeRateService);
+            CompanyInfoReader companyInfoReader = new CompanyInfoReader(_connectionStringEmployeeService);
+            ExchangeRateReader exchangeRateReader = new ExchangeRateReader(_connectionStringExchangeRateService);
             foreach (var office in _includedOfficesMetrics)
             {
 
