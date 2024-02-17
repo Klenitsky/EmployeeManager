@@ -38,7 +38,7 @@ namespace ServicesTests.EmployeeServiceTests
         }
 
         [Theory]
-        [InlineData(17, "Anna")]
+        [InlineData(17, "Ann")]
         [InlineData(8, "Ivan")]
         public void GetByIdTestSuccess(int id, string name)
         {
@@ -121,6 +121,7 @@ namespace ServicesTests.EmployeeServiceTests
         public void UpdateTest()
         {
             Employee testEmployee = new Employee { FirstName = "Asdfgh", LastName = "Zxc", EmploymentDate = new DateTime(2022, 01, 13), DismissalDate = null, CurrencyId = _currencyToTestId, OfficeId = _officeToTestId, Email = "aaa@gmail.com", Salary = 777 };
+            _controller.Add(testEmployee);
             var addedEmployeeId = ((_controller.GetAll() as OkObjectResult).Value as IEnumerable<Employee>).Where(e => e.FirstName == "Asdfgh").First().Id;
             testEmployee.FirstName = "RQ";
             testEmployee.Id = addedEmployeeId;

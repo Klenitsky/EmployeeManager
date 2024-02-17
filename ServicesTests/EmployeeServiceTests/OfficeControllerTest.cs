@@ -118,6 +118,7 @@ namespace ServicesTests.EmployeeServiceTests
         public void UpdateTest()
         {
             Office testOffice = new Office() { Name = "QA", CountryId = _countryToTestId };
+            _controller.Add(testOffice);
             var addedOfficeId = ((_controller.GetAll() as OkObjectResult).Value as IEnumerable<Office>).Where(o => o.Name == "QA").First().Id;
             testOffice.Name = "RQ";
             testOffice.Id = addedOfficeId;
