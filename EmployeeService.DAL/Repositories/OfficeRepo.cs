@@ -22,6 +22,10 @@ namespace EmployeeService.DAL.Repositories
 
         public IEnumerable<Office> GetAllByCountry(int countryId)
         {
+            if(!DbContext.Countries.Where(c => c.Id == countryId).Any()) 
+            {
+                throw new ArgumentException("No such country");
+            }
             return Table
                     .Where(o => o.CountryId == countryId)
                     .Include(o => o.CountryNavigation)

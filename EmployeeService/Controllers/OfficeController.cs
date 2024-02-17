@@ -51,8 +51,20 @@ namespace EmployeeService.Controllers
         [HttpGet("FindByCountry/{countryId}")]
         public IActionResult FindByCountry(int countryId)
         {
-            IEnumerable<Office> offices = _officeRepo.GetAllByCountry(countryId);
-            if (offices != null)
+            IEnumerable<Office> offices = new List<Office>();
+            try
+            {
+                offices = _officeRepo.GetAllByCountry(countryId);
+            }
+            catch(ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch(Exception ex)
+            {
+                return StatusCode(503);
+            }
+            if (offices != null && offices.Count() != 0)
             {
                 return Ok(offices);
             }

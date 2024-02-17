@@ -51,8 +51,21 @@ namespace EmployeeService.Controllers
         [HttpGet("FindByOffice/{officeId}")]
         public IActionResult FindByOffice(int officeId)
         {
-            IEnumerable<Employee> answer = _employeeRepo.GetAllByOffice(officeId);
-            if (answer != null)
+            IEnumerable<Employee> answer = new List<Employee>();
+            try
+            {
+               answer = _employeeRepo.GetAllByOffice(officeId);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(503);
+            }
+
+            if (answer != null && answer.Count() != 0 )
             {
                 return Ok(answer);
             }

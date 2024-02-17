@@ -22,6 +22,10 @@ namespace EmployeeService.DAL.Repositories
 
         public IEnumerable<Employee> GetAllByOffice(int officeId)
         {
+            if(!DbContext.Offices.Where(o => o.Id == officeId).Any())
+            {
+                throw new ArgumentException("No such office");
+            }
             return Table
                     .Where(e => e.OfficeId == officeId)
                     .Include(e => e.CurrencyNavigation)
