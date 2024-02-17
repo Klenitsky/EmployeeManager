@@ -25,7 +25,7 @@ namespace ServicesTests.ReportServiceTests
 
         public SalarySummaryReportControllerTest()
         {
-            _SalarySummaryReportController = new SalarySummaryReportController(new SalarySummaryReportBuilder("http://localhost:5282/api/EmployeeService", "https://localhost:5027/api/ExchangeRate"));
+            _SalarySummaryReportController = new SalarySummaryReportController(new SalarySummaryReportBuilder("http://localhost:5282/api/EmployeeService", "http://localhost:5027/api/ExchangeRate"));
             string[] args = { };
             _includedOffices = _httpClient.GetFromJsonAsync<IEnumerable<Office>>("http://localhost:5282/api/EmployeeService/Office").Result.Where(o => o.Id == 4 || o.Id == 5 || o.Id == 7).ToList();
             _includedCountries = _httpClient.GetFromJsonAsync<IEnumerable<Country>>("http://localhost:5282/api/EmployeeService/Country").Result.Where(o => o.Id == 3).ToList();

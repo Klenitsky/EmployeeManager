@@ -75,7 +75,7 @@ namespace ServicesTests.ReportServiceTests
             {
                 StartDate = new DateTime(2024, 2, 1),
                 EndDate = new DateTime(2024, 2, 5),
-                IncludedCurrencies = _includedCurrencies
+                IncludedCurrencies = currencies
             };
             var result = _exchangeRateOnDateRangeReportController.SetParameters(parametersModel);
             Assert.False(result is OkResult);
