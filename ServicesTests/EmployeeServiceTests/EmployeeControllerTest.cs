@@ -164,9 +164,10 @@ namespace ServicesTests.EmployeeServiceTests
         public void DeleteTest()
         {
             Employee testEmployee = new Employee { FirstName = "Asdfgh", LastName = "Zxc", EmploymentDate = new DateTime(2022, 01, 13), DismissalDate = null, CurrencyId = _currencyToTestId, OfficeId = _officeToTestId, Email = "aaa@gmail.com", Salary = 777 };
-            var response = _controller.Add(testEmployee);
+            var responseOnAdd = _controller.Add(testEmployee);
             testEmployee = ((_controller.GetAll() as OkObjectResult).Value as IEnumerable<Employee>).Where(e => e.FirstName == testEmployee.FirstName).First();
-            _controller.Delete(testEmployee);
+            var response = _controller.Delete(testEmployee);
+            Assert.True(responseOnAdd is CreatedAtActionResult);
             Assert.True(response is OkResult);
             Assert.True(((_controller.GetAll() as OkObjectResult).Value as IEnumerable<Employee>).Where(e => e.FirstName == testEmployee.FirstName).Count() == 0);
         }
@@ -179,9 +180,10 @@ namespace ServicesTests.EmployeeServiceTests
                     new Employee { FirstName = "Asdfgh", LastName = "Zxc", EmploymentDate =new DateTime(2022,01,13), DismissalDate=null, CurrencyId= _currencyToTestId, OfficeId =_officeToTestId, Email= "aaa@gmail.com", Salary =777 },
                     new Employee { FirstName = "Qwett", LastName = "Zxc", EmploymentDate = new DateTime(2021, 01, 13), DismissalDate = null, CurrencyId = _currencyToTestId, OfficeId = _officeToTestId, Email = "bbb@gmail.com", Salary = 888 }
                 };
-            var response = _controller.AddRange(testEmployees);
+            var responseOnAdd = _controller.AddRange(testEmployees);
             testEmployees = ((_controller.GetAll() as OkObjectResult).Value as IEnumerable<Employee>).Where(e => e.FirstName == "Asdfgh" || e.FirstName == "Qwett").ToList();
-            _controller.DeleteRange(testEmployees);
+            var response =  _controller.DeleteRange(testEmployees);
+            Assert.True(responseOnAdd is CreatedAtActionResult);
             Assert.True(response is OkResult);
             foreach (var employee in testEmployees)
             {
@@ -193,9 +195,10 @@ namespace ServicesTests.EmployeeServiceTests
         public void DeleteByIdTestSuccess()
         {
             Employee testEmployee = new Employee { FirstName = "Asdfgh", LastName = "Zxc", EmploymentDate = new DateTime(2022, 01, 13), DismissalDate = null, CurrencyId = _currencyToTestId, OfficeId = _officeToTestId, Email = "aaa@gmail.com", Salary = 777 };
-            var response = _controller.Add(testEmployee);
+            var responseOnAdd = _controller.Add(testEmployee);
             testEmployee = ((_controller.GetAll() as OkObjectResult).Value as IEnumerable<Employee>).Where(e => e.FirstName == testEmployee.FirstName).First();
-            _controller.Delete(testEmployee.Id);
+            var response = _controller.Delete(testEmployee.Id);
+            Assert.True(responseOnAdd is CreatedAtActionResult);
             Assert.True(response is OkResult);
             Assert.True(((_controller.GetAll() as OkObjectResult).Value as IEnumerable<Employee>).Where(e => e.FirstName == testEmployee.FirstName).Count() == 0);
 

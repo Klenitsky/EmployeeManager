@@ -1,4 +1,5 @@
-﻿using EmployeeService.Controllers;
+﻿using Azure;
+using EmployeeService.Controllers;
 using EmployeeService.DAL.Contexts;
 using EmployeeService.DAL.Models;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -161,9 +162,10 @@ namespace ServicesTests.EmployeeServiceTests
         public void DeleteTest()
         {
             Office testOffice = new Office() { Name = "QA", CountryId = _countryToTestId };
-            var response = _controller.Add(testOffice);
+            var responseOnAdd = _controller.Add(testOffice);
             testOffice = ((_controller.GetAll() as OkObjectResult).Value as IEnumerable<Office>).Where(o => o.Name == testOffice.Name).First();
-            _controller.Delete(testOffice);
+            var response = _controller.Delete(testOffice);
+            Assert.True(responseOnAdd is CreatedAtActionResult);
             Assert.True(response is OkResult);
             Assert.True(((_controller.GetAll() as OkObjectResult).Value as IEnumerable<Office>).Where(o => o.Name == testOffice.Name).Count() == 0);
         }
@@ -176,9 +178,10 @@ namespace ServicesTests.EmployeeServiceTests
                     new Office() { Name = "QA", CountryId= _countryToTestId },
                     new Office() { Name = "DevOps", CountryId= _countryToTestId}
                 };
-            var response = _controller.AddRange(testOffices);
+            var responseOnAdd = _controller.AddRange(testOffices);
             testOffices = ((_controller.GetAll() as OkObjectResult).Value as IEnumerable<Office>).Where(o => o.Name == "QA" || o.Name == "DevOps").ToList();
-            _controller.DeleteRange(testOffices);
+            var response = _controller.DeleteRange(testOffices);
+            Assert.True(responseOnAdd is CreatedAtActionResult);
             Assert.True(response is OkResult);
             foreach (var office in testOffices)
             {
@@ -190,9 +193,10 @@ namespace ServicesTests.EmployeeServiceTests
         public void DeleteByIdTestSuccess()
         {
             Office testOffice = new Office() { Name = "QA", CountryId = _countryToTestId };
-            var response = _controller.Add(testOffice);
+            var responseOnAdd = _controller.Add(testOffice);
             testOffice = ((_controller.GetAll() as OkObjectResult).Value as IEnumerable<Office>).Where(o => o.Name == testOffice.Name).First();
-            _controller.Delete(testOffice.Id);
+            var response = _controller.Delete(testOffice.Id);
+            Assert.True(responseOnAdd is CreatedAtActionResult);
             Assert.True(response is OkResult);
             Assert.True(((_controller.GetAll() as OkObjectResult).Value as IEnumerable<Office>).Where(o => o.Name == testOffice.Name).Count() == 0);
 
